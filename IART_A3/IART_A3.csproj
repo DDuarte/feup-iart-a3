@@ -43,9 +43,11 @@
   <ItemGroup>
     <Compile Include="Constraint.cs" />
     <Compile Include="Landuse.cs" />
+    <Compile Include="LanduseAllocations.cs" />
     <Compile Include="Lot.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tree.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace IART_A3
+﻿namespace IART_A3
 {
     /// <summary>
     /// Slope classification
@@ -63,21 +57,5 @@ namespace IART_A3
         /// Distance in kilometers to the nearest highway
         /// </summary>
         public double DistanceHighway { get; set; }
-
-        /// <summary>
-        /// Near some water body
-        /// </summary>
-        public bool IsNearLake()
-        {
-            return DistanceLake < NEAR_KILOMETERS;
-        }
-
-        /// <summary>
-        /// Near a high-capacity highway (noisy and ugly)
-        /// </summary>
-        public bool IsNearHighway()
-        {
-            return DistanceHighway < NEAR_KILOMETERS;
-        }
     }
 }

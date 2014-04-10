@@ -37,24 +37,99 @@ namespace IART_A3
                 {"C4", new DistanceConstraint(new[] {LanduseType.Apartments, LanduseType.HousingComplex, LanduseType.Recreational}, Place.Highway, DistanceConstraint.FartherThan)}
             };
 
-            var constraintsTable = new Dictionary<Tuple<string, string>, bool>();
+            var constraintsTable = new Dictionary<string, Dictionary<string, bool>>(); // landuse, -> lot -> yes/no
 
             foreach (var landuse in landuses)
             {
                 foreach (var lot in lots)
                 {
                     var valid = contraints.All(constraint => constraint.Value.Feasible(landuse.Value, lot.Value));
-                    constraintsTable.Add(Tuple.Create(landuse.Key, lot.Key), valid);
+                    if (!constraintsTable.ContainsKey(landuse.Key))
+                        constraintsTable.Add(landuse.Key, new Dictionary<string, bool>());
+
+                    constraintsTable[landuse.Key].Add(lot.Key, valid);
                 }
             }
 
             Console.WriteLine("Contraints table:");
-            foreach (var b in constraintsTable)
+            foreach (var c in constraintsTable)
             {
-                Console.WriteLine("\t{0} - {1} = {2}", b.Key.Item1, b.Key.Item2, b.Value ? "OK" : "NOTOK");
+                foreach (var v in c.Value)
+                {
+                    Console.WriteLine("\t{0} - {1} = {2}", c.Key, v.Key, v.Value ? "OK" : "NOTOK");
+                }
+            }
+
+            // set of unassigned landuses
+            var laui = new List<string>(landuses.Keys.OrderBy(s => constraintsTable[s].Count(r => !r.Value))); // "place the most constrained landuses first"
+
+            // set of unassigned lots
+            var loti = new List<string>(lots.Keys.OrderBy(s => lots[s].Cost)); // "set of lots yet to be assigned ordered according to lowest cost first"
+
+            var root = new TreeNode<LanduseAllocations>(new LanduseAllocations());
+            RecursiveAllocate(laui, loti, constraintsTable, root);
+
+            //RecursivePrintTree(root, 0);
+
+            var leaves = new List<LanduseAllocations>();
+            RecursiveGetLeaves(root, leaves);
+
+            var leavesComplete = leaves.Where(allocations => allocations.Count == landuses.Count).OrderBy(allocations => allocations.Cost(lots));
+            foreach (var l in leavesComplete)
+            {
+                Console.WriteLine("{0} - €{1}", l, l.Cost(lots));
             }
 
             Console.ReadKey();
+        }
+
+        private static void RecursivePrintTree(TreeNode<LanduseAllocations> currentNode, int i)
+        {
+            Console.WriteLine(currentNode.Data.ToString().Insert(0, new string(' ', i)));
+            foreach (var treeNode in currentNode.Children)
+            {
+                RecursivePrintTree(treeNode, i + 1);
+            }
+        }
+
+        private static void RecursiveAllocate(List<string> laui, List<string> loti, Dictionary<string, Dictionary<string, bool>> constraintsTable, TreeNode<LanduseAllocations> currentNode)
+        {
+            foreach (var l in laui)
+            {
+                foreach (var c in constraintsTable[l].Where(c => c.Value /*&& loti.Contains(c.Key)*/))
+                {
+                    RecursiveAllocate(laui.FindAll(s => s != l), loti.FindAll(s => s != c.Key), constraintsTable, currentNode.AddChild(currentNode.Data.Allocate(l, c.Key)));
+                }
+            }
+        }
+
+        private static void RecursiveGetLeaves(TreeNode<LanduseAllocations> currentNode, List<LanduseAllocations> leaves)
+        {
+            if (currentNode.Children.Count == 0)
+                leaves.Add(currentNode.Data);
+            else
+            {
+                foreach (var treeNode in currentNode.Children)
+                {
+                    RecursiveGetLeaves(treeNode, leaves);
+                }
+            }
+        }
+
+        private static double Cost(IEnumerable<string> loti, List<string> laui, IReadOnlyDictionary<string, Lot> lots, LanduseAllocations n)
+        {
+            var h = HeuristicCost(loti, laui, lots);
+            var g = n.Cost(lots);
+            return h + g;
+        }
+
+        static double HeuristicCost(IEnumerable<string> loti, IReadOnlyCollection<string> laui, IReadOnlyDictionary<string, Lot> lots)
+        {
+            // let p be the number of landuses yet to be assigned
+            var p = laui.Count;
+
+            // h(n) is the sum of the costs of the first p elements in Loti'
+            return loti.Take(p).Select(s => lots[s].Cost).Sum();
         }
     }
 }
