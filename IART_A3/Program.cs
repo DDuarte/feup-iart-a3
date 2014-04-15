@@ -51,7 +51,7 @@ namespace IART_A3
                 }
             }
 
-            Console.WriteLine("Contraints table:");
+            Console.WriteLine("Constraints table:");
             foreach (var c in constraintsTable)
             {
                 foreach (var v in c.Value)
@@ -66,6 +66,9 @@ namespace IART_A3
             // set of unassigned lots
             var loti = new List<string>(lots.Keys.OrderBy(s => lots[s].Cost)); // "set of lots yet to be assigned ordered according to lowest cost first"
 
+            LanduseAllocations.ConstraintsTable = constraintsTable;
+            
+            
             var root = new TreeNode<LanduseAllocations>(new LanduseAllocations());
             RecursiveAllocate(laui, loti, constraintsTable, root);
 
