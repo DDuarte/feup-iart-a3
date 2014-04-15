@@ -7,21 +7,21 @@ namespace IART_A3
 {
     public class LanduseAllocations
     {
-        private readonly List<Tuple<string, string>> _allocations; // [landuse, lot]
-        private readonly List<string> _unattributedLanduses;
-        private readonly List<string> _unattributedLots;
+        private readonly HashSet<Tuple<string, string>> _allocations; // [landuse, lot]
+        private readonly HashSet<string> _unattributedLanduses;
+        private readonly HashSet<string> _unattributedLots;
         
 
         public static Dictionary<string, Dictionary<string, bool>> ConstraintsTable { get; set; }
 
         public LanduseAllocations()
         {
-            _allocations = new List<Tuple<string, string>>();
-            _unattributedLanduses = new List<string>();
-            _unattributedLots = new List<string>();
+            _allocations = new HashSet<Tuple<string, string>>();
+            _unattributedLanduses = new HashSet<string>();
+            _unattributedLots = new HashSet<string>();
         }
 
-        public LanduseAllocations(List<Tuple<string, string>> allocations, List<string> unattributedLanduses, List<string> unattributedLots)
+        public LanduseAllocations(HashSet<Tuple<string, string>> allocations, HashSet<string> unattributedLanduses, HashSet<string> unattributedLots)
         {
             _allocations = allocations;
             _unattributedLanduses = unattributedLanduses;
@@ -30,20 +30,52 @@ namespace IART_A3
 
         public LanduseAllocations Allocate(string landuse, string lot)
         {
-            var al = _allocations.ConvertAll(input => input);
-            var lu = _unattributedLanduses.Where(input => input != landuse).ToList();
-            var lo = _unattributedLots.Where(input => input != lot).ToList();
+            var al = new HashSet<Tuple<string, string>>(_allocations);
+            var lu = new HashSet<string>(_unattributedLanduses);
+            var lo = new HashSet<string>(_unattributedLots);
+
             al.Add(Tuple.Create(landuse, lot));
+            lu.Remove(landuse);
+            lu.Remove(lot);
 
             return new LanduseAllocations(al, lu, lo);
         }
 
+        public override bool Equals(object obj)
+        {
+            // If parameter is null return false.
+            if (obj == null)
+                return false;
+
+            // If parameter cannot be cast to LanduseAllocations return false.
+            var la = obj as LanduseAllocations;
+            if (la == null)
+            {
+                return false;
+            }
+
+            
+            return _allocations.SetEquals(la._allocations) &&
+                _unattributedLanduses.SetEquals(la._unattributedLanduses) &&
+                _unattributedLots.SetEquals(la._unattributedLots);
+        }
+
+        public override int GetHashCode()
+        {
+            var hash = _allocations.Aggregate(0, (current, alloc) => current*31 + (alloc == null ? 0 : alloc.GetHashCode()));
+            
+            hash = _unattributedLanduses.Aggregate(hash, (current, la) => current*31 + (la == null ? 0 : la.GetHashCode()));
+
+            return _unattributedLots.Aggregate(hash, (current, lot) => current*31 + (lot == null ? 0 : lot.GetHashCode()));
+        }
+
         public override string ToString()
         {
+            var alls = _allocations.ToList();
             var b = new StringBuilder("{");
-            for (var i = 0; i < _allocations.Count; i++)
+            for (var i = 0; i < alls.Count; i++)
             {
-                b.AppendFormat("{0}-{1}", _allocations[i].Item1, _allocations[i].Item2);
+                b.AppendFormat("{0}-{1}", alls[i].Item1, alls[i].Item2);
                 if (i != _allocations.Count - 1)
                     b.Append(", ");
             }
