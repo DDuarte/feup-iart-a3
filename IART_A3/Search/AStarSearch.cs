@@ -14,24 +14,25 @@ namespace IART_A3.Search
 
             var stateComparer = new AllocationsComparer(lots);
             var visitedStates = new List<LanduseAllocations>();
-            var stateQueue = new List<LanduseAllocations> { new LanduseAllocations(landuseNames, lotNames) };
+            var stateQueue = new SortedSet<LanduseAllocations> (stateComparer) { new LanduseAllocations(landuseNames, lotNames) };
 
-            
 
             while (stateQueue.Any()) //while not empty
             {
                 var currentState = stateQueue.First();
-                stateQueue.RemoveAt(0);
+                stateQueue.Remove(currentState);
+
                 if (currentState.IsFinalState())
                     return currentState;
 
+                var newSuccessors = new SortedSet<LanduseAllocations>(stateComparer);
                 foreach (var state in currentState.GetSuccessors(constraintsTable).Where(state => !visitedStates.Contains(state)))
                 {
                     visitedStates.Add(state);
-                    stateQueue.Add(state);
+                    newSuccessors.Add(state);
                 }
 
-                stateQueue.Sort(stateComparer);
+                stateQueue.UnionWith(newSuccessors);
             }
 
             return null;
