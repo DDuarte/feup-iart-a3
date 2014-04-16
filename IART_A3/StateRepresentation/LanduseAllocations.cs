@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace IART_A3.StateRepresentation
@@ -11,9 +10,6 @@ namespace IART_A3.StateRepresentation
         private readonly HashSet<Tuple<string, string>> _allocations; // [landuse, lot]
         private readonly HashSet<string> _unattributedLanduses;
         private readonly HashSet<string> _unattributedLots;
-        
-
-        public static Dictionary<string, Dictionary<string, bool>> ConstraintsTable { get; set; }
 
         public LanduseAllocations()
         {
@@ -89,7 +85,7 @@ namespace IART_A3.StateRepresentation
         }
 
 
-        public List<LanduseAllocations> GetSuccessors()
+        public List<LanduseAllocations> GetSuccessors(Dictionary<string, Dictionary<string, bool>> constraintsTable)
         {
             var successors = new List<LanduseAllocations>();
 
@@ -97,7 +93,7 @@ namespace IART_A3.StateRepresentation
                 return successors;
 
             foreach (var landuse in _unattributedLanduses)
-                successors.AddRange(from lot in _unattributedLots where ConstraintsTable[landuse][lot] select Allocate(landuse, lot));
+                successors.AddRange(from lot in _unattributedLots where constraintsTable[landuse][lot] select Allocate(landuse, lot));
 
             return successors;
         }

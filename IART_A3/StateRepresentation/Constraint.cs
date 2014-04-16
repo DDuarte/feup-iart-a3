@@ -31,7 +31,7 @@ namespace IART_A3.StateRepresentation
         public static readonly Func<double, double, bool> CloserThan = (d, d1) => d <= d1;
         public static readonly Func<double, double, bool> FartherThan = (d, d1) => d > d1; 
 
-        public DistanceConstraint(LanduseType[] landusesTypes, Place place, Func<double, double, bool> distCheck, double threshold = Lot.NEAR_KILOMETERS)
+        public DistanceConstraint(LanduseType[] landusesTypes, Place place, Func<double, double, bool> distCheck, double threshold = Lot.NearKilometers)
         {
             _landusesTypes = landusesTypes;
             _place = place;

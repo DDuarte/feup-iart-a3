@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
 using IART_A3.StateRepresentation;
 
 namespace IART_A3.Search
@@ -27,7 +25,7 @@ namespace IART_A3.Search
                 if (currentState.IsFinalState())
                     return currentState;
 
-                foreach (var state in currentState.GetSuccessors().Where(state => !visitedStates.Contains(state)))
+                foreach (var state in currentState.GetSuccessors(constraintsTable).Where(state => !visitedStates.Contains(state)))
                 {
                     visitedStates.Add(state);
                     stateQueue.Add(state);

@@ -55,8 +55,6 @@ namespace IART_A3
 
             // set of unassigned lots
             var loti = new List<string>(lots.Keys.OrderBy(s => lots[s].Cost)); // "set of lots yet to be assigned ordered according to lowest cost first"
-
-            LanduseAllocations.ConstraintsTable = constraintsTable;
             
             
             var root = new TreeNode<LanduseAllocations>(new LanduseAllocations());

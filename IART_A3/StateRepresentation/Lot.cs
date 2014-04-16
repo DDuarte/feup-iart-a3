@@ -31,7 +31,7 @@
         /// <summary>
         /// Maximum distance to something to consider it "near".
         /// </summary>
-        public const double NEAR_KILOMETERS = 0.5;
+        public const double NearKilometers = 0.5;
 
         /// <summary>
         /// Price of lot in millions of Euro
