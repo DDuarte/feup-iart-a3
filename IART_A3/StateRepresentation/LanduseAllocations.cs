@@ -7,12 +7,17 @@ namespace IART_A3.StateRepresentation
 {
     public class LanduseAllocations : IEquatable<LanduseAllocations>
     {
+        private static int _curId;
+
+        private readonly int _id;
+        public int Id { get { return _id; } } //TODO think of a better way to implement CompareTo so that 0 is never returned if Equal is false
         private readonly HashSet<Tuple<string, string>> _allocations; // [landuse, lot]
         private readonly HashSet<string> _unattributedLanduses;
         private readonly HashSet<string> _unattributedLots;
 
         public LanduseAllocations()
         {
+            _id = _curId++;
             _allocations = new HashSet<Tuple<string, string>>();
             _unattributedLanduses = new HashSet<string>();
             _unattributedLots = new HashSet<string>();
@@ -20,6 +25,7 @@ namespace IART_A3.StateRepresentation
 
         public LanduseAllocations(HashSet<string> unattributedLanduses, HashSet<string> unattributedLots)
         {
+            _id = _curId++;
             _allocations = new HashSet<Tuple<string, string>>();
             _unattributedLanduses = unattributedLanduses;
             _unattributedLots = unattributedLots;
@@ -27,6 +33,7 @@ namespace IART_A3.StateRepresentation
 
         public LanduseAllocations(HashSet<Tuple<string, string>> allocations, HashSet<string> unattributedLanduses, HashSet<string> unattributedLots)
         {
+            _id = _curId++;
             _allocations = allocations;
             _unattributedLanduses = unattributedLanduses;
             _unattributedLots = unattributedLots;
@@ -43,6 +50,11 @@ namespace IART_A3.StateRepresentation
             lo.Remove(lot);
 
             return new LanduseAllocations(al, lu, lo);
+        }
+
+        public IReadOnlyList<Tuple<string, string>> GetAllocations()
+        {
+            return _allocations.ToList();
         }
 
         public bool Equals(LanduseAllocations la)

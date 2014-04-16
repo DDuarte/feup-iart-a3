@@ -71,8 +71,10 @@ namespace IART_A3
                 Console.WriteLine("{0} - €{1}", l, l.CurrentCost(lots));
             }
 
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             var astarResult = AStarSearch.Search(landuses, lots, constraints);
-            Console.WriteLine("A* solution: {0}\nCosts: {1}", astarResult ,astarResult.CurrentCost(lots));
+            watch.Stop();
+            Console.WriteLine("A* solution: {0}\nCosts: {1}\nTook {2} miliseconds", astarResult ,astarResult.CurrentCost(lots), watch.ElapsedMilliseconds);
 
             Console.ReadKey();
         }

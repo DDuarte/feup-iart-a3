@@ -52,7 +52,11 @@ namespace IART_A3.Search
                 var costX = x.CurrentCost(_lots) + x.HeuristicCost(_lots);
                 var costY = y.CurrentCost(_lots) + y.HeuristicCost(_lots);
                 var comparison = costX.CompareTo(costY);
-                return comparison == 0 ? x.LandUsesLeft().CompareTo(y.LandUsesLeft()) : comparison; //for same estimated cost, choose deepest node
+                if (comparison != 0)
+                    return comparison;
+
+                comparison = x.LandUsesLeft().CompareTo(y.LandUsesLeft()); //for same estimated cost, choose deepest node
+                return comparison != 0 ? comparison : x.Id.CompareTo(y.Id); //uses uniqueID for disambiguation
             }
         }
     }
