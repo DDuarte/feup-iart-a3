@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using IART_A3.Search;
+using IART_A3.StateRepresentation;
 
 namespace IART_A3
 {
@@ -29,7 +31,7 @@ namespace IART_A3
                 {"D", new Landuse {Type = LanduseType.Dump}}
             };
 
-            var contraints = new Dictionary<string, Constraint>
+            var constraints = new Dictionary<string, Constraint>
             {
                 {"C1", new DistanceConstraint(new [] {LanduseType.Recreational}, Place.Lake, DistanceConstraint.CloserThan)},
                 {"C2", new SteepConstraint(new[] {LanduseType.Apartments, LanduseType.HousingComplex, LanduseType.Cemetery, LanduseType.Dump}, new[] {SteepType.Flat, SteepType.ModeratelySteep})},
@@ -37,19 +39,7 @@ namespace IART_A3
                 {"C4", new DistanceConstraint(new[] {LanduseType.Apartments, LanduseType.HousingComplex, LanduseType.Recreational}, Place.Highway, DistanceConstraint.FartherThan)}
             };
 
-            var constraintsTable = new Dictionary<string, Dictionary<string, bool>>(); // landuse, -> lot -> yes/no
-
-            foreach (var landuse in landuses)
-            {
-                foreach (var lot in lots)
-                {
-                    var valid = contraints.All(constraint => constraint.Value.Feasible(landuse.Value, lot.Value));
-                    if (!constraintsTable.ContainsKey(landuse.Key))
-                        constraintsTable.Add(landuse.Key, new Dictionary<string, bool>());
-
-                    constraintsTable[landuse.Key].Add(lot.Key, valid);
-                }
-            }
+            var constraintsTable = SearchUtilities.CreateConstraintsTable(landuses, lots, constraints);
 
             Console.WriteLine("Constraints table:");
             foreach (var c in constraintsTable)
@@ -77,11 +67,14 @@ namespace IART_A3
             var leaves = new List<LanduseAllocations>();
             RecursiveGetLeaves(root, leaves);
 
-            var leavesComplete = leaves.Where(allocations => allocations.Count == landuses.Count).OrderBy(allocations => allocations.Cost(lots));
+            var leavesComplete = leaves.Where(allocations => allocations.Count == landuses.Count).OrderBy(allocations => allocations.CurrentCost(lots));
             foreach (var l in leavesComplete)
             {
-                Console.WriteLine("{0} - €{1}", l, l.Cost(lots));
+                Console.WriteLine("{0} - €{1}", l, l.CurrentCost(lots));
             }
+
+            var astarResult = AStarSearch.Search(landuses, lots, constraints);
+            Console.WriteLine("A* solution: {0}\nCosts: {1}", astarResult ,astarResult.CurrentCost(lots));
 
             Console.ReadKey();
         }
@@ -91,7 +84,7 @@ namespace IART_A3
             Console.WriteLine(currentNode.Data.ToString().Insert(0, new string(' ', i)));
             foreach (var treeNode in currentNode.Children)
             {
-                RecursivePrintTree(treeNode, i + 1);
+                Program.RecursivePrintTree(treeNode, i + 1);
             }
         }
 
@@ -99,9 +92,9 @@ namespace IART_A3
         {
             foreach (var l in laui)
             {
-                foreach (var c in constraintsTable[l].Where(c => c.Value /*&& loti.Contains(c.Key)*/))
+                foreach (var c in constraintsTable[l].Where(c => c.Value && loti.Contains(c.Key)))
                 {
-                    RecursiveAllocate(laui.FindAll(s => s != l), loti.FindAll(s => s != c.Key), constraintsTable, currentNode.AddChild(currentNode.Data.Allocate(l, c.Key)));
+                    Program.RecursiveAllocate(laui.FindAll(s => s != l), loti.FindAll(s => s != c.Key), constraintsTable, currentNode.AddChild(currentNode.Data.Allocate(l, c.Key)));
                 }
             }
         }
@@ -114,7 +107,7 @@ namespace IART_A3
             {
                 foreach (var treeNode in currentNode.Children)
                 {
-                    RecursiveGetLeaves(treeNode, leaves);
+                    Program.RecursiveGetLeaves(treeNode, leaves);
                 }
             }
         }
@@ -122,7 +115,7 @@ namespace IART_A3
         private static double Cost(IEnumerable<string> loti, List<string> laui, IReadOnlyDictionary<string, Lot> lots, LanduseAllocations n)
         {
             var h = HeuristicCost(loti, laui, lots);
-            var g = n.Cost(lots);
+            var g = n.CurrentCost(lots);
             return h + g;
         }
 

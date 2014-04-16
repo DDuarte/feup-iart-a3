@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace IART_A3
+namespace IART_A3.StateRepresentation
 {
     /// <summary>
     /// "Something" on the map that isn't a lot or landuse

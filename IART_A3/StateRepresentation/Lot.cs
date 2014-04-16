@@ -1,4 +1,4 @@
-﻿namespace IART_A3
+﻿namespace IART_A3.StateRepresentation
 {
     /// <summary>
     /// Slope classification

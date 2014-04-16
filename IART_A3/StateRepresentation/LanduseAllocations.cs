@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
-namespace IART_A3
+namespace IART_A3.StateRepresentation
 {
-    public class LanduseAllocations
+    public class LanduseAllocations : IEquatable<LanduseAllocations>
     {
         private readonly HashSet<Tuple<string, string>> _allocations; // [landuse, lot]
         private readonly HashSet<string> _unattributedLanduses;
@@ -19,6 +20,13 @@ namespace IART_A3
             _allocations = new HashSet<Tuple<string, string>>();
             _unattributedLanduses = new HashSet<string>();
             _unattributedLots = new HashSet<string>();
+        }
+
+        public LanduseAllocations(HashSet<string> unattributedLanduses, HashSet<string> unattributedLots)
+        {
+            _allocations = new HashSet<Tuple<string, string>>();
+            _unattributedLanduses = unattributedLanduses;
+            _unattributedLots = unattributedLots;
         }
 
         public LanduseAllocations(HashSet<Tuple<string, string>> allocations, HashSet<string> unattributedLanduses, HashSet<string> unattributedLots)
@@ -36,37 +44,16 @@ namespace IART_A3
 
             al.Add(Tuple.Create(landuse, lot));
             lu.Remove(landuse);
-            lu.Remove(lot);
+            lo.Remove(lot);
 
             return new LanduseAllocations(al, lu, lo);
         }
 
-        public override bool Equals(object obj)
+        public bool Equals(LanduseAllocations la)
         {
-            // If parameter is null return false.
-            if (obj == null)
-                return false;
-
-            // If parameter cannot be cast to LanduseAllocations return false.
-            var la = obj as LanduseAllocations;
-            if (la == null)
-            {
-                return false;
-            }
-
-            
             return _allocations.SetEquals(la._allocations) &&
                 _unattributedLanduses.SetEquals(la._unattributedLanduses) &&
                 _unattributedLots.SetEquals(la._unattributedLots);
-        }
-
-        public override int GetHashCode()
-        {
-            var hash = _allocations.Aggregate(0, (current, alloc) => current*31 + (alloc == null ? 0 : alloc.GetHashCode()));
-            
-            hash = _unattributedLanduses.Aggregate(hash, (current, la) => current*31 + (la == null ? 0 : la.GetHashCode()));
-
-            return _unattributedLots.Aggregate(hash, (current, lot) => current*31 + (lot == null ? 0 : lot.GetHashCode()));
         }
 
         public override string ToString()
@@ -82,9 +69,18 @@ namespace IART_A3
             return b.Append('}').ToString();
         }
 
-        public double Cost(IReadOnlyDictionary<string, Lot> lots) // "the g(n) function is the cost of the partial solution"
+        public double CurrentCost(IReadOnlyDictionary<string, Lot> lots) // "the g(n) function is the cost of the partial solution"
         {
             return _allocations.Sum(allocation => lots[allocation.Item2].Cost); //TODO elaborate this further with weak constraints raising cost
+        }
+
+        public double HeuristicCost(IReadOnlyDictionary<string, Lot> lots) //TODO Improve/Optimize heuristic
+        {
+            // let p be the number of land uses yet to be assigned
+            var p = _unattributedLanduses.Count;
+
+            // h(n) is the sum of the costs of the first p elements in the list of free lots
+            return lots.Values.OrderBy(s => s.Cost).Take(p).Select(s => s.Cost).Sum();
         }
 
         public int Count
@@ -97,11 +93,24 @@ namespace IART_A3
         {
             var successors = new List<LanduseAllocations>();
 
+            if (!_unattributedLanduses.Any() || !_unattributedLots.Any())
+                return successors;
+
             foreach (var landuse in _unattributedLanduses)
                 successors.AddRange(from lot in _unattributedLots where ConstraintsTable[landuse][lot] select Allocate(landuse, lot));
-            
+
             return successors;
-        }  
+        }
+
+        public bool IsFinalState()
+        {
+            return !_unattributedLanduses.Any(); //_unattributedLanduses.Count() == 0;
+        }
+
+        public int LandUsesLeft()
+        {
+            return _unattributedLanduses.Count();
+        }
 
     }
 }
