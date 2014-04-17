@@ -14,7 +14,7 @@ namespace IART_A3.StateRepresentation
 
     /// <summary>
     /// Criteria for land allocations
-    /// TODO: Hard and soft contraints
+    /// TODO: Soft contraints
     /// </summary>
     public abstract class Constraint
     {

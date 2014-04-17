@@ -64,7 +64,7 @@ namespace IART_A3.StateRepresentation
             lu.Remove(landuse);
             lo.Remove(lot);
 
-            return new LanduseAllocations(CurrentCost()+_lots[lot].Cost,al, lu, lo, _lots, constraintsTable);
+            return new LanduseAllocations(CurrentCost()+_lots[lot].Price,al, lu, lo, _lots, constraintsTable);
         }
 
         public IReadOnlyList<Tuple<string, string>> GetAllocations()
@@ -101,7 +101,7 @@ namespace IART_A3.StateRepresentation
             var costs = new SortedSet<double>();
             foreach (var lot in _unattributedLots)
             {
-                costs.Add(constraintsTable.Any(s => s.Value[lot]) ? lots[lot].Cost : 9999999);
+                costs.Add(constraintsTable.Any(s => s.Value[lot]) ? lots[lot].Price : 9999999);
             }
 
             return costs.Take(p).Sum();
@@ -109,7 +109,7 @@ namespace IART_A3.StateRepresentation
 
         public double CurrentCost() // "the g(n) function is the cost of the partial solution"
         {
-            return _currentCost; //TODO elaborate this further with weak constraints raising cost
+            return _currentCost; // TODO elaborate this further with weak constraints raising cost
         }
 
         public double HeuristicCost()

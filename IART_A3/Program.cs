@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using IART_A3.Search;
 using IART_A3.StateRepresentation;
@@ -12,14 +13,14 @@ namespace IART_A3
         {
             var lots = new Dictionary<string, Lot>
             {
-                { "lot3",  new Lot {Cost = 1.2, DistanceLake = 10,  DistanceHighway = 0.1, PoorSoil = false, Steep = SteepType.Flat}},
-                { "lot5",  new Lot {Cost = 1.3, DistanceLake = 10,  DistanceHighway = 10,  PoorSoil = false, Steep = SteepType.Flat}},
-                { "lot7",  new Lot {Cost = 0.9, DistanceLake = 0.1, DistanceHighway = 0.1, PoorSoil = false, Steep = SteepType.Flat}},
-                { "lot9",  new Lot {Cost = 1.6, DistanceLake = 10,  DistanceHighway = 10,  PoorSoil = false, Steep = SteepType.Flat}},
-                { "lot10", new Lot {Cost = 1.7, DistanceLake = 0.1, DistanceHighway = 10,  PoorSoil = true,  Steep = SteepType.ModeratelySteep}},
-                { "lot11", new Lot {Cost = 1.0, DistanceLake = 10,  DistanceHighway = 10,  PoorSoil = false, Steep = SteepType.Steep}},
-                { "lot12", new Lot {Cost = 1.4, DistanceLake = 0.1, DistanceHighway = 10,  PoorSoil = true,  Steep = SteepType.ModeratelySteep}},
-                { "lot17", new Lot {Cost = 0.8, DistanceLake = 10,  DistanceHighway = 10,  PoorSoil = false, Steep = SteepType.VerySteep}}
+                { "lot3",  new Lot {Price = 1.2, DistanceLake = 10,  DistanceHighway = 0.1, PoorSoil = false, Steep = SteepType.Flat}},
+                { "lot5",  new Lot {Price = 1.3, DistanceLake = 10,  DistanceHighway = 10,  PoorSoil = false, Steep = SteepType.Flat}},
+                { "lot7",  new Lot {Price = 0.9, DistanceLake = 0.1, DistanceHighway = 0.1, PoorSoil = false, Steep = SteepType.Flat}},
+                { "lot9",  new Lot {Price = 1.6, DistanceLake = 10,  DistanceHighway = 10,  PoorSoil = false, Steep = SteepType.Flat}},
+                { "lot10", new Lot {Price = 1.7, DistanceLake = 0.1, DistanceHighway = 10,  PoorSoil = true,  Steep = SteepType.ModeratelySteep}},
+                { "lot11", new Lot {Price = 1.0, DistanceLake = 10,  DistanceHighway = 10,  PoorSoil = false, Steep = SteepType.Steep}},
+                { "lot12", new Lot {Price = 1.4, DistanceLake = 0.1, DistanceHighway = 10,  PoorSoil = true,  Steep = SteepType.ModeratelySteep}},
+                { "lot17", new Lot {Price = 0.8, DistanceLake = 10,  DistanceHighway = 10,  PoorSoil = false, Steep = SteepType.VerySteep}}
             };
 
             var landuses = new Dictionary<string, Landuse>
@@ -46,11 +47,11 @@ namespace IART_A3
             var laui = new List<string>(landuses.Keys.OrderBy(s => constraintsTable[s].Count(r => !r.Value))); // "place the most constrained landuses first"
 
             // set of unassigned lots
-            var loti = new List<string>(lots.Keys.OrderBy(s => lots[s].Cost)); // "set of lots yet to be assigned ordered according to lowest cost first"
+            var loti = new List<string>(lots.Keys.OrderBy(s => lots[s].Price)); // "set of lots yet to be assigned ordered according to lowest cost first"
             
             
             var root = new TreeNode<LanduseAllocations>(new LanduseAllocations(lots, constraintsTable));
-            var bruteWatch = System.Diagnostics.Stopwatch.StartNew();
+            var bruteWatch = Stopwatch.StartNew();
             RecursiveAllocate(laui, loti, constraintsTable, root);
             
             //RecursivePrintTree(root, 0);
@@ -66,7 +67,7 @@ namespace IART_A3
             bruteWatch.Stop();
             Console.WriteLine("Bruteforce obtained all solutions in {0} miliseconds:\n{2}\nCost: {1}", bruteWatch.ElapsedMilliseconds,leavesComplete.ElementAt(0).CurrentCost(), leavesComplete.ElementAt(0));
 
-            var aStarWatch = System.Diagnostics.Stopwatch.StartNew();
+            var aStarWatch = Stopwatch.StartNew();
             var astarResult = AStarSearch.Search(landuses, lots, constraints);
             aStarWatch.Stop();
             Console.WriteLine("A* solution:\nTook {0} miliseconds\n{2}\nCost: {1}", aStarWatch.ElapsedMilliseconds, astarResult.CurrentCost(), astarResult);
@@ -79,7 +80,7 @@ namespace IART_A3
             Console.WriteLine(currentNode.Data.ToString().Insert(0, new string(' ', i)));
             foreach (var treeNode in currentNode.Children)
             {
-                Program.RecursivePrintTree(treeNode, i + 1);
+                RecursivePrintTree(treeNode, i + 1);
             }
         }
 
@@ -89,7 +90,7 @@ namespace IART_A3
             {
                 foreach (var c in constraintsTable[l].Where(c => c.Value && loti.Contains(c.Key)))
                 {
-                    Program.RecursiveAllocate(laui.FindAll(s => s != l), loti.FindAll(s => s != c.Key), constraintsTable, currentNode.AddChild(currentNode.Data.Allocate(l, c.Key, constraintsTable)));
+                    RecursiveAllocate(laui.FindAll(s => s != l), loti.FindAll(s => s != c.Key), constraintsTable, currentNode.AddChild(currentNode.Data.Allocate(l, c.Key, constraintsTable)));
                 }
             }
         }
@@ -102,7 +103,7 @@ namespace IART_A3
             {
                 foreach (var treeNode in currentNode.Children)
                 {
-                    Program.RecursiveGetLeaves(treeNode, leaves);
+                    RecursiveGetLeaves(treeNode, leaves);
                 }
             }
         }
@@ -120,7 +121,7 @@ namespace IART_A3
             var p = laui.Count;
 
             // h(n) is the sum of the costs of the first p elements in loti
-            return loti.Take(p).Select(s => lots[s].Cost).Sum();
+            return loti.Take(p).Select(s => lots[s].Price).Sum();
         }
     }
 }

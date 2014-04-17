@@ -36,7 +36,7 @@
         /// <summary>
         /// Price of lot in millions of Euro
         /// </summary>
-        public double Cost { get; set; }
+        public double Price { get; set; }
 
         /// <summary>
         /// Soil not suitable for construction
