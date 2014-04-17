@@ -39,16 +39,32 @@ namespace IART_A3
                 {"C4", new DistanceConstraint(new[] {LanduseType.Apartments, LanduseType.HousingComplex, LanduseType.Recreational}, Place.Highway, DistanceConstraint.FartherThan)}
             };
 
-            var constraintsTable = SearchUtilities.CreateConstraintsTable(landuses, lots, constraints);
 
-            Console.WriteLine("Constraints table:");
-            foreach (var c in constraintsTable)
-            {
-                foreach (var v in c.Value)
-                {
-                    Console.WriteLine("\t{0} - {1} = {2}", c.Key, v.Key, v.Value ? "OK" : "NOTOK");
-                }
-            }
+//             ////// Random test data
+//             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+//             var landuseValues = Enum.GetValues(typeof(LanduseType));
+//             var steepTypeValues = Enum.GetValues(typeof(SteepType));
+// 
+//             for (var i = 0; i < 10000; i++)
+//             {
+//                 var random = new Random();
+//                 var lotName = new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray());
+//                 if (lots.ContainsKey(lotName)) continue;
+//                 lots.Add(lotName, new Lot { Cost = (random.Next(15) + 5) / 10.0, DistanceLake = random.Next(100) / 10.0, DistanceHighway = random.Next(100) / 10.0, PoorSoil = random.Next(2) != 0, Steep = (SteepType)steepTypeValues.GetValue(random.Next(steepTypeValues.Length)) });
+//                 //landuses.Add(lotName, new Landuse { Type = (LanduseType)landuseValues.GetValue(random.Next(landuseValues.Length)) });
+//             }
+//             for (var i = 0; i < 100; i++)
+//             {
+//                 var random = new Random();
+//                 var lotName = new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray());
+//                 if (landuses.ContainsKey(lotName)) continue;
+//                 //lots.Add(lotName, new Lot { Cost = (random.Next(15) + 5) / 10.0, DistanceLake = random.Next(100) / 10.0, DistanceHighway = random.Next(100) / 10.0, PoorSoil = random.Next(2) != 0, Steep = (SteepType)steepTypeValues.GetValue(random.Next(steepTypeValues.Length)) });
+//                 landuses.Add(lotName, new Landuse { Type = (LanduseType)landuseValues.GetValue(random.Next(landuseValues.Length)) });
+//             }
+//             /////////////
+
+            var constraintsTable = SearchUtilities.CreateConstraintsTable(landuses, lots, constraints);
+            
 
             // set of unassigned landuses
             var laui = new List<string>(landuses.Keys.OrderBy(s => constraintsTable[s].Count(r => !r.Value))); // "place the most constrained landuses first"
@@ -57,24 +73,27 @@ namespace IART_A3
             var loti = new List<string>(lots.Keys.OrderBy(s => lots[s].Cost)); // "set of lots yet to be assigned ordered according to lowest cost first"
             
             
-            var root = new TreeNode<LanduseAllocations>(new LanduseAllocations());
+            var root = new TreeNode<LanduseAllocations>(new LanduseAllocations(lots));
+            var bruteWatch = System.Diagnostics.Stopwatch.StartNew();
             RecursiveAllocate(laui, loti, constraintsTable, root);
-
+            
             //RecursivePrintTree(root, 0);
 
             var leaves = new List<LanduseAllocations>();
             RecursiveGetLeaves(root, leaves);
+   
+            var leavesComplete = leaves.Where(allocations => allocations.Count == landuses.Count).OrderBy(allocations => allocations.CurrentCost());
+            //foreach (var l in leavesComplete)
+            //{
+            //    Console.WriteLine("{0} - €{1}", l, l.CurrentCost());
+            //}
+            bruteWatch.Stop();
+            Console.WriteLine("Bruteforce obtained all solutions in {0} miliseconds:\n", bruteWatch.ElapsedMilliseconds);
 
-            var leavesComplete = leaves.Where(allocations => allocations.Count == landuses.Count).OrderBy(allocations => allocations.CurrentCost(lots));
-            foreach (var l in leavesComplete)
-            {
-                Console.WriteLine("{0} - €{1}", l, l.CurrentCost(lots));
-            }
-
-            var watch = System.Diagnostics.Stopwatch.StartNew();
+            var aStarWatch = System.Diagnostics.Stopwatch.StartNew();
             var astarResult = AStarSearch.Search(landuses, lots, constraints);
-            watch.Stop();
-            Console.WriteLine("A* solution: {0}\nCosts: {1}\nTook {2} miliseconds", astarResult ,astarResult.CurrentCost(lots), watch.ElapsedMilliseconds);
+            aStarWatch.Stop();
+            Console.WriteLine("A* solution:\nTook {0} miliseconds", aStarWatch.ElapsedMilliseconds);
 
             Console.ReadKey();
         }
@@ -115,7 +134,7 @@ namespace IART_A3
         private static double Cost(IEnumerable<string> loti, List<string> laui, IReadOnlyDictionary<string, Lot> lots, LanduseAllocations n)
         {
             var h = HeuristicCost(loti, laui, lots);
-            var g = n.CurrentCost(lots);
+            var g = n.CurrentCost();
             return h + g;
         }
 
@@ -124,7 +143,7 @@ namespace IART_A3
             // let p be the number of landuses yet to be assigned
             var p = laui.Count;
 
-            // h(n) is the sum of the costs of the first p elements in Loti'
+            // h(n) is the sum of the costs of the first p elements in loti
             return loti.Take(p).Select(s => lots[s].Cost).Sum();
         }
     }

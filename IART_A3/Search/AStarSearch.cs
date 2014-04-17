@@ -9,12 +9,11 @@ namespace IART_A3.Search
         public static LanduseAllocations Search(IReadOnlyDictionary<string, Landuse> landuses, IReadOnlyDictionary<string, Lot> lots, IReadOnlyDictionary<string, Constraint> constraints)
         {
             var constraintsTable = SearchUtilities.CreateConstraintsTable(landuses, lots, constraints);
-            var lotNames = new HashSet<string>(lots.Keys);
             var landuseNames = new HashSet<string>(landuses.Keys);
 
-            var stateComparer = new AllocationsComparer(lots);
+            var stateComparer = new AllocationsComparer();
             var visitedStates = new List<LanduseAllocations>();
-            var stateQueue = new SortedSet<LanduseAllocations> (stateComparer) { new LanduseAllocations(landuseNames, lotNames) };
+            var stateQueue = new SortedSet<LanduseAllocations> (stateComparer) { new LanduseAllocations(landuseNames, lots) };
 
 
             while (stateQueue.Any()) //while not empty
@@ -25,14 +24,13 @@ namespace IART_A3.Search
                 if (currentState.IsFinalState())
                     return currentState;
 
-                var newSuccessors = new SortedSet<LanduseAllocations>(stateComparer);
+                
                 foreach (var state in currentState.GetSuccessors(constraintsTable).Where(state => !visitedStates.Contains(state)))
                 {
                     visitedStates.Add(state);
-                    newSuccessors.Add(state);
+                    stateQueue.Add(state);
                 }
-
-                stateQueue.UnionWith(newSuccessors);
+                
             }
 
             return null;
@@ -40,17 +38,10 @@ namespace IART_A3.Search
 
         private class AllocationsComparer : IComparer<LanduseAllocations>
         {
-            private readonly IReadOnlyDictionary<string, Lot> _lots;
-
-            public AllocationsComparer(IReadOnlyDictionary<string, Lot> lots)
-            {
-                _lots = lots;
-            }
-
             public int Compare(LanduseAllocations x, LanduseAllocations y)
             {
-                var costX = x.CurrentCost(_lots) + x.HeuristicCost(_lots);
-                var costY = y.CurrentCost(_lots) + y.HeuristicCost(_lots);
+                var costX = x.CurrentCost() + x.HeuristicCost();
+                var costY = y.CurrentCost() + y.HeuristicCost();
                 var comparison = costX.CompareTo(costY);
                 if (comparison != 0)
                     return comparison;

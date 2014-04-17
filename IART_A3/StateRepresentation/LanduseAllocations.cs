@@ -10,33 +10,48 @@ namespace IART_A3.StateRepresentation
         private static int _curId;
 
         private readonly int _id;
-        public int Id { get { return _id; } } //TODO think of a better way to implement CompareTo so that 0 is never returned if Equal is false
+        public int Id { get { return _id; } }
         private readonly HashSet<Tuple<string, string>> _allocations; // [landuse, lot]
         private readonly HashSet<string> _unattributedLanduses;
         private readonly HashSet<string> _unattributedLots;
+        private readonly double _currentCost;
+        private readonly double _heuristicCost;
+        private readonly IReadOnlyDictionary<string, Lot> _lots; 
 
-        public LanduseAllocations()
+        public LanduseAllocations(IReadOnlyDictionary<string, Lot> lots)
         {
+            
             _id = _curId++;
             _allocations = new HashSet<Tuple<string, string>>();
             _unattributedLanduses = new HashSet<string>();
             _unattributedLots = new HashSet<string>();
+            _lots = lots;
+            _currentCost = 0;
+            _heuristicCost = CalculateHeuristicCost(lots);
         }
 
-        public LanduseAllocations(HashSet<string> unattributedLanduses, HashSet<string> unattributedLots)
+        public LanduseAllocations(HashSet<string> landuses, IReadOnlyDictionary<string, Lot> lots)
         {
+            
             _id = _curId++;
             _allocations = new HashSet<Tuple<string, string>>();
-            _unattributedLanduses = unattributedLanduses;
-            _unattributedLots = unattributedLots;
+            _unattributedLanduses = landuses;
+            _unattributedLots = new HashSet<string>(lots.Keys);
+            _lots = lots;
+            _currentCost = 0;
+            _heuristicCost = CalculateHeuristicCost(lots);
         }
 
-        public LanduseAllocations(HashSet<Tuple<string, string>> allocations, HashSet<string> unattributedLanduses, HashSet<string> unattributedLots)
+        public LanduseAllocations(double newCost, HashSet<Tuple<string, string>> allocations, HashSet<string> unattributedLanduses, HashSet<string> freeLots,IReadOnlyDictionary<string, Lot> lots)
         {
+            
             _id = _curId++;
             _allocations = allocations;
             _unattributedLanduses = unattributedLanduses;
-            _unattributedLots = unattributedLots;
+            _unattributedLots = freeLots;
+            _lots = lots;
+            _currentCost = newCost;
+            _heuristicCost = CalculateHeuristicCost(lots);
         }
 
         public LanduseAllocations Allocate(string landuse, string lot)
@@ -49,7 +64,7 @@ namespace IART_A3.StateRepresentation
             lu.Remove(landuse);
             lo.Remove(lot);
 
-            return new LanduseAllocations(al, lu, lo);
+            return new LanduseAllocations(CurrentCost()+_lots[lot].Cost,al, lu, lo, _lots);
         }
 
         public IReadOnlyList<Tuple<string, string>> GetAllocations()
@@ -77,18 +92,29 @@ namespace IART_A3.StateRepresentation
             return b.Append('}').ToString();
         }
 
-        public double CurrentCost(IReadOnlyDictionary<string, Lot> lots) // "the g(n) function is the cost of the partial solution"
-        {
-            return _allocations.Sum(allocation => lots[allocation.Item2].Cost); //TODO elaborate this further with weak constraints raising cost
-        }
-
-        public double HeuristicCost(IReadOnlyDictionary<string, Lot> lots) //TODO Improve/Optimize heuristic
+        private double CalculateHeuristicCost(IReadOnlyDictionary<string, Lot> lots) //TODO Improve/Optimize heuristic
         {
             // let p be the number of land uses yet to be assigned
             var p = _unattributedLanduses.Count;
 
             // h(n) is the sum of the costs of the first p elements in the list of free lots
-            return lots.Values.OrderBy(s => s.Cost).Take(p).Select(s => s.Cost).Sum();
+            var costs = new SortedSet<double>();
+            foreach (var lot in _unattributedLots)
+            {
+                costs.Add(lots[lot].Cost);
+            }
+
+            return costs.Take(p).Sum();
+        }
+
+        public double CurrentCost() // "the g(n) function is the cost of the partial solution"
+        {
+            return _currentCost; //TODO elaborate this further with weak constraints raising cost
+        }
+
+        public double HeuristicCost()
+        {
+            return _heuristicCost;
         }
 
         public int Count
