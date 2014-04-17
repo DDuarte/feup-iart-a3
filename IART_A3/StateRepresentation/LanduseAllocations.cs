@@ -16,9 +16,9 @@ namespace IART_A3.StateRepresentation
         private readonly HashSet<string> _unattributedLots;
         private readonly double _currentCost;
         private readonly double _heuristicCost;
-        private readonly IReadOnlyDictionary<string, Lot> _lots; 
+        private readonly IReadOnlyDictionary<string, Lot> _lots;
 
-        public LanduseAllocations(IReadOnlyDictionary<string, Lot> lots)
+        public LanduseAllocations(IReadOnlyDictionary<string, Lot> lots, Dictionary<string, Dictionary<string, bool>> constraintsTable)
         {
             
             _id = _curId++;
@@ -27,10 +27,10 @@ namespace IART_A3.StateRepresentation
             _unattributedLots = new HashSet<string>();
             _lots = lots;
             _currentCost = 0;
-            _heuristicCost = CalculateHeuristicCost(lots);
+            _heuristicCost = CalculateHeuristicCost(lots, constraintsTable);
         }
 
-        public LanduseAllocations(HashSet<string> landuses, IReadOnlyDictionary<string, Lot> lots)
+        public LanduseAllocations(HashSet<string> landuses, IReadOnlyDictionary<string, Lot> lots, Dictionary<string, Dictionary<string, bool>> constraintsTable)
         {
             
             _id = _curId++;
@@ -39,10 +39,10 @@ namespace IART_A3.StateRepresentation
             _unattributedLots = new HashSet<string>(lots.Keys);
             _lots = lots;
             _currentCost = 0;
-            _heuristicCost = CalculateHeuristicCost(lots);
+            _heuristicCost = CalculateHeuristicCost(lots, constraintsTable);
         }
 
-        public LanduseAllocations(double newCost, HashSet<Tuple<string, string>> allocations, HashSet<string> unattributedLanduses, HashSet<string> freeLots,IReadOnlyDictionary<string, Lot> lots)
+        public LanduseAllocations(double newCost, HashSet<Tuple<string, string>> allocations, HashSet<string> unattributedLanduses, HashSet<string> freeLots, IReadOnlyDictionary<string, Lot> lots, Dictionary<string, Dictionary<string, bool>> constraintsTable)
         {
             
             _id = _curId++;
@@ -51,10 +51,10 @@ namespace IART_A3.StateRepresentation
             _unattributedLots = freeLots;
             _lots = lots;
             _currentCost = newCost;
-            _heuristicCost = CalculateHeuristicCost(lots);
+            _heuristicCost = CalculateHeuristicCost(lots, constraintsTable);
         }
 
-        public LanduseAllocations Allocate(string landuse, string lot)
+        public LanduseAllocations Allocate(string landuse, string lot, Dictionary<string, Dictionary<string, bool>> constraintsTable)
         {
             var al = new HashSet<Tuple<string, string>>(_allocations);
             var lu = new HashSet<string>(_unattributedLanduses);
@@ -64,7 +64,7 @@ namespace IART_A3.StateRepresentation
             lu.Remove(landuse);
             lo.Remove(lot);
 
-            return new LanduseAllocations(CurrentCost()+_lots[lot].Cost,al, lu, lo, _lots);
+            return new LanduseAllocations(CurrentCost()+_lots[lot].Cost,al, lu, lo, _lots, constraintsTable);
         }
 
         public IReadOnlyList<Tuple<string, string>> GetAllocations()
@@ -92,7 +92,7 @@ namespace IART_A3.StateRepresentation
             return b.Append('}').ToString();
         }
 
-        private double CalculateHeuristicCost(IReadOnlyDictionary<string, Lot> lots) //TODO Improve/Optimize heuristic
+        private double CalculateHeuristicCost(IReadOnlyDictionary<string, Lot> lots, Dictionary<string, Dictionary<string, bool>> constraintsTable) //TODO Improve/Optimize heuristic
         {
             // let p be the number of land uses yet to be assigned
             var p = _unattributedLanduses.Count;
@@ -101,7 +101,7 @@ namespace IART_A3.StateRepresentation
             var costs = new SortedSet<double>();
             foreach (var lot in _unattributedLots)
             {
-                costs.Add(lots[lot].Cost);
+                costs.Add(constraintsTable.Any(s => s.Value[lot]) ? lots[lot].Cost : 9999999);
             }
 
             return costs.Take(p).Sum();
@@ -131,7 +131,7 @@ namespace IART_A3.StateRepresentation
                 return successors;
 
             foreach (var landuse in _unattributedLanduses)
-                successors.AddRange(from lot in _unattributedLots where constraintsTable[landuse][lot] select Allocate(landuse, lot));
+                successors.AddRange(from lot in _unattributedLots where constraintsTable[landuse][lot] select Allocate(landuse, lot, constraintsTable));
 
             return successors;
         }

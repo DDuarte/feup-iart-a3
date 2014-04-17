@@ -13,7 +13,7 @@ namespace IART_A3.Search
 
             var stateComparer = new AllocationsComparer();
             var visitedStates = new List<LanduseAllocations>();
-            var stateQueue = new SortedSet<LanduseAllocations> (stateComparer) { new LanduseAllocations(landuseNames, lots) };
+            var stateQueue = new SortedSet<LanduseAllocations> (stateComparer) { new LanduseAllocations(landuseNames, lots, constraintsTable) };
 
 
             while (stateQueue.Any()) //while not empty

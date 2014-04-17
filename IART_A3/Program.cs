@@ -62,6 +62,7 @@ namespace IART_A3
 //                 landuses.Add(lotName, new Landuse { Type = (LanduseType)landuseValues.GetValue(random.Next(landuseValues.Length)) });
 //             }
 //             /////////////
+            
 
             var constraintsTable = SearchUtilities.CreateConstraintsTable(landuses, lots, constraints);
             
@@ -73,7 +74,7 @@ namespace IART_A3
             var loti = new List<string>(lots.Keys.OrderBy(s => lots[s].Cost)); // "set of lots yet to be assigned ordered according to lowest cost first"
             
             
-            var root = new TreeNode<LanduseAllocations>(new LanduseAllocations(lots));
+            var root = new TreeNode<LanduseAllocations>(new LanduseAllocations(lots, constraintsTable));
             var bruteWatch = System.Diagnostics.Stopwatch.StartNew();
             RecursiveAllocate(laui, loti, constraintsTable, root);
             
@@ -93,7 +94,7 @@ namespace IART_A3
             var aStarWatch = System.Diagnostics.Stopwatch.StartNew();
             var astarResult = AStarSearch.Search(landuses, lots, constraints);
             aStarWatch.Stop();
-            Console.WriteLine("A* solution:\nTook {0} miliseconds", aStarWatch.ElapsedMilliseconds);
+            Console.WriteLine("A* solution:\nTook {0} miliseconds\nCost: {1}", aStarWatch.ElapsedMilliseconds, astarResult.CurrentCost());
 
             Console.ReadKey();
         }
@@ -113,7 +114,7 @@ namespace IART_A3
             {
                 foreach (var c in constraintsTable[l].Where(c => c.Value && loti.Contains(c.Key)))
                 {
-                    Program.RecursiveAllocate(laui.FindAll(s => s != l), loti.FindAll(s => s != c.Key), constraintsTable, currentNode.AddChild(currentNode.Data.Allocate(l, c.Key)));
+                    Program.RecursiveAllocate(laui.FindAll(s => s != l), loti.FindAll(s => s != c.Key), constraintsTable, currentNode.AddChild(currentNode.Data.Allocate(l, c.Key, constraintsTable)));
                 }
             }
         }
