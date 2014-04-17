@@ -39,31 +39,6 @@ namespace IART_A3
                 {"C4", new DistanceConstraint(new[] {LanduseType.Apartments, LanduseType.HousingComplex, LanduseType.Recreational}, Place.Highway, DistanceConstraint.FartherThan)}
             };
 
-
-//             ////// Random test data
-//             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-//             var landuseValues = Enum.GetValues(typeof(LanduseType));
-//             var steepTypeValues = Enum.GetValues(typeof(SteepType));
-// 
-//             for (var i = 0; i < 10000; i++)
-//             {
-//                 var random = new Random();
-//                 var lotName = new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray());
-//                 if (lots.ContainsKey(lotName)) continue;
-//                 lots.Add(lotName, new Lot { Cost = (random.Next(15) + 5) / 10.0, DistanceLake = random.Next(100) / 10.0, DistanceHighway = random.Next(100) / 10.0, PoorSoil = random.Next(2) != 0, Steep = (SteepType)steepTypeValues.GetValue(random.Next(steepTypeValues.Length)) });
-//                 //landuses.Add(lotName, new Landuse { Type = (LanduseType)landuseValues.GetValue(random.Next(landuseValues.Length)) });
-//             }
-//             for (var i = 0; i < 100; i++)
-//             {
-//                 var random = new Random();
-//                 var lotName = new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray());
-//                 if (landuses.ContainsKey(lotName)) continue;
-//                 //lots.Add(lotName, new Lot { Cost = (random.Next(15) + 5) / 10.0, DistanceLake = random.Next(100) / 10.0, DistanceHighway = random.Next(100) / 10.0, PoorSoil = random.Next(2) != 0, Steep = (SteepType)steepTypeValues.GetValue(random.Next(steepTypeValues.Length)) });
-//                 landuses.Add(lotName, new Landuse { Type = (LanduseType)landuseValues.GetValue(random.Next(landuseValues.Length)) });
-//             }
-//             /////////////
-            
-
             var constraintsTable = SearchUtilities.CreateConstraintsTable(landuses, lots, constraints);
             
 
@@ -89,12 +64,12 @@ namespace IART_A3
             //    Console.WriteLine("{0} - €{1}", l, l.CurrentCost());
             //}
             bruteWatch.Stop();
-            Console.WriteLine("Bruteforce obtained all solutions in {0} miliseconds:\n", bruteWatch.ElapsedMilliseconds);
+            Console.WriteLine("Bruteforce obtained all solutions in {0} miliseconds:\n{2}\nCost: {1}", bruteWatch.ElapsedMilliseconds,leavesComplete.ElementAt(0).CurrentCost(), leavesComplete.ElementAt(0));
 
             var aStarWatch = System.Diagnostics.Stopwatch.StartNew();
             var astarResult = AStarSearch.Search(landuses, lots, constraints);
             aStarWatch.Stop();
-            Console.WriteLine("A* solution:\nTook {0} miliseconds\nCost: {1}", aStarWatch.ElapsedMilliseconds, astarResult.CurrentCost());
+            Console.WriteLine("A* solution:\nTook {0} miliseconds\n{2}\nCost: {1}", aStarWatch.ElapsedMilliseconds, astarResult.CurrentCost(), astarResult);
 
             Console.ReadKey();
         }
@@ -121,7 +96,7 @@ namespace IART_A3
 
         private static void RecursiveGetLeaves(TreeNode<LanduseAllocations> currentNode, List<LanduseAllocations> leaves)
         {
-            if (currentNode.Children.Count == 0)
+            if (currentNode.Children.Count == 0 && currentNode.Data.IsFinalState())
                 leaves.Add(currentNode.Data);
             else
             {
