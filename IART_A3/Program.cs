@@ -48,8 +48,7 @@ namespace IART_A3
 
             // set of unassigned lots
             var loti = new List<string>(lots.Keys.OrderBy(s => lots[s].Price)); // "set of lots yet to be assigned ordered according to lowest cost first"
-            
-            
+
             var root = new TreeNode<LanduseAllocations>(new LanduseAllocations(lots, constraintsTable));
             var bruteWatch = Stopwatch.StartNew();
             RecursiveAllocate(laui, loti, constraintsTable, root);
@@ -108,7 +107,7 @@ namespace IART_A3
             }
         }
 
-        private static double Cost(IEnumerable<string> loti, List<string> laui, IReadOnlyDictionary<string, Lot> lots, LanduseAllocations n)
+        private static double Cost(IEnumerable<string> loti, IReadOnlyCollection<string> laui, IReadOnlyDictionary<string, Lot> lots, LanduseAllocations n)
         {
             var h = HeuristicCost(loti, laui, lots);
             var g = n.CurrentCost();

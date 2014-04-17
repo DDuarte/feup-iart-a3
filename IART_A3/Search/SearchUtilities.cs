@@ -6,7 +6,7 @@ namespace IART_A3.Search
 {
     public static class SearchUtilities
     {
-        public static Dictionary<string, Dictionary<string, bool>> CreateConstraintsTable(IReadOnlyDictionary<string, Landuse> landuses, IReadOnlyDictionary<string, Lot> lots, IReadOnlyDictionary<string, Constraint> constraints)
+        public static Dictionary<string, Dictionary<string, bool>> CreateConstraintsTable(IEnumerable<KeyValuePair<string, Landuse>> landuses, IReadOnlyDictionary<string, Lot> lots, IReadOnlyDictionary<string, Constraint> constraints)
         {
             var constraintsTable = new Dictionary<string, Dictionary<string, bool>>(); // landuse, -> lot -> yes/no
 

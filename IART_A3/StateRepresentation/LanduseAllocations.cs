@@ -92,7 +92,7 @@ namespace IART_A3.StateRepresentation
             return b.Append('}').ToString();
         }
 
-        private double CalculateHeuristicCost(IReadOnlyDictionary<string, Lot> lots, Dictionary<string, Dictionary<string, bool>> constraintsTable) //TODO Improve/Optimize heuristic
+        private double CalculateHeuristicCost(IReadOnlyDictionary<string, Lot> lots, Dictionary<string, Dictionary<string, bool>> constraintsTable) // TODO Improve/Optimize heuristic
         {
             // let p be the number of land uses yet to be assigned
             var p = _unattributedLanduses.Count;
@@ -122,12 +122,11 @@ namespace IART_A3.StateRepresentation
             get { return _allocations.Count; }
         }
 
-
-        public List<LanduseAllocations> GetSuccessors(Dictionary<string, Dictionary<string, bool>> constraintsTable)
+        public IEnumerable<LanduseAllocations> GetSuccessors(Dictionary<string, Dictionary<string, bool>> constraintsTable)
         {
             var successors = new List<LanduseAllocations>();
 
-            if (!_unattributedLanduses.Any() || !_unattributedLots.Any())
+            if (_unattributedLanduses.Count == 0 || _unattributedLots.Count == 0)
                 return successors;
 
             foreach (var landuse in _unattributedLanduses)
@@ -138,12 +137,12 @@ namespace IART_A3.StateRepresentation
 
         public bool IsFinalState()
         {
-            return !_unattributedLanduses.Any(); //_unattributedLanduses.Count() == 0;
+            return _unattributedLanduses.Count == 0;
         }
 
         public int LandUsesLeft()
         {
-            return _unattributedLanduses.Count();
+            return _unattributedLanduses.Count;
         }
 
     }

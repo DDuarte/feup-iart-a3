@@ -4,7 +4,7 @@ using IART_A3.StateRepresentation;
 
 namespace IART_A3.Search
 {
-    class AStarSearch
+    public class AStarSearch
     {
         public static LanduseAllocations Search(IReadOnlyDictionary<string, Landuse> landuses, IReadOnlyDictionary<string, Lot> lots, IReadOnlyDictionary<string, Constraint> constraints)
         {
@@ -16,7 +16,7 @@ namespace IART_A3.Search
             var stateQueue = new SortedSet<LanduseAllocations> (stateComparer) { new LanduseAllocations(landuseNames, lots, constraintsTable) };
 
 
-            while (stateQueue.Any()) //while not empty
+            while (stateQueue.Count > 0) // while not empty
             {
                 var currentState = stateQueue.First();
                 stateQueue.Remove(currentState);
