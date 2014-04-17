@@ -98,13 +98,9 @@ namespace IART_A3.StateRepresentation
             var p = _unattributedLanduses.Count;
 
             // h(n) is the sum of the costs of the first p elements in the list of free lots
-            var costs = new SortedSet<double>();
-            foreach (var lot in _unattributedLots)
-            {
-                costs.Add(constraintsTable.Any(s => s.Value[lot]) ? lots[lot].Price : 9999999);
-            }
+            var costs = _unattributedLots.Where(lot => constraintsTable.Any(s => s.Value[lot])).Select(lot => lots[lot].Price).ToList();
 
-            return costs.Take(p).Sum();
+            return costs.Count >= p ? costs.OrderBy(s => s).Take(p).Sum() : Double.MaxValue;
         }
 
         public double CurrentCost() // "the g(n) function is the cost of the partial solution"
