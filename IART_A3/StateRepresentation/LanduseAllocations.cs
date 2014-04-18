@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
@@ -18,7 +19,7 @@ namespace IART_A3.StateRepresentation
         private readonly double _heuristicCost;
         private readonly IReadOnlyDictionary<string, Lot> _lots;
 
-        public LanduseAllocations(IReadOnlyDictionary<string, Lot> lots, Dictionary<string, Dictionary<string, bool>> constraintsTable)
+        public LanduseAllocations(IReadOnlyDictionary<string, Lot> lots, ReadOnlyDictionary<string, Dictionary<string, bool>> constraintsTable)
         {
             _id = _curId++;
             _allocations = new HashSet<Tuple<string, string>>();
@@ -29,7 +30,7 @@ namespace IART_A3.StateRepresentation
             _heuristicCost = CalculateHeuristicCost(lots, constraintsTable);
         }
 
-        public LanduseAllocations(HashSet<string> landuses, IReadOnlyDictionary<string, Lot> lots, Dictionary<string, Dictionary<string, bool>> constraintsTable)
+        public LanduseAllocations(HashSet<string> landuses, IReadOnlyDictionary<string, Lot> lots, ReadOnlyDictionary<string, Dictionary<string, bool>> constraintsTable)
         {
             _id = _curId++;
             _allocations = new HashSet<Tuple<string, string>>();
@@ -40,7 +41,7 @@ namespace IART_A3.StateRepresentation
             _heuristicCost = CalculateHeuristicCost(lots, constraintsTable);
         }
 
-        public LanduseAllocations(double newCost, HashSet<Tuple<string, string>> allocations, HashSet<string> unattributedLanduses, HashSet<string> freeLots, IReadOnlyDictionary<string, Lot> lots, Dictionary<string, Dictionary<string, bool>> constraintsTable)
+        public LanduseAllocations(double newCost, HashSet<Tuple<string, string>> allocations, HashSet<string> unattributedLanduses, HashSet<string> freeLots, IReadOnlyDictionary<string, Lot> lots, ReadOnlyDictionary<string, Dictionary<string, bool>> constraintsTable)
         {
             _id = _curId++;
             _allocations = allocations;
@@ -51,7 +52,7 @@ namespace IART_A3.StateRepresentation
             _heuristicCost = CalculateHeuristicCost(lots, constraintsTable);
         }
 
-        public LanduseAllocations Allocate(string landuse, string lot, Dictionary<string, Dictionary<string, bool>> constraintsTable)
+        public LanduseAllocations Allocate(string landuse, string lot, ReadOnlyDictionary<string, Dictionary<string, bool>> constraintsTable)
         {
             var al = new HashSet<Tuple<string, string>>(_allocations);
             var lu = new HashSet<string>(_unattributedLanduses);
@@ -96,7 +97,7 @@ namespace IART_A3.StateRepresentation
             return b.Append('}').ToString();
         }
 
-        private double CalculateHeuristicCost(IReadOnlyDictionary<string, Lot> lots, Dictionary<string, Dictionary<string, bool>> constraintsTable) // TODO Improve/Optimize heuristic
+        private double CalculateHeuristicCost(IReadOnlyDictionary<string, Lot> lots, ReadOnlyDictionary<string, Dictionary<string, bool>> constraintsTable) // TODO Improve/Optimize heuristic
         {
             // let p be the number of land uses yet to be assigned
             var p = _unattributedLanduses.Count;
@@ -123,7 +124,7 @@ namespace IART_A3.StateRepresentation
             get { return _allocations.Count; }
         }
 
-        public IEnumerable<LanduseAllocations> GetSuccessors(Dictionary<string, Dictionary<string, bool>> constraintsTable)
+        public IEnumerable<LanduseAllocations> GetSuccessors(ReadOnlyDictionary<string, Dictionary<string, bool>> constraintsTable)
         {
             var successors = new List<LanduseAllocations>();
 

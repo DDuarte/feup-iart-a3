@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using IART_A3.StateRepresentation;
 
@@ -31,7 +32,7 @@ namespace IART_A3.SearchAlgorithms
                 .First();
         }
 
-        private static void RecursiveAllocate(List<string> laui, List<string> loti, Dictionary<string, Dictionary<string, bool>> constraintsTable, TreeNode<LanduseAllocations> currentNode)
+        private static void RecursiveAllocate(List<string> laui, List<string> loti, ReadOnlyDictionary<string, Dictionary<string, bool>> constraintsTable, TreeNode<LanduseAllocations> currentNode)
         {
             foreach (var l in laui)
             {
