@@ -5,7 +5,7 @@ using System.Text;
 
 namespace IART_A3.StateRepresentation
 {
-    public class LanduseAllocations : IEquatable<LanduseAllocations>
+    public class LanduseAllocations : IEquatable<LanduseAllocations>, IComparable<LanduseAllocations>
     {
         private static int _curId;
 
@@ -20,7 +20,6 @@ namespace IART_A3.StateRepresentation
 
         public LanduseAllocations(IReadOnlyDictionary<string, Lot> lots, Dictionary<string, Dictionary<string, bool>> constraintsTable)
         {
-            
             _id = _curId++;
             _allocations = new HashSet<Tuple<string, string>>();
             _unattributedLanduses = new HashSet<string>();
@@ -32,7 +31,6 @@ namespace IART_A3.StateRepresentation
 
         public LanduseAllocations(HashSet<string> landuses, IReadOnlyDictionary<string, Lot> lots, Dictionary<string, Dictionary<string, bool>> constraintsTable)
         {
-            
             _id = _curId++;
             _allocations = new HashSet<Tuple<string, string>>();
             _unattributedLanduses = landuses;
@@ -44,7 +42,6 @@ namespace IART_A3.StateRepresentation
 
         public LanduseAllocations(double newCost, HashSet<Tuple<string, string>> allocations, HashSet<string> unattributedLanduses, HashSet<string> freeLots, IReadOnlyDictionary<string, Lot> lots, Dictionary<string, Dictionary<string, bool>> constraintsTable)
         {
-            
             _id = _curId++;
             _allocations = allocations;
             _unattributedLanduses = unattributedLanduses;
@@ -67,16 +64,23 @@ namespace IART_A3.StateRepresentation
             return new LanduseAllocations(CurrentCost()+_lots[lot].Price,al, lu, lo, _lots, constraintsTable);
         }
 
-        public IReadOnlyList<Tuple<string, string>> GetAllocations()
-        {
-            return _allocations.ToList();
-        }
-
         public bool Equals(LanduseAllocations la)
         {
             return _allocations.SetEquals(la._allocations) &&
                 _unattributedLanduses.SetEquals(la._unattributedLanduses) &&
                 _unattributedLots.SetEquals(la._unattributedLots);
+        }
+
+        public int CompareTo(LanduseAllocations other)
+        {
+            var costX = CurrentCost() + HeuristicCost();
+            var costY = other.CurrentCost() + other.HeuristicCost();
+            var comparison = costX.CompareTo(costY);
+            if (comparison != 0)
+                return comparison;
+
+            comparison = LandUsesLeft().CompareTo(other.LandUsesLeft()); // for same estimated cost, choose deepest node
+            return comparison != 0 ? comparison : Id.CompareTo(other.Id); // uses uniqueID for disambiguation
         }
 
         public override string ToString()
@@ -98,9 +102,10 @@ namespace IART_A3.StateRepresentation
             var p = _unattributedLanduses.Count;
 
             // h(n) is the sum of the costs of the first p elements in the list of free lots
-            var costs = _unattributedLots.Where(lot => constraintsTable.Any(s => s.Value[lot])).Select(lot => lots[lot].Price).ToList();
+            var costs = _unattributedLots.Where(lot => constraintsTable.Any(s => s.Value[lot]))
+                .Select(lot => lots[lot].Price).ToList();
 
-            return costs.Count >= p ? costs.OrderBy(s => s).Take(p).Sum() : Double.MaxValue;
+            return costs.Count >= p ? costs.OrderBy(s => s).Take(p).Sum() : double.MaxValue;
         }
 
         public double CurrentCost() // "the g(n) function is the cost of the partial solution"
@@ -140,6 +145,5 @@ namespace IART_A3.StateRepresentation
         {
             return _unattributedLanduses.Count;
         }
-
     }
 }

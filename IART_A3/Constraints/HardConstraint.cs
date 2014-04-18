@@ -1,27 +1,18 @@
 ﻿using System;
 using System.Linq;
+using IART_A3.StateRepresentation;
 
-namespace IART_A3.StateRepresentation
+namespace IART_A3.Constraints
 {
     /// <summary>
-    /// "Something" on the map that isn't a lot or landuse
+    /// Criteria for land allocations (yes/no)
     /// </summary>
-    public enum Place
+    public interface IHardConstraint
     {
-        Lake,
-        Highway
+        bool Feasible(Landuse landuse, Lot lot);
     }
 
-    /// <summary>
-    /// Criteria for land allocations
-    /// TODO: Soft contraints
-    /// </summary>
-    public abstract class Constraint
-    {
-        public abstract bool Feasible(Landuse landuse, Lot lot);
-    }
-
-    public class DistanceConstraint : Constraint
+    public class DistanceHardConstraint : IHardConstraint
     {
         private readonly Place _place;
         private readonly LanduseType[] _landusesTypes;
@@ -29,9 +20,9 @@ namespace IART_A3.StateRepresentation
         private readonly Func<double, double, bool> _distCheck;
 
         public static readonly Func<double, double, bool> CloserThan = (d, d1) => d <= d1;
-        public static readonly Func<double, double, bool> FartherThan = (d, d1) => d > d1; 
+        public static readonly Func<double, double, bool> FartherThan = (d, d1) => d > d1;
 
-        public DistanceConstraint(LanduseType[] landusesTypes, Place place, Func<double, double, bool> distCheck, double threshold = Lot.NearKilometers)
+        public DistanceHardConstraint(LanduseType[] landusesTypes, Place place, Func<double, double, bool> distCheck, double threshold = Lot.NearKilometers)
         {
             _landusesTypes = landusesTypes;
             _place = place;
@@ -39,7 +30,7 @@ namespace IART_A3.StateRepresentation
             _distCheck = distCheck;
         }
 
-        public override bool Feasible(Landuse landuse, Lot lot)
+        public bool Feasible(Landuse landuse, Lot lot)
         {
             if (_landusesTypes.Any(landuseType => landuseType == landuse.Type))
             {
@@ -56,18 +47,18 @@ namespace IART_A3.StateRepresentation
         }
     }
 
-    public class SteepConstraint : Constraint
+    public class SteepHardConstraint : IHardConstraint
     {
         private readonly LanduseType[] _landusesTypes;
         private readonly SteepType[] _steepTypes;
 
-        public SteepConstraint(LanduseType[] landusesTypes, SteepType[] steepTypes)
+        public SteepHardConstraint(LanduseType[] landusesTypes, SteepType[] steepTypes)
         {
             _landusesTypes = landusesTypes;
             _steepTypes = steepTypes;
         }
 
-        public override bool Feasible(Landuse landuse, Lot lot)
+        public bool Feasible(Landuse landuse, Lot lot)
         {
             if (_landusesTypes.Any(landuseType => landuseType == landuse.Type))
                 return _steepTypes.Any(steepType => steepType == lot.Steep);
@@ -76,18 +67,18 @@ namespace IART_A3.StateRepresentation
         }
     }
 
-    public class SoilConstraint : Constraint
+    public class SoilHardConstraint : IHardConstraint
     {
         private readonly LanduseType[] _landusesTypes;
         private readonly bool _poorSoil;
 
-        public SoilConstraint(LanduseType[] landuseTypes, bool poorSoil)
+        public SoilHardConstraint(LanduseType[] landuseTypes, bool poorSoil)
         {
             _landusesTypes = landuseTypes;
             _poorSoil = poorSoil;
         }
 
-        public override bool Feasible(Landuse landuse, Lot lot)
+        public bool Feasible(Landuse landuse, Lot lot)
         {
             if (_landusesTypes.Any(landuseType => landuseType == landuse.Type))
                 return lot.PoorSoil == _poorSoil;
