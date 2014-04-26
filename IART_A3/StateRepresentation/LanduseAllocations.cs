@@ -1,68 +1,68 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
 namespace IART_A3.StateRepresentation
 {
-    public class LanduseAllocations : IEquatable<LanduseAllocations>, IComparable<LanduseAllocations>
+    public class LanduseAllocations : IEquatable<LanduseAllocations>
     {
         private static int _curId;
 
         private readonly int _id;
-        public int Id { get { return _id; } }
         private readonly HashSet<Tuple<string, string>> _allocations; // [landuse, lot]
         private readonly HashSet<string> _unattributedLanduses;
         private readonly HashSet<string> _unattributedLots;
         private readonly double _currentCost;
         private readonly double _heuristicCost;
-        private readonly IReadOnlyDictionary<string, Lot> _lots;
+        private readonly Problem _problem;
 
-        public LanduseAllocations(IReadOnlyDictionary<string, Lot> lots, ReadOnlyDictionary<string, Dictionary<string, bool>> constraintsTable)
+        public int Id { get { return _id; } }
+
+        // "the g(n) function is the cost of the partial solution"
+        public double CurrentCost { get { return _currentCost; } }
+
+        public double HeuristicCost { get { return _heuristicCost; } }
+
+        public int Count { get { return _allocations.Count; } }
+
+        public bool IsFinalState { get { return LandUsesLeft == 0; } }
+
+        public int LandUsesLeft { get { return _unattributedLanduses.Count; } }
+
+        public LanduseAllocations(Problem problem)
         {
             _id = _curId++;
+            _problem = problem;
             _allocations = new HashSet<Tuple<string, string>>();
-            _unattributedLanduses = new HashSet<string>();
-            _unattributedLots = new HashSet<string>();
-            _lots = lots;
+            _unattributedLanduses = new HashSet<string>(problem.Landuses.Keys);
+            _unattributedLots = new HashSet<string>(problem.Lots.Keys);
+
             _currentCost = 0;
-            _heuristicCost = CalculateHeuristicCost(lots, constraintsTable);
+            _heuristicCost = CalculateHeuristicCost();
         }
 
-        public LanduseAllocations(HashSet<string> landuses, IReadOnlyDictionary<string, Lot> lots, ReadOnlyDictionary<string, Dictionary<string, bool>> constraintsTable)
+        private LanduseAllocations(LanduseAllocations landuseAllocations, string landuse, string lot)
         {
             _id = _curId++;
-            _allocations = new HashSet<Tuple<string, string>>();
-            _unattributedLanduses = landuses;
-            _unattributedLots = new HashSet<string>(lots.Keys);
-            _lots = lots;
-            _currentCost = 0;
-            _heuristicCost = CalculateHeuristicCost(lots, constraintsTable);
-        }
+            _problem = landuseAllocations._problem;
 
-        public LanduseAllocations(double newCost, HashSet<Tuple<string, string>> allocations, HashSet<string> unattributedLanduses, HashSet<string> freeLots, IReadOnlyDictionary<string, Lot> lots, ReadOnlyDictionary<string, Dictionary<string, bool>> constraintsTable)
-        {
-            _id = _curId++;
-            _allocations = allocations;
-            _unattributedLanduses = unattributedLanduses;
-            _unattributedLots = freeLots;
-            _lots = lots;
-            _currentCost = newCost;
-            _heuristicCost = CalculateHeuristicCost(lots, constraintsTable);
-        }
-
-        public LanduseAllocations Allocate(string landuse, string lot, ReadOnlyDictionary<string, Dictionary<string, bool>> constraintsTable)
-        {
-            var al = new HashSet<Tuple<string, string>>(_allocations);
-            var lu = new HashSet<string>(_unattributedLanduses);
-            var lo = new HashSet<string>(_unattributedLots);
+            var al = new HashSet<Tuple<string, string>>(landuseAllocations._allocations);
+            var lu = new HashSet<string>(landuseAllocations._unattributedLanduses);
+            var lo = new HashSet<string>(landuseAllocations._unattributedLots);
 
             al.Add(Tuple.Create(landuse, lot));
             lu.Remove(landuse);
             lo.Remove(lot);
 
-            return new LanduseAllocations(CurrentCost()+_lots[lot].Price,al, lu, lo, _lots, constraintsTable);
+            _allocations = al;
+            _unattributedLanduses = lu;
+            _unattributedLots = lo;
+
+            _currentCost = landuseAllocations.CurrentCost +
+                _problem.Lots[lot].Price +
+                _problem.SoftConstraintsTable[landuse][lot];
+            _heuristicCost = CalculateHeuristicCost();
         }
 
         public bool Equals(LanduseAllocations la)
@@ -70,18 +70,6 @@ namespace IART_A3.StateRepresentation
             return _allocations.SetEquals(la._allocations) &&
                 _unattributedLanduses.SetEquals(la._unattributedLanduses) &&
                 _unattributedLots.SetEquals(la._unattributedLots);
-        }
-
-        public int CompareTo(LanduseAllocations other)
-        {
-            var costX = CurrentCost() + HeuristicCost();
-            var costY = other.CurrentCost() + other.HeuristicCost();
-            var comparison = costX.CompareTo(costY);
-            if (comparison != 0)
-                return comparison;
-
-            comparison = LandUsesLeft().CompareTo(other.LandUsesLeft()); // for same estimated cost, choose deepest node
-            return comparison != 0 ? comparison : Id.CompareTo(other.Id); // uses uniqueID for disambiguation
         }
 
         public override string ToString()
@@ -97,34 +85,19 @@ namespace IART_A3.StateRepresentation
             return b.Append('}').ToString();
         }
 
-        private double CalculateHeuristicCost(IReadOnlyDictionary<string, Lot> lots, ReadOnlyDictionary<string, Dictionary<string, bool>> constraintsTable) // TODO Improve/Optimize heuristic
+        private double CalculateHeuristicCost() // TODO Improve/Optimize heuristic and add softconstraints costs
         {
             // let p be the number of land uses yet to be assigned
             var p = _unattributedLanduses.Count;
 
             // h(n) is the sum of the costs of the first p elements in the list of free lots
-            var costs = _unattributedLots.Where(lot => constraintsTable.Any(s => s.Value[lot]))
-                .Select(lot => lots[lot].Price).ToList();
+            var costs = _unattributedLots.Where(lot => _problem.HardConstraintsTable.Any(s => s.Value[lot]))
+                .Select(lot => _problem.Lots[lot].Price).ToList();
 
             return costs.Count >= p ? costs.OrderBy(s => s).Take(p).Sum() : double.MaxValue;
         }
 
-        public double CurrentCost() // "the g(n) function is the cost of the partial solution"
-        {
-            return _currentCost; // TODO elaborate this further with weak constraints raising cost
-        }
-
-        public double HeuristicCost()
-        {
-            return _heuristicCost;
-        }
-
-        public int Count
-        {
-            get { return _allocations.Count; }
-        }
-
-        public IEnumerable<LanduseAllocations> GetSuccessors(ReadOnlyDictionary<string, Dictionary<string, bool>> constraintsTable)
+        public IEnumerable<LanduseAllocations> GetSuccessors()
         {
             var successors = new List<LanduseAllocations>();
 
@@ -132,19 +105,11 @@ namespace IART_A3.StateRepresentation
                 return successors;
 
             foreach (var landuse in _unattributedLanduses)
-                successors.AddRange(from lot in _unattributedLots where constraintsTable[landuse][lot] select Allocate(landuse, lot, constraintsTable));
+                successors.AddRange(
+                    _unattributedLots.Where(lot => _problem.HardConstraintsTable[landuse][lot])
+                        .Select(lot => new LanduseAllocations(this, landuse, lot)));
 
             return successors;
-        }
-
-        public bool IsFinalState()
-        {
-            return _unattributedLanduses.Count == 0;
-        }
-
-        public int LandUsesLeft()
-        {
-            return _unattributedLanduses.Count;
         }
     }
 }

@@ -12,12 +12,10 @@ namespace IART_A3.SearchAlgorithms
 
         protected override LanduseAllocations SearchImpl()
         {
-            var landuseNames = new HashSet<string>(Problem.Landuses.Keys);
-
             var visitedStates = new List<LanduseAllocations>();
-            var stateQueue = new SortedSet<LanduseAllocations>
+            var stateQueue = new SortedSet<LanduseAllocations>(new AllocationsComparer())
             {
-                new LanduseAllocations(landuseNames, Problem.Lots, Problem.HardConstraintsTable)
+                new LanduseAllocations(Problem)
             };
 
             while (stateQueue.Count > 0) // while not empty
@@ -25,10 +23,10 @@ namespace IART_A3.SearchAlgorithms
                 var currentState = stateQueue.Min;
                 stateQueue.Remove(currentState);
 
-                if (currentState.IsFinalState())
+                if (currentState.IsFinalState)
                     return currentState;
 
-                foreach (var state in currentState.GetSuccessors(Problem.HardConstraintsTable).Where(state => !visitedStates.Contains(state)))
+                foreach (var state in currentState.GetSuccessors().Where(state => !visitedStates.Contains(state)))
                 {
                     visitedStates.Add(state);
                     stateQueue.Add(state);
@@ -36,6 +34,21 @@ namespace IART_A3.SearchAlgorithms
             }
 
             return null;
+        }
+
+        private class AllocationsComparer : IComparer<LanduseAllocations>
+        {
+            public int Compare(LanduseAllocations x, LanduseAllocations y)
+            {
+                var costX = x.CurrentCost + x.HeuristicCost;
+                var costY = y.CurrentCost + y.HeuristicCost;
+                var comparison = costX.CompareTo(costY);
+                if (comparison != 0)
+                    return comparison;
+
+                comparison = x.LandUsesLeft.CompareTo(y.LandUsesLeft); //for same estimated cost, choose deepest node
+                return comparison != 0 ? comparison : x.Id.CompareTo(y.Id); //uses uniqueID for disambiguation
+            }
         }
     }
 }

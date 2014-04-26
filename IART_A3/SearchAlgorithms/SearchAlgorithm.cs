@@ -26,7 +26,7 @@ namespace IART_A3.SearchAlgorithms
             if (output != null)
             {
                 output.WriteLine("{0} solution:\n\t\t{1}\n\tCost: {2}\n",
-                    Name,  res, res.CurrentCost());
+                    Name,  res, res.CurrentCost);
             }
 
             return SearchImpl();
@@ -42,7 +42,7 @@ namespace IART_A3.SearchAlgorithms
             if (output != null)
             {
                 output.WriteLine("{0} solution:\n\tTook {1} milliseconds\n\t{2}\n\tCost: {3}\n",
-                    Name, time, res, res.CurrentCost());
+                    Name, time, res, res.CurrentCost);
             }
 
             return Tuple.Create(res, time);
