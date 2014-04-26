@@ -43,11 +43,7 @@ namespace IART_A3.SearchAlgorithms
                 var costX = x.CurrentCost + x.HeuristicCost;
                 var costY = y.CurrentCost + y.HeuristicCost;
                 var comparison = costX.CompareTo(costY);
-                if (comparison != 0)
-                    return comparison;
-
-                comparison = x.LandUsesLeft.CompareTo(y.LandUsesLeft); //for same estimated cost, choose deepest node
-                return comparison != 0 ? comparison : x.Id.CompareTo(y.Id); //uses uniqueID for disambiguation
+                return comparison != 0 ? comparison : x.LandUsesLeft.CompareTo(y.LandUsesLeft); // for same estimated cost, choose deepest node
             }
         }
     }

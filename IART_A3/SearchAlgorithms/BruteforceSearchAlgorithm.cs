@@ -12,38 +12,23 @@ namespace IART_A3.SearchAlgorithms
 
         protected override LanduseAllocations SearchImpl()
         {
-            // TODO: perhaps get rid of the TreeNode
-            var root = new TreeNode<LanduseAllocations>(new LanduseAllocations(Problem));
-            RecursiveAllocate(root);
+            var firstState = new LanduseAllocations(Problem);
+            var states = new List<LanduseAllocations>();
+            RecursiveAllocate(firstState, states);
 
-            var leaves = new List<LanduseAllocations>();
-            RecursiveGetLeaves(root, leaves);
-
-            return leaves
-                .Where(allocations => allocations.Count == Problem.Landuses.Count)
+            return states
+                .Where(allocations => allocations.IsFinalState)
                 .OrderBy(allocations => allocations.CurrentCost)
                 .First();
         }
 
-        private static void RecursiveAllocate(TreeNode<LanduseAllocations> currentNode)
+        private static void RecursiveAllocate(LanduseAllocations state, List<LanduseAllocations> states)
         {
-            var successors = currentNode.Data.GetSuccessors();
+            var successors = state.GetSuccessors();
             foreach (var successor in successors)
             {
-                RecursiveAllocate(currentNode.AddChild(successor));
-            }
-        }
-
-        private static void RecursiveGetLeaves(TreeNode<LanduseAllocations> currentNode, ICollection<LanduseAllocations> leaves)
-        {
-            if (currentNode.Children.Count == 0 && currentNode.Data.IsFinalState)
-                leaves.Add(currentNode.Data);
-            else
-            {
-                foreach (var treeNode in currentNode.Children)
-                {
-                    RecursiveGetLeaves(treeNode, leaves);
-                }
+                states.Add(successor);
+                RecursiveAllocate(successor, states);
             }
         }
     }

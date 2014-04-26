@@ -7,22 +7,15 @@ namespace IART_A3.StateRepresentation
 {
     public class LanduseAllocations : IEquatable<LanduseAllocations>
     {
-        private static int _curId;
-
-        private readonly int _id;
         private readonly HashSet<Tuple<string, string>> _allocations; // [landuse, lot]
         private readonly HashSet<string> _unattributedLanduses;
         private readonly HashSet<string> _unattributedLots;
-        private readonly double _currentCost;
-        private readonly double _heuristicCost;
         private readonly Problem _problem;
 
-        public int Id { get { return _id; } }
-
         // "the g(n) function is the cost of the partial solution"
-        public double CurrentCost { get { return _currentCost; } }
+        public double CurrentCost { get; private set; }
 
-        public double HeuristicCost { get { return _heuristicCost; } }
+        public double HeuristicCost { get; private set; }
 
         public int Count { get { return _allocations.Count; } }
 
@@ -32,37 +25,31 @@ namespace IART_A3.StateRepresentation
 
         public LanduseAllocations(Problem problem)
         {
-            _id = _curId++;
             _problem = problem;
             _allocations = new HashSet<Tuple<string, string>>();
             _unattributedLanduses = new HashSet<string>(problem.Landuses.Keys);
             _unattributedLots = new HashSet<string>(problem.Lots.Keys);
 
-            _currentCost = 0;
-            _heuristicCost = CalculateHeuristicCost();
+            CurrentCost = 0;
+            HeuristicCost = CalculateHeuristicCost();
         }
 
         private LanduseAllocations(LanduseAllocations landuseAllocations, string landuse, string lot)
         {
-            _id = _curId++;
             _problem = landuseAllocations._problem;
 
-            var al = new HashSet<Tuple<string, string>>(landuseAllocations._allocations);
-            var lu = new HashSet<string>(landuseAllocations._unattributedLanduses);
-            var lo = new HashSet<string>(landuseAllocations._unattributedLots);
+            _allocations = new HashSet<Tuple<string, string>>(landuseAllocations._allocations);
+            _unattributedLanduses = new HashSet<string>(landuseAllocations._unattributedLanduses);
+            _unattributedLots = new HashSet<string>(landuseAllocations._unattributedLots);
 
-            al.Add(Tuple.Create(landuse, lot));
-            lu.Remove(landuse);
-            lo.Remove(lot);
+            _allocations.Add(Tuple.Create(landuse, lot));
+            _unattributedLanduses.Remove(landuse);
+            _unattributedLots.Remove(lot);
 
-            _allocations = al;
-            _unattributedLanduses = lu;
-            _unattributedLots = lo;
-
-            _currentCost = landuseAllocations.CurrentCost +
+            CurrentCost = landuseAllocations.CurrentCost +
                 _problem.Lots[lot].Price +
                 _problem.SoftConstraintsTable[landuse][lot];
-            _heuristicCost = CalculateHeuristicCost();
+            HeuristicCost = CalculateHeuristicCost();
         }
 
         public bool Equals(LanduseAllocations la)
