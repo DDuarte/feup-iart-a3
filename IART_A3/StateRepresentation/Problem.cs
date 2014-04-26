@@ -7,29 +7,28 @@ namespace IART_A3.StateRepresentation
 {
     public class Problem
     {
-        public ReadOnlyDictionary<string, Lot> Lots { get; set; }
-        public ReadOnlyDictionary<string, Landuse> Landuses { get; set; }
-        public ReadOnlyDictionary<string, IHardConstraint> HardConstraints { private get; set; }
-        public ReadOnlyDictionary<string, ISoftConstraint> SoftConstraints { private get; set; }
+        public Problem(ReadOnlyDictionary<string, Lot> lots, ReadOnlyDictionary<string, Landuse> landuses,
+            ReadOnlyDictionary<string, IHardConstraint> hardConstraints,
+            ReadOnlyDictionary<string, ISoftConstraint> softContraints)
+        {
+            Lots = lots;
+            Landuses = landuses;
+            HardConstraints = hardConstraints;
+            SoftConstraints = softContraints;
+
+            CreateConstraintsTables();
+        }
+
+        public ReadOnlyDictionary<string, Lot> Lots { get; private set; }
+        public ReadOnlyDictionary<string, Landuse> Landuses { get; private set; }
+        public ReadOnlyDictionary<string, IHardConstraint> HardConstraints { get; private set; }
+        public ReadOnlyDictionary<string, ISoftConstraint> SoftConstraints { get; private set; }
 
         public ReadOnlyDictionary<string, Dictionary<string, bool>> HardConstraintsTable { get; private set; }
         public ReadOnlyDictionary<string, Dictionary<string, double>> SoftConstraintsTable { get; private set; }
 
-        public void Init()
-        {
-            CreateConstraintsTables();
-            // Perhaps create a constructor that accepts the above properties and calls the create method?
-        }
-
         private void CreateConstraintsTables()
         {
-            /*Contract.Requires(Landuses != null);
-            Contract.Requires(Lots != null);
-            Contract.Requires(HardConstraints != null);
-            Contract.Requires(SoftConstraints != null);
-            Contract.Ensures(HardConstraintsTable != null);
-            Contract.Ensures(SoftConstraintsTable != null);*/
-
             var hardConstraintsTable = new Dictionary<string, Dictionary<string, bool>>(); // landuse -> lot -> yes/no
             var softConstraintsTable = new Dictionary<string, Dictionary<string, double>>(); // landuse -> lot -> cost
 
