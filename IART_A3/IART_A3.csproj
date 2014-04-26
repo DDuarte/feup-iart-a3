@@ -87,7 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Problem.cs" />
-    <Compile Include="SearchAlgorithms\AStarSearchAlgorithm.cs" />
+    <Compile Include="SearchAlgorithms\BestFirstSearchAlgorithm.cs" />
     <Compile Include="SearchAlgorithms\BruteforceSearchAlgorithm.cs" />
     <Compile Include="SearchAlgorithms\SearchAlgorithm.cs" />
     <Compile Include="Constraints\HardConstraint.cs" />

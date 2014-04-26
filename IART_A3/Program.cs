@@ -50,6 +50,8 @@ namespace IART_A3
             var algorithms = new List<SearchAlgorithm>
             {
                 new AStarSearchAlgorithm(problem),
+                new GreedySearchAlgorithm(problem),
+                new UniformCostAlgorithm(problem),
                 new BruteforceSearchAlgorithm(problem)
             };
 
