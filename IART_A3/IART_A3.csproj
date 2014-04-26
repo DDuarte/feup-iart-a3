@@ -86,7 +86,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Problem.cs" />
+    <Compile Include="StateRepresentation\Problem.cs" />
     <Compile Include="SearchAlgorithms\BestFirstSearchAlgorithm.cs" />
     <Compile Include="SearchAlgorithms\BruteforceSearchAlgorithm.cs" />
     <Compile Include="SearchAlgorithms\SearchAlgorithm.cs" />

@@ -2,9 +2,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using IART_A3.Constraints;
-using IART_A3.StateRepresentation;
 
-namespace IART_A3
+namespace IART_A3.StateRepresentation
 {
     public class Problem
     {
@@ -46,7 +45,6 @@ namespace IART_A3
                     hardConstraintsTable[landuse.Key][lot.Key] = valid;
 
                     // soft
-                    //var cost = SoftConstraints.Aggregate(0.0, (d, constraint) => d + constraint.Value.FeasibleCost(landuse.Value, lot.Value));
                     var cost = SoftConstraints.Sum(constraint => constraint.Value.FeasibleCost(landuse.Value, lot.Value));
                     if (!softConstraintsTable.ContainsKey(landuse.Key))
                         softConstraintsTable.Add(landuse.Key, new Dictionary<string, double>());
