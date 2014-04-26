@@ -22,7 +22,7 @@ namespace IART_A3.SearchAlgorithms
                 .First();
         }
 
-        private static void RecursiveAllocate(LanduseAllocations state, List<LanduseAllocations> states)
+        private static void RecursiveAllocate(LanduseAllocations state, ICollection<LanduseAllocations> states)
         {
             var successors = state.GetSuccessors();
             foreach (var successor in successors)

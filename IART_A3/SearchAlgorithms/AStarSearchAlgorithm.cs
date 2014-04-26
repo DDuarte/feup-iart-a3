@@ -13,7 +13,12 @@ namespace IART_A3.SearchAlgorithms
         protected override LanduseAllocations SearchImpl()
         {
             var visitedStates = new List<LanduseAllocations>();
-            var stateQueue = new SortedSet<LanduseAllocations>(new AllocationsComparer())
+            var stateQueue =
+                new SortedSet<LanduseAllocations>(new LanduseAllocations.Comparer
+                {
+                    UseCurrentCost = true,
+                    UseHeuristicCost = true
+                })
             {
                 new LanduseAllocations(Problem)
             };
@@ -34,17 +39,6 @@ namespace IART_A3.SearchAlgorithms
             }
 
             return null;
-        }
-
-        private class AllocationsComparer : IComparer<LanduseAllocations>
-        {
-            public int Compare(LanduseAllocations x, LanduseAllocations y)
-            {
-                var costX = x.CurrentCost + x.HeuristicCost;
-                var costY = y.CurrentCost + y.HeuristicCost;
-                var comparison = costX.CompareTo(costY);
-                return comparison != 0 ? comparison : x.LandUsesLeft.CompareTo(y.LandUsesLeft); // for same estimated cost, choose deepest node
-            }
         }
     }
 }

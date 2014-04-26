@@ -17,8 +17,6 @@ namespace IART_A3.StateRepresentation
 
         public double HeuristicCost { get; private set; }
 
-        public int Count { get { return _allocations.Count; } }
-
         public bool IsFinalState { get { return LandUsesLeft == 0; } }
 
         public int LandUsesLeft { get { return _unattributedLanduses.Count; } }
@@ -97,6 +95,20 @@ namespace IART_A3.StateRepresentation
                         .Select(lot => new LanduseAllocations(this, landuse, lot)));
 
             return successors;
+        }
+
+        public class Comparer : IComparer<LanduseAllocations>
+        {
+            public bool UseCurrentCost { get; set; }
+            public bool UseHeuristicCost { get; set; }
+
+            public int Compare(LanduseAllocations x, LanduseAllocations y)
+            {
+                var costX = (UseCurrentCost ? x.CurrentCost : 0) + (UseHeuristicCost ? x.HeuristicCost : 0);
+                var costY = (UseCurrentCost ? y.CurrentCost : 0) + (UseHeuristicCost ? y.HeuristicCost : 0);
+                var comparison = costX.CompareTo(costY);
+                return comparison != 0 ? comparison : x.LandUsesLeft.CompareTo(y.LandUsesLeft); // for same estimated cost, choose deepest node
+            }
         }
     }
 }
