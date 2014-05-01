@@ -86,6 +86,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SearchAlgorithms\BreadthFirstSearchAlgorithm.cs" />
+    <Compile Include="SearchAlgorithms\DepthFirstSearchAlgorithm.cs" />
     <Compile Include="StateRepresentation\Problem.cs" />
     <Compile Include="SearchAlgorithms\BestFirstSearchAlgorithm.cs" />
     <Compile Include="SearchAlgorithms\BruteforceSearchAlgorithm.cs" />

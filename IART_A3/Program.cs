@@ -46,10 +46,12 @@ namespace IART_A3
 
             var algorithms = new List<SearchAlgorithm>
             {
-                new AStarSearchAlgorithm(problem),
-                new GreedySearchAlgorithm(problem),
+                new BruteforceSearchAlgorithm(problem),
+                new BreadthFirstSearchAlgorithm(problem),
+                new DepthFirstSearchAlgorithm(problem),
                 new UniformCostAlgorithm(problem),
-                new BruteforceSearchAlgorithm(problem)
+                new GreedySearchAlgorithm(problem),
+                new AStarSearchAlgorithm(problem)
             };
 
             algorithms.ForEach(algorithm => algorithm.TimedSearch(Console.Out));

@@ -39,10 +39,17 @@ namespace IART_A3.SearchAlgorithms
             watch.Stop();
             var time = watch.ElapsedMilliseconds;
 
-            if (output != null)
+            if (output == null) return Tuple.Create(res, time);
+
+            if (res != null)
             {
                 output.WriteLine("{0} solution:\n\tTook {1} milliseconds\n\t{2}\n\tCost: {3}\n",
                     Name, time, res, res.CurrentCost);
+            }
+            else
+            {
+                output.WriteLine("{0} solution:\n\tTook {1} milliseconds\n\tNo solution found.\n",
+                    Name, time);
             }
 
             return Tuple.Create(res, time);
