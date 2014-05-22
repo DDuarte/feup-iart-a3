@@ -68,6 +68,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -82,6 +83,57 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IART_A3\IART_A3.csproj">
+      <Project>{2FE2746D-103D-4FC6-9BE6-9D4996A96479}</Project>
+      <Name>IART_A3</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\water_texture847.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\asphalt_texture409.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\parks-rec-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\65-512.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Accommodation-Apartment-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cemetery-512.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Recycle_bin.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\canstock5653997_0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\canstock5653997_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\canstock5653997_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\canstock5653997_3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dirt_Texture_by_b_a88_0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dirt_Texture_by_b_a88_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dirt_Texture_by_b_a88_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dirt_Texture_by_b_a88_3.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
