@@ -29,7 +29,12 @@ namespace IART_A3
                 {"A", new Landuse {Type = LanduseType.Apartments}},
                 {"H", new Landuse {Type = LanduseType.HousingComplex}},
                 {"C", new Landuse {Type = LanduseType.Cemetery}},
-                {"D", new Landuse {Type = LanduseType.Dump}}
+                {"D", new Landuse {Type = LanduseType.Dump}}/*,
+                {"R2", new Landuse {Type = LanduseType.Recreational}},
+                {"A2", new Landuse {Type = LanduseType.Apartments}},
+                {"H2", new Landuse {Type = LanduseType.HousingComplex}},
+                {"C2", new Landuse {Type = LanduseType.Cemetery}},
+                {"D2", new Landuse {Type = LanduseType.Dump}}*/
             });
 
             var hardConstraints = new ReadOnlyDictionary<string, IHardConstraint>(new Dictionary<string, IHardConstraint>

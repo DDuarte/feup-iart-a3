@@ -12,6 +12,7 @@ namespace IART_A3.SearchAlgorithms
 
         protected override LanduseAllocations SearchImpl()
         {
+            if (Problem.Landuses.Count > Problem.Lots.Count) return null;
             var firstState = new LanduseAllocations(Problem);
             var stateQueue = new List<LanduseAllocations> { firstState };
             var visitedStates = new List<LanduseAllocations>();

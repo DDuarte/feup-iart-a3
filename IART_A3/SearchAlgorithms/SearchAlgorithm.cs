@@ -21,7 +21,7 @@ namespace IART_A3.SearchAlgorithms
 
         public LanduseAllocations Search(TextWriter output = null)
         {
-            var res = SearchImpl();
+            var res = Problem.Landuses.Count > Problem.Lots.Count ? SearchImpl() : null;
 
             if (output != null)
             {
