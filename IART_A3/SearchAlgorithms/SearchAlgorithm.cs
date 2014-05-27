@@ -46,7 +46,7 @@ namespace IART_A3.SearchAlgorithms
         /// In addition to finding a solution, also measures the time taken to complete the search and the number of iterations necessary.
         /// </summary>
         /// <param name="output">TextWriter where to print the result. If null, no result will be printed</param>
-        /// <returns>Returns a tuple with the solution found, the time taken to find it (miliseconds) and the number of iterations needed</returns>
+        /// <returns>Returns a tuple with the solution found, the time taken to find it (milliseconds) and the number of iterations needed</returns>
         public Tuple<LanduseAllocations, long, long> TimedSearch(TextWriter output = null)
         {
             ItCounter = 0;
