@@ -10,25 +10,30 @@ namespace IART_A3
     {
         static void Main()
         {
+            
             var lots = new Dictionary<string, Lot>
             {
-                { "lot3",  new Lot {Price = 1.2, DistanceLake = 10,  DistanceHighway = 0.1, PoorSoil = false, Steep = SteepType.Flat}},
-                { "lot5",  new Lot {Price = 1.3, DistanceLake = 10,  DistanceHighway = 10,  PoorSoil = false, Steep = SteepType.Flat}},
-                { "lot7",  new Lot {Price = 0.9, DistanceLake = 0.1, DistanceHighway = 0.1, PoorSoil = false, Steep = SteepType.Flat}},
-                { "lot9",  new Lot {Price = 1.6, DistanceLake = 10,  DistanceHighway = 10,  PoorSoil = false, Steep = SteepType.Flat}},
-                { "lot10", new Lot {Price = 1.7, DistanceLake = 0.1, DistanceHighway = 10,  PoorSoil = true,  Steep = SteepType.ModeratelySteep}},
-                { "lot11", new Lot {Price = 1.0, DistanceLake = 10,  DistanceHighway = 10,  PoorSoil = false, Steep = SteepType.Steep}},
-                { "lot12", new Lot {Price = 1.4, DistanceLake = 0.1, DistanceHighway = 10,  PoorSoil = true,  Steep = SteepType.ModeratelySteep}},
-                { "lot17", new Lot {Price = 0.8, DistanceLake = 10,  DistanceHighway = 10,  PoorSoil = false, Steep = SteepType.VerySteep}}
+                { "Porto",  new Lot {Price = 230, DistanceLake = 4,  DistanceHighway = 0.1, PoorSoil = false, Steep = SteepType.Steep}},
+                { "Lisboa",  new Lot {Price = 250, DistanceLake = 10,  DistanceHighway = 0.1, PoorSoil = true, Steep = SteepType.Flat}},
+                { "Guimaraes",  new Lot {Price = 150, DistanceLake = 2,  DistanceHighway = 0.5, PoorSoil = false, Steep = SteepType.ModeratelySteep}},
+                { "Santarem",  new Lot {Price = 100, DistanceLake = 1,  DistanceHighway = 0.4, PoorSoil = false, Steep = SteepType.ModeratelySteep}},
+                { "Braga",  new Lot {Price = 100, DistanceLake = 3,  DistanceHighway = 0.9, PoorSoil = true, Steep = SteepType.Steep}},
+                { "Braganca",  new Lot {Price = 127, DistanceLake = 1,  DistanceHighway = 1.5, PoorSoil = false, Steep = SteepType.VerySteep}},
+                { "Setubal",  new Lot {Price = 183, DistanceLake = 5,  DistanceHighway = 2, PoorSoil = true, Steep = SteepType.Flat}},
+                { "Faro",  new Lot {Price = 82, DistanceLake = 4,  DistanceHighway = 3, PoorSoil = false, Steep = SteepType.Flat}},
+                { "Viseu",  new Lot {Price = 200, DistanceLake = 0.2,  DistanceHighway = 1.7, PoorSoil = false, Steep = SteepType.ModeratelySteep}},
+                { "Aveiro",  new Lot {Price = 140, DistanceLake = 0.1,  DistanceHighway = 2.3, PoorSoil = false, Steep = SteepType.Steep}}
             };
 
             var landuses = new Dictionary<string, Landuse>
             {
-                {"R", new Landuse {Type = LanduseType.Recreational}},
-                {"A", new Landuse {Type = LanduseType.Apartments}},
-                {"H", new Landuse {Type = LanduseType.HousingComplex}},
-                {"C", new Landuse {Type = LanduseType.Cemetery}},
-                {"D", new Landuse {Type = LanduseType.Dump}}
+                {"Parques", new Landuse {Type = LanduseType.Recreational}},
+                {"Predios", new Landuse {Type = LanduseType.Apartments}},
+                {"Casas", new Landuse {Type = LanduseType.HousingComplex}},
+                {"Cemiterio", new Landuse {Type = LanduseType.Cemetery}},
+                {"Lixeira", new Landuse {Type = LanduseType.Dump}},
+                {"Zona de guerra", new Landuse {Type = LanduseType.Cemetery}},
+                {"Favela", new Landuse {Type = LanduseType.Dump}}
             };
 
             var hardConstraints = new Dictionary<string, IHardConstraint>
@@ -43,8 +48,8 @@ namespace IART_A3
 
             var problem = new Problem(lots, landuses, hardConstraints, softConstraints);
 
-            problem.WriteJson("../../../example_problems/book_example.txt");
-            var newP = Problem.ReadJson("../../../example_problems/book_example.txt");
+            problem.WriteJson("../../../example_problems/portugal_randomized.txt");
+            var newP = Problem.ReadJson("../../../example_problems/portugal_randomized.txt");
 
             var algorithms = new List<SearchAlgorithm>
             {

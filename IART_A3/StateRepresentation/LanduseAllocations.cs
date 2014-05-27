@@ -11,6 +11,9 @@ namespace IART_A3.StateRepresentation
         private readonly HashSet<string> _unattributedLanduses;
         private readonly HashSet<string> _unattributedLots;
         private readonly Problem _problem;
+        private string _string;
+        private readonly int _id;
+        private static int _lastId = 0;
 
         // "the g(n) function is the cost of the partial solution"
         public double CurrentCost { get; private set; }
@@ -23,6 +26,8 @@ namespace IART_A3.StateRepresentation
 
         public LanduseAllocations(Problem problem)
         {
+            _id = _lastId++;
+            _string = null;
             _problem = problem;
             _allocations = new HashSet<Tuple<string, string>>();
             _unattributedLanduses = new HashSet<string>(problem.Landuses.Keys);
@@ -34,6 +39,7 @@ namespace IART_A3.StateRepresentation
 
         private LanduseAllocations(LanduseAllocations landuseAllocations, string landuse, string lot)
         {
+            _id = _lastId++;
             _problem = landuseAllocations._problem;
 
             _allocations = new HashSet<Tuple<string, string>>(landuseAllocations._allocations);
@@ -59,6 +65,7 @@ namespace IART_A3.StateRepresentation
 
         public override string ToString()
         {
+            if (_string != null) return _string;
             var alls = _allocations.ToList();
             var b = new StringBuilder("{");
             for (var i = 0; i < alls.Count; i++)
@@ -67,7 +74,8 @@ namespace IART_A3.StateRepresentation
                 if (i != _allocations.Count - 1)
                     b.Append(", ");
             }
-            return b.Append('}').ToString();
+            _string = b.Append('}').ToString();
+            return _string;
         }
 
         private double CalculateHeuristicCost() // TODO Improve/Optimize heuristic and add softconstraints costs
@@ -107,7 +115,8 @@ namespace IART_A3.StateRepresentation
                 var costX = (UseCurrentCost ? x.CurrentCost : 0) + (UseHeuristicCost ? x.HeuristicCost : 0);
                 var costY = (UseCurrentCost ? y.CurrentCost : 0) + (UseHeuristicCost ? y.HeuristicCost : 0);
                 var comparison = costX.CompareTo(costY);
-                return comparison != 0 ? comparison : x.LandUsesLeft.CompareTo(y.LandUsesLeft); // for same estimated cost, choose deepest node
+                var res = comparison != 0 ? comparison : x.LandUsesLeft.CompareTo(y.LandUsesLeft); // for same estimated cost, choose deepest node
+                return res != 0 ? res : (x.Equals(y) ? 0 : x._id.CompareTo(y._id));
             }
         }
     }
