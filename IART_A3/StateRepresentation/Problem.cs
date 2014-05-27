@@ -1,31 +1,36 @@
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+
+using System.IO;
 using System.Linq;
 using IART_A3.Constraints;
+using IART_A3.SearchAlgorithms;
+using Newtonsoft.Json;
+
 
 namespace IART_A3.StateRepresentation
 {
     public class Problem
     {
-        public Problem(ReadOnlyDictionary<string, Lot> lots, ReadOnlyDictionary<string, Landuse> landuses,
-            ReadOnlyDictionary<string, IHardConstraint> hardConstraints,
-            ReadOnlyDictionary<string, ISoftConstraint> softContraints)
+        public Problem(Dictionary<string, Lot> lots, Dictionary<string, Landuse> landuses,
+            Dictionary<string, IHardConstraint> hardConstraints,
+            Dictionary<string, ISoftConstraint> softConstraints)
         {
-            Lots = lots;
-            Landuses = landuses;
-            HardConstraints = hardConstraints;
-            SoftConstraints = softContraints;
+            Lots = lots ?? new Dictionary<string, Lot>();
+            Landuses = landuses ?? new Dictionary<string, Landuse>();
+            HardConstraints = hardConstraints ?? new Dictionary<string, IHardConstraint>();
+            SoftConstraints = softConstraints ?? new Dictionary<string, ISoftConstraint>();
 
             CreateConstraintsTables();
         }
 
-        public ReadOnlyDictionary<string, Lot> Lots { get; private set; }
-        public ReadOnlyDictionary<string, Landuse> Landuses { get; private set; }
-        public ReadOnlyDictionary<string, IHardConstraint> HardConstraints { get; private set; }
-        public ReadOnlyDictionary<string, ISoftConstraint> SoftConstraints { get; private set; }
+        public Dictionary<string, Lot> Lots;
+        public Dictionary<string, Landuse> Landuses;
+        public Dictionary<string, IHardConstraint> HardConstraints;
+        public Dictionary<string, ISoftConstraint> SoftConstraints;
 
-        public ReadOnlyDictionary<string, Dictionary<string, bool>> HardConstraintsTable { get; private set; }
-        public ReadOnlyDictionary<string, Dictionary<string, double>> SoftConstraintsTable { get; private set; }
+        public Dictionary<string, Dictionary<string, bool>> HardConstraintsTable;
+        public Dictionary<string, Dictionary<string, double>> SoftConstraintsTable;
 
         private void CreateConstraintsTables()
         {
@@ -52,8 +57,30 @@ namespace IART_A3.StateRepresentation
                 }
             }
 
-            HardConstraintsTable = new ReadOnlyDictionary<string, Dictionary<string, bool>>(hardConstraintsTable);
-            SoftConstraintsTable = new ReadOnlyDictionary<string, Dictionary<string, double>>(softConstraintsTable);
+            HardConstraintsTable = hardConstraintsTable;
+            SoftConstraintsTable = softConstraintsTable;
+        }
+
+        public void WriteJson(String filepath)
+        {
+            var js = new JsonSerializer { TypeNameHandling = TypeNameHandling.Auto };
+            
+            using (var sw = new StreamWriter(filepath))
+            using (JsonWriter writer = new JsonTextWriter(sw))
+            {
+                js.Serialize(writer, this);
+            }
+        }
+
+        public static Problem ReadJson(String filepath)
+        {
+            var js = new JsonSerializer { TypeNameHandling = TypeNameHandling.Auto };
+
+            using (var sr = new StreamReader(filepath))
+            using (JsonReader reader = new JsonTextReader(sr))
+            {
+                return js.Deserialize<Problem>(reader);  
+            }
         }
     }
 }
