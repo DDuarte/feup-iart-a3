@@ -11,8 +11,9 @@ namespace IART_A3.SearchAlgorithms
 
         public override string Name { get { return "DepthFirst"; } }
 
-        private static LanduseAllocations SearchRecursive(LanduseAllocations curState, List<LanduseAllocations> visitedStates)
+        private LanduseAllocations SearchRecursive(LanduseAllocations curState, List<LanduseAllocations> visitedStates)
         {
+            ++ItCounter;
             if (curState.IsFinalState)
                 return curState;
 

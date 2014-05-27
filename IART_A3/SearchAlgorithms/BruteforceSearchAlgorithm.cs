@@ -15,6 +15,7 @@ namespace IART_A3.SearchAlgorithms
             if (Problem.Landuses.Count > Problem.Lots.Count) return null;
             var firstState = new LanduseAllocations(Problem);
             var states = new List<LanduseAllocations>();
+
             RecursiveAllocate(firstState, states);
 
             return states
@@ -23,8 +24,9 @@ namespace IART_A3.SearchAlgorithms
                 .First();
         }
 
-        private static void RecursiveAllocate(LanduseAllocations state, ICollection<LanduseAllocations> states)
+        private void RecursiveAllocate(LanduseAllocations state, ICollection<LanduseAllocations> states)
         {
+            ++ItCounter;
             var successors = state.GetSuccessors();
             foreach (var successor in successors)
             {

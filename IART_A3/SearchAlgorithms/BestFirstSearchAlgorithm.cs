@@ -26,8 +26,10 @@ namespace IART_A3.SearchAlgorithms
                 new LanduseAllocations(Problem)
             };
 
+            
             while (stateQueue.Count > 0) // while not empty
             {
+                ++ItCounter;
                 var currentState = stateQueue.Min;
                 stateQueue.Remove(currentState);
 

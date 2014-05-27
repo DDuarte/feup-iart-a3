@@ -19,6 +19,7 @@ namespace IART_A3.SearchAlgorithms
 
             while (stateQueue.Count > 0)
             {
+                ++ItCounter;
                 var curState = stateQueue.First();
                 stateQueue.Remove(curState);
 
