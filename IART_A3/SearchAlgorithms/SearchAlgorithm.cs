@@ -23,13 +23,20 @@ namespace IART_A3.SearchAlgorithms
         {
             var res = Problem.Landuses.Count > Problem.Lots.Count ? SearchImpl() : null;
 
-            if (output != null)
+            if (output == null) return res;
+
+            if (res != null)
             {
                 output.WriteLine("{0} solution:\n\t\t{1}\n\tCost: {2}\n",
-                    Name,  res, res.CurrentCost);
+                    Name, res, res.CurrentCost);
+            }
+            else
+            {
+                output.WriteLine("{0} solution:\n\tNo solution found.\n",
+                    Name);
             }
 
-            return SearchImpl();
+            return res;
         }
 
         public Tuple<LanduseAllocations, long> TimedSearch(TextWriter output = null)
