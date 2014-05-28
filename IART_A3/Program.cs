@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using IART_A3.Constraints;
+using System.Linq;
+//using IART_A3.Constraints;
 using IART_A3.SearchAlgorithms;
 using IART_A3.StateRepresentation;
 
@@ -10,7 +11,7 @@ namespace IART_A3
     {
         static void Main()
         {
-            
+            /*
             var lots = new Dictionary<string, Lot>
             {
                 { "Porto",  new Lot {Price = 230, Size = 400, DistanceLake = 4,  DistanceHighway = 0.1, PoorSoil = false, Steep = SteepType.Steep}},
@@ -34,8 +35,7 @@ namespace IART_A3
                 {"Cemiterio", new Landuse {Type = LanduseType.Cemetery}},
                 {"Lixeira", new Landuse {Type = LanduseType.Dump}},
                 {"Zona de guerra", new Landuse {Type = LanduseType.Cemetery}},
-                {"Favela", new Landuse {Type = LanduseType.Dump}},
-                {"Bairro", new Landuse {Type = LanduseType.Apartments}}
+                {"Favela", new Landuse {Type = LanduseType.Dump}}
             };
 
             var hardConstraints = new Dictionary<string, IHardConstraint>
@@ -54,24 +54,46 @@ namespace IART_A3
 
             var problem = new Problem(lots, landuses, hardConstraints, softConstraints);
 
-            problem.WriteJson("../../../example_problems/portugal_larger.txt");
-            var newP = Problem.ReadJson("../../../example_problems/portugal_larger.txt");
+            problem.WriteJson("../../../example_problems/portugal_larger.txt");*/
 
-            var algorithms = new List<SearchAlgorithm>
+            var problemPaths = new List<String>
             {
-                new BruteforceSearchAlgorithm(newP),
-                new BreadthFirstSearchAlgorithm(newP),
-                new DepthFirstSearchAlgorithm(newP),
-                new UniformCostAlgorithm(newP),
-                new GreedySearchAlgorithm(newP),
-                new AStarSearchAlgorithm(newP)
+                "../../../example_problems/book_example.txt",
+                "../../../example_problems/portugal_small.txt",
+                "../../../example_problems/portugal_medium.txt",
+                "../../../example_problems/portugal_large.txt",
+                "../../../example_problems/portugal_larger.txt"
             };
-
-            algorithms.ForEach(algorithm => algorithm.TimedSearch(Console.Out));
-            
+            ComputeStatistics("../../../example_problems/statistics.txt", problemPaths);
 
             Console.WriteLine("Press ENTER to exit.");
             Console.ReadKey(true);
+        }
+
+        public static void ComputeStatistics(string filepath, List<String> problemPaths)
+        {
+            var problemList = problemPaths.Select(Problem.ReadJson).ToList();
+
+            var stream = new System.IO.StreamWriter(filepath, false);
+            for (var i = 0; i < problemPaths.Count; i++)
+            {
+                var probName = problemPaths[i];
+                stream.WriteLine("-----------------------" + probName + "-----------------------\n");
+                var prob = problemList[i];
+                var algorithms = new List<SearchAlgorithm>
+                {
+                    new BruteforceSearchAlgorithm(prob),
+                    new BreadthFirstSearchAlgorithm(prob),
+                    new DepthFirstSearchAlgorithm(prob),
+                    new UniformCostAlgorithm(prob),
+                    new GreedySearchAlgorithm(prob),
+                    new AStarSearchAlgorithm(prob)
+                };
+
+                algorithms.ForEach(algorithm => algorithm.TimedSearch(stream));
+                stream.Flush();
+            }
+            stream.Close();
         }
     }
 }

@@ -1,0 +1,190 @@
+-----------------------../../../example_problems/book_example.txt-----------------------
+
+Bruteforce solution:
+	Took 82 milliseconds
+	Took 491 iterations
+	{R-lot12, A-lot9, H-lot5, C-lot3, D-lot7}
+	Cost: 6,4
+
+BreadthFirst solution:
+	Took 68 milliseconds
+	Took 468 iterations
+	{R-lot10, A-lot5, H-lot9, C-lot3, D-lot7}
+	Cost: 6,7
+
+DepthFirst solution:
+	Took 1 milliseconds
+	Took 6 iterations
+	{R-lot10, A-lot5, H-lot9, C-lot3, D-lot7}
+	Cost: 6,7
+
+UniformCost solution:
+	Took 69 milliseconds
+	Took 468 iterations
+	{C-lot7, D-lot3, A-lot5, R-lot12, H-lot9}
+	Cost: 6,4
+
+Greedy solution:
+	Took 0 milliseconds
+	Took 6 iterations
+	{R-lot10, A-lot9, H-lot5, C-lot3, D-lot7}
+	Cost: 6,7
+
+A* solution:
+	Took 2 milliseconds
+	Took 14 iterations
+	{A-lot5, C-lot7, R-lot12, H-lot9, D-lot3}
+	Cost: 6,4
+
+-----------------------../../../example_problems/portugal_small.txt-----------------------
+
+Bruteforce solution:
+	Took 0 milliseconds
+	Took 17 iterations
+	{Parques-Aveiro, Predios-Faro, Casas-Viseu}
+	Cost: 422
+
+BreadthFirst solution:
+	Took 0 milliseconds
+	Took 16 iterations
+	{Parques-Aveiro, Predios-Faro, Casas-Viseu}
+	Cost: 422
+
+DepthFirst solution:
+	Took 0 milliseconds
+	Took 7 iterations
+	{Parques-Aveiro, Predios-Faro, Casas-Viseu}
+	Cost: 422
+
+UniformCost solution:
+	Took 0 milliseconds
+	Took 16 iterations
+	{Predios-Faro, Parques-Aveiro, Casas-Viseu}
+	Cost: 422
+
+Greedy solution:
+	Took 0 milliseconds
+	Took 5 iterations
+	{Predios-Viseu, Parques-Aveiro, Casas-Faro}
+	Cost: 422
+
+A* solution:
+	Took 0 milliseconds
+	Took 5 iterations
+	{Parques-Aveiro, Predios-Faro, Casas-Viseu}
+	Cost: 422
+
+-----------------------../../../example_problems/portugal_medium.txt-----------------------
+
+Bruteforce solution:
+	Took 79 milliseconds
+	Took 491 iterations
+	{Parques-Aveiro, Predios-Faro, Casas-Viseu, Cemiterio-Guimaraes, Lixeira-Santarem}
+	Cost: 672
+
+BreadthFirst solution:
+	Took 76 milliseconds
+	Took 468 iterations
+	{Parques-Aveiro, Predios-Faro, Casas-Viseu, Cemiterio-Lisboa, Lixeira-Guimaraes}
+	Cost: 822
+
+DepthFirst solution:
+	Took 4 milliseconds
+	Took 79 iterations
+	{Parques-Aveiro, Predios-Faro, Casas-Viseu, Cemiterio-Lisboa, Lixeira-Guimaraes}
+	Cost: 822
+
+UniformCost solution:
+	Took 71 milliseconds
+	Took 424 iterations
+	{Predios-Faro, Cemiterio-Santarem, Parques-Aveiro, Lixeira-Guimaraes, Casas-Viseu}
+	Cost: 672
+
+Greedy solution:
+	Took 2 milliseconds
+	Took 27 iterations
+	{Predios-Viseu, Cemiterio-Lisboa, Parques-Aveiro, Lixeira-Guimaraes, Casas-Faro}
+	Cost: 822
+
+A* solution:
+	Took 19 milliseconds
+	Took 95 iterations
+	{Parques-Aveiro, Predios-Faro, Cemiterio-Guimaraes, Lixeira-Santarem, Casas-Viseu}
+	Cost: 672
+
+-----------------------../../../example_problems/portugal_large.txt-----------------------
+
+Bruteforce solution:
+	Took 1275 milliseconds
+	Took 2120 iterations
+	{Parques-Aveiro, Predios-Faro, Casas-Viseu, Cemiterio-Guimaraes, Lixeira-Santarem, Zona de guerra-Setubal}
+	Cost: 855
+
+BreadthFirst solution:
+	Took 1253 milliseconds
+	Took 2073 iterations
+	{Parques-Aveiro, Predios-Faro, Casas-Viseu, Cemiterio-Lisboa, Lixeira-Guimaraes, Zona de guerra-Santarem}
+	Cost: 922
+
+DepthFirst solution:
+	Took 32 milliseconds
+	Took 289 iterations
+	{Parques-Aveiro, Predios-Faro, Casas-Viseu, Cemiterio-Lisboa, Lixeira-Guimaraes, Zona de guerra-Santarem}
+	Cost: 922
+
+UniformCost solution:
+	Took 1204 milliseconds
+	Took 1989 iterations
+	{Predios-Faro, Cemiterio-Santarem, Parques-Aveiro, Lixeira-Guimaraes, Zona de guerra-Setubal, Casas-Viseu}
+	Cost: 855
+
+Greedy solution:
+	Took 18 milliseconds
+	Took 80 iterations
+	{Predios-Viseu, Cemiterio-Lisboa, Lixeira-Guimaraes, Parques-Aveiro, Zona de guerra-Santarem, Casas-Faro}
+	Cost: 922
+
+A* solution:
+	Took 10 milliseconds
+	Took 41 iterations
+	{Parques-Aveiro, Predios-Faro, Casas-Viseu, Cemiterio-Guimaraes, Lixeira-Santarem, Zona de guerra-Setubal}
+	Cost: 855
+
+-----------------------../../../example_problems/portugal_larger.txt-----------------------
+
+Bruteforce solution:
+	Took 280854 milliseconds
+	Took 29408 iterations
+	{Parques-Aveiro, Predios-Faro, Casas-Viseu, Cemiterio-Guimaraes, Lixeira-Santarem, Zona de guerra-Setubal, Favela-Alentejo}
+	Cost: 975
+
+BreadthFirst solution:
+	Took 277597 milliseconds
+	Took 28593 iterations
+	{Parques-Viseu, Predios-Faro, Casas-Alentejo, Cemiterio-Lisboa, Lixeira-Guimaraes, Zona de guerra-Santarem, Favela-Setubal}
+	Cost: 1085
+
+DepthFirst solution:
+	Took 1 milliseconds
+	Took 8 iterations
+	{Parques-Viseu, Predios-Faro, Casas-Alentejo, Cemiterio-Lisboa, Lixeira-Guimaraes, Zona de guerra-Santarem, Favela-Setubal}
+	Cost: 1085
+
+UniformCost solution:
+	Took 288973 milliseconds
+	Took 27249 iterations
+	{Predios-Faro, Cemiterio-Santarem, Casas-Alentejo, Parques-Aveiro, Lixeira-Guimaraes, Zona de guerra-Setubal, Favela-Viseu}
+	Cost: 975
+
+Greedy solution:
+	Took 2 milliseconds
+	Took 8 iterations
+	{Parques-Viseu, Cemiterio-Lisboa, Lixeira-Guimaraes, Zona de guerra-Setubal, Predios-Alentejo, Favela-Santarem, Casas-Faro}
+	Cost: 1085
+
+A* solution:
+	Took 1308 milliseconds
+	Took 791 iterations
+	{Parques-Aveiro, Predios-Faro, Casas-Viseu, Cemiterio-Guimaraes, Lixeira-Santarem, Zona de guerra-Setubal, Favela-Alentejo}
+	Cost: 975
+
