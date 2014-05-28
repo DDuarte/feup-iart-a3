@@ -93,7 +93,17 @@ namespace IART_A3.StateRepresentation
             if (heurCost >= double.MaxValue)
                 return heurCost;
 
-            heurCost += _unattributedLanduses.Sum(lu => _unattributedLots.Select(lot => _problem.SoftConstraintsTable[lu][lot]).Concat(new[] {Double.MaxValue}).Min());
+            foreach (var lu in _unattributedLanduses)
+            {
+                var minCost = Double.MaxValue;
+                foreach (var lot in _unattributedLots)
+                {
+                    if (_problem.HardConstraintsTable[lu][lot] && _problem.SoftConstraintsTable[lu][lot] < minCost)
+                        minCost = _problem.SoftConstraintsTable[lu][lot];
+                }
+                heurCost += minCost;
+            }
+
 
             return heurCost;
         }

@@ -14,9 +14,27 @@ namespace IART_A3.SearchAlgorithms
         {
             if (Problem.Landuses.Count > Problem.Lots.Count) return null;
             var firstState = new LanduseAllocations(Problem);
+            var stateQueue = new List<LanduseAllocations> { firstState };
+            var visitedStates = new List<LanduseAllocations>();
+
             var states = new List<LanduseAllocations>();
 
-            RecursiveAllocate(firstState, states);
+            while (stateQueue.Count > 0)
+            {
+                ++ItCounter;
+                var curState = stateQueue.First();
+                stateQueue.Remove(curState);
+
+                if (curState.IsFinalState)
+                    states.Add(curState);
+
+                foreach (var state in curState.GetSuccessors().Where(st => !visitedStates.Contains(st)))
+                {
+                    visitedStates.Add(state);
+                    stateQueue.Add(state);
+                }
+
+            }
 
             if (!states.Any(allocations => allocations.IsFinalState))
                 return null;
@@ -25,17 +43,6 @@ namespace IART_A3.SearchAlgorithms
                 .Where(allocations => allocations.IsFinalState)
                 .OrderBy(allocations => allocations.CurrentCost)
                 .First();
-        }
-
-        private void RecursiveAllocate(LanduseAllocations state, ICollection<LanduseAllocations> states)
-        {
-            ++ItCounter;
-            var successors = state.GetSuccessors();
-            foreach (var successor in successors)
-            {
-                states.Add(successor);
-                RecursiveAllocate(successor, states);
-            }
         }
     }
 }
