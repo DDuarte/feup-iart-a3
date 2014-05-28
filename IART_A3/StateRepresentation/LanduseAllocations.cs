@@ -13,7 +13,7 @@ namespace IART_A3.StateRepresentation
         private readonly Problem _problem;
         private string _string;
         private readonly int _id;
-        private static int _lastId = 0;
+        private static int _lastId;
 
         // "the g(n) function is the cost of the partial solution"
         public double CurrentCost { get; private set; }
@@ -78,7 +78,7 @@ namespace IART_A3.StateRepresentation
             return _string;
         }
 
-        private double CalculateHeuristicCost() // TODO Improve/Optimize heuristic and add softconstraints costs
+        private double CalculateHeuristicCost()
         {
             // let p be the number of land uses yet to be assigned
             var p = _unattributedLanduses.Count;
@@ -87,7 +87,15 @@ namespace IART_A3.StateRepresentation
             var costs = _unattributedLots.Where(lot => _problem.HardConstraintsTable.Any(s => s.Value[lot]))
                 .Select(lot => _problem.Lots[lot].Price).ToList();
 
-            return costs.Count >= p ? costs.OrderBy(s => s).Take(p).Sum() : double.MaxValue;
+
+            var heurCost = costs.Count >= p ? costs.OrderBy(s => s).Take(p).Sum() : double.MaxValue;
+
+            if (heurCost >= double.MaxValue)
+                return heurCost;
+
+            heurCost += _unattributedLanduses.Sum(lu => _unattributedLots.Select(lot => _problem.SoftConstraintsTable[lu][lot]).Concat(new[] {Double.MaxValue}).Min());
+
+            return heurCost;
         }
 
         public IEnumerable<LanduseAllocations> GetSuccessors()
