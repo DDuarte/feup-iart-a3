@@ -13,16 +13,16 @@ namespace IART_A3
             
             var lots = new Dictionary<string, Lot>
             {
-                { "Porto",  new Lot {Price = 230, DistanceLake = 4,  DistanceHighway = 0.1, PoorSoil = false, Steep = SteepType.Steep}},
-                { "Lisboa",  new Lot {Price = 250, DistanceLake = 10,  DistanceHighway = 0.1, PoorSoil = true, Steep = SteepType.Flat}},
-                { "Guimaraes",  new Lot {Price = 150, DistanceLake = 2,  DistanceHighway = 0.5, PoorSoil = false, Steep = SteepType.ModeratelySteep}},
-                { "Santarem",  new Lot {Price = 100, DistanceLake = 1,  DistanceHighway = 0.4, PoorSoil = false, Steep = SteepType.ModeratelySteep}},
-                { "Braga",  new Lot {Price = 100, DistanceLake = 3,  DistanceHighway = 0.9, PoorSoil = true, Steep = SteepType.Steep}},
-                { "Braganca",  new Lot {Price = 127, DistanceLake = 1,  DistanceHighway = 1.5, PoorSoil = false, Steep = SteepType.VerySteep}},
-                { "Setubal",  new Lot {Price = 183, DistanceLake = 5,  DistanceHighway = 2, PoorSoil = true, Steep = SteepType.Flat}},
-                { "Faro",  new Lot {Price = 82, DistanceLake = 4,  DistanceHighway = 3, PoorSoil = false, Steep = SteepType.Flat}},
-                { "Viseu",  new Lot {Price = 200, DistanceLake = 0.2,  DistanceHighway = 1.7, PoorSoil = false, Steep = SteepType.ModeratelySteep}},
-                { "Aveiro",  new Lot {Price = 140, DistanceLake = 0.1,  DistanceHighway = 2.3, PoorSoil = false, Steep = SteepType.Steep}}
+                { "Porto",  new Lot {Price = 230, Size = 400, DistanceLake = 4,  DistanceHighway = 0.1, PoorSoil = false, Steep = SteepType.Steep}},
+                { "Lisboa",  new Lot {Price = 250, Size = 500, DistanceLake = 10,  DistanceHighway = 0.1, PoorSoil = true, Steep = SteepType.Flat}},
+                { "Guimaraes",  new Lot {Price = 150, Size = 200, DistanceLake = 2,  DistanceHighway = 0.5, PoorSoil = false, Steep = SteepType.ModeratelySteep}},
+                { "Santarem",  new Lot {Price = 100, Size = 100, DistanceLake = 1,  DistanceHighway = 0.4, PoorSoil = false, Steep = SteepType.ModeratelySteep}},
+                { "Braga",  new Lot {Price = 100, Size = 120, DistanceLake = 3,  DistanceHighway = 0.9, PoorSoil = true, Steep = SteepType.Steep}},
+                { "Braganca",  new Lot {Price = 127, Size = 80, DistanceLake = 1,  DistanceHighway = 1.5, PoorSoil = false, Steep = SteepType.VerySteep}},
+                { "Setubal",  new Lot {Price = 183, Size = 230, DistanceLake = 5,  DistanceHighway = 2, PoorSoil = true, Steep = SteepType.Flat}},
+                { "Faro",  new Lot {Price = 82, Size = 220, DistanceLake = 4,  DistanceHighway = 3, PoorSoil = false, Steep = SteepType.Flat}},
+                { "Viseu",  new Lot {Price = 200, Size = 140, DistanceLake = 0.2,  DistanceHighway = 1.7, PoorSoil = false, Steep = SteepType.ModeratelySteep}},
+                { "Aveiro",  new Lot {Price = 140, Size = 90, DistanceLake = 0.1,  DistanceHighway = 2.3, PoorSoil = false, Steep = SteepType.Steep}}
             };
 
             var landuses = new Dictionary<string, Landuse>
@@ -41,15 +41,19 @@ namespace IART_A3
                 {"C1", new DistanceHardConstraint(new [] {LanduseType.Recreational}, Place.Lake, true)},
                 {"C2", new SteepHardConstraint(new[] {LanduseType.Apartments, LanduseType.HousingComplex, LanduseType.Cemetery, LanduseType.Dump}, new[] {SteepType.Flat, SteepType.ModeratelySteep})},
                 {"C3", new SoilHardConstraint(new[] {LanduseType.Apartments, LanduseType.HousingComplex}, false)},
-                {"C4", new DistanceHardConstraint(new[] {LanduseType.Apartments, LanduseType.HousingComplex, LanduseType.Recreational}, Place.Highway, false)}
+                {"C4", new DistanceHardConstraint(new[] {LanduseType.Apartments, LanduseType.HousingComplex, LanduseType.Recreational}, Place.Highway, false)},
+                {"C5", new SizeHardConstraint(new [] {LanduseType.Recreational}, false, 30)}
             };
 
-            var softConstraints = new Dictionary<string, ISoftConstraint>();
+            var softConstraints = new Dictionary<string, ISoftConstraint>
+            {
+                {"S1", new SizeSoftConstraint(200, new [] {LanduseType.Dump}, false, 480)}
+            };
 
             var problem = new Problem(lots, landuses, hardConstraints, softConstraints);
 
-            problem.WriteJson("../../../example_problems/portugal_randomized.txt");
-            var newP = Problem.ReadJson("../../../example_problems/portugal_randomized.txt");
+            //problem.WriteJson("../../../example_problems/portugal_randomized.txt");
+            var newP = Problem.ReadJson("../../../example_problems/impossible.txt");
 
             var algorithms = new List<SearchAlgorithm>
             {

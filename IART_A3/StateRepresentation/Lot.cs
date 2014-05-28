@@ -29,9 +29,14 @@
     public class Lot
     {
         /// <summary>
-        /// Maximum distance to something to consider it "near".
+        /// Maximum distance to something to consider it "near"
         /// </summary>
         public const double NearKilometers = 0.5;
+
+        /// <summary>
+        /// Size of the lot in square Kilometers
+        /// </summary>
+        public double Size { get; set; }
 
         /// <summary>
         /// Price of lot in millions of Euro

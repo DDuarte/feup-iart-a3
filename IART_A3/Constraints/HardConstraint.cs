@@ -12,6 +12,35 @@ namespace IART_A3.Constraints
         bool Feasible(Landuse landuse, Lot lot);
     }
 
+    public class SizeHardConstraint : IHardConstraint
+    {
+        public LanduseType[] LandusesTypes;
+        public double Threshold;
+        public bool CheckSmaller;
+        private readonly Func<double, double, bool> _sizeCheck;
+
+        private static readonly Func<double, double, bool> SmallerThan = (d, d1) => d <= d1;
+        private static readonly Func<double, double, bool> LargerThan = (d, d1) => d > d1;
+
+        public SizeHardConstraint(LanduseType[] landusesTypes, bool checkSmaller, double threshold)
+        {
+            LandusesTypes = landusesTypes;
+            Threshold = threshold;
+            CheckSmaller = checkSmaller;
+            _sizeCheck = checkSmaller ? SmallerThan : LargerThan;
+        }
+
+        public bool Feasible(Landuse landuse, Lot lot)
+        {
+            if (LandusesTypes != null && LandusesTypes.Any(landuseType => landuseType == landuse.Type))
+            {
+                return _sizeCheck(lot.Size, Threshold);
+            }
+
+            return true;
+        }
+    }
+
     public class DistanceHardConstraint : IHardConstraint
     {
         public Place Place;

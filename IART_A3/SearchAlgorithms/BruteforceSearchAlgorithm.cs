@@ -18,6 +18,9 @@ namespace IART_A3.SearchAlgorithms
 
             RecursiveAllocate(firstState, states);
 
+            if (!states.Any(allocations => allocations.IsFinalState))
+                return null;
+
             return states
                 .Where(allocations => allocations.IsFinalState)
                 .OrderBy(allocations => allocations.CurrentCost)
