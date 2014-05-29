@@ -9,7 +9,7 @@ namespace IART_A3.Constraints
     /// </summary>
     public interface ISoftConstraint
     {
-        double FeasibleCost(Landuse landuse, Lot lot);
+        double FeasibleCost(Landuse landuse, Lot lot, Problem problem);
     }
 
     public class SizeSoftConstraint : ISoftConstraint
@@ -18,7 +18,6 @@ namespace IART_A3.Constraints
         public LanduseType[] LandusesTypes;
         public double Threshold;
         public bool CheckSmaller;
-        private readonly Func<double, double, bool> _sizeCheck;
 
         private static readonly Func<double, double, bool> SmallerThan = (d, d1) => d <= d1;
         private static readonly Func<double, double, bool> LargerThan = (d, d1) => d > d1;
@@ -29,17 +28,18 @@ namespace IART_A3.Constraints
             LandusesTypes = landusesTypes;
             Threshold = threshold;
             CheckSmaller = checkSmaller;
-            _sizeCheck = checkSmaller ? SmallerThan : LargerThan;
         }
 
-        public double FeasibleCost(Landuse landuse, Lot lot)
+        public double FeasibleCost(Landuse landuse, Lot lot, Problem problem)
         {
             var cost = BaseCost * (CheckSmaller ? (Threshold/lot.Size) : (lot.Size/Threshold));
             if (cost >= BaseCost * 10)
                 cost = BaseCost * 10;
+
             if (LandusesTypes != null && LandusesTypes.Any(landuseType => landuseType == landuse.Type))
             {
-                return _sizeCheck(lot.Size, Threshold) ? 0 : cost;
+                var sizeCheck = CheckSmaller ? SmallerThan : LargerThan;
+                return sizeCheck(lot.Size, Threshold) ? 0 : cost;
             }
 
             return 0;
@@ -53,34 +53,37 @@ namespace IART_A3.Constraints
         public double Threshold;
         public double BaseCost;
         public bool CheckCloser;
-        private readonly Func<double, double, bool> _distCheck;
 
         private static readonly Func<double, double, bool> CloserThan = (d, d1) => d <= d1;
         private static readonly Func<double, double, bool> FartherThan = (d, d1) => d > d1;
 
-        public DistanceSoftConstraint(double baseCost, LanduseType[] landusesTypes, Place place, bool checkCloser, double threshold = Lot.NearKilometers)
+        public const double NearKilometers = 1;
+
+        public DistanceSoftConstraint(double baseCost, LanduseType[] landusesTypes, Place place, bool checkCloser, double threshold = NearKilometers)
         {
             LandusesTypes = landusesTypes;
             Place = place;
             Threshold = threshold;
             BaseCost = baseCost;
             CheckCloser = checkCloser;
-            _distCheck = checkCloser ? CloserThan : FartherThan;
         }
 
-        public double FeasibleCost(Landuse landuse, Lot lot)
+        public double FeasibleCost(Landuse landuse, Lot lot, Problem problem)
         {
-            var cost = BaseCost * (CheckCloser ? (Threshold/lot.DistanceLake) : (lot.DistanceLake/Threshold));
+            var cost = BaseCost * (CheckCloser ? (Threshold / lot.DistanceLake(problem)) : (lot.DistanceLake(problem) / Threshold));
             if (cost >= BaseCost * 10)
                 cost = BaseCost * 10;
+
             if (LandusesTypes != null && LandusesTypes.Any(landuseType => landuseType == landuse.Type))
             {
+                var distCheck = CheckCloser ? CloserThan : FartherThan;
+
                 switch (Place)
                 {
                     case Place.Lake:
-                        return _distCheck(lot.DistanceLake, Threshold) ? 0 : cost;
+                        return distCheck(lot.DistanceLake(problem), Threshold) ? 0 : cost;
                     case Place.Highway:
-                        return _distCheck(lot.DistanceHighway, Threshold) ? 0 : cost;
+                        return distCheck(lot.DistanceHighway(problem), Threshold) ? 0 : cost;
                 }
             }
 
@@ -101,7 +104,7 @@ namespace IART_A3.Constraints
             BaseCost = baseCost;
         }
 
-        public double FeasibleCost(Landuse landuse, Lot lot)
+        public double FeasibleCost(Landuse landuse, Lot lot, Problem problem)
         {
             if (LandusesTypes != null && LandusesTypes.Any(landuseType => landuseType == landuse.Type))
                 return SteepTypes.Any(steepType => steepType == lot.Steep) ? 0 : BaseCost;
@@ -123,7 +126,7 @@ namespace IART_A3.Constraints
             PoorSoil = poorSoil;
         }
 
-        public double FeasibleCost(Landuse landuse, Lot lot)
+        public double FeasibleCost(Landuse landuse, Lot lot, Problem problem)
         {
             if (LandusesTypes != null && LandusesTypes.Any(landuseType => landuseType == landuse.Type))
                 return lot.PoorSoil == PoorSoil ? 0 : BaseCost;

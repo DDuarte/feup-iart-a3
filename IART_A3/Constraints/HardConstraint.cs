@@ -9,7 +9,7 @@ namespace IART_A3.Constraints
     /// </summary>
     public interface IHardConstraint
     {
-        bool Feasible(Landuse landuse, Lot lot);
+        bool Feasible(Landuse landuse, Lot lot, Problem problem);
     }
 
     public class SizeHardConstraint : IHardConstraint
@@ -17,7 +17,6 @@ namespace IART_A3.Constraints
         public LanduseType[] LandusesTypes;
         public double Threshold;
         public bool CheckSmaller;
-        private readonly Func<double, double, bool> _sizeCheck;
 
         private static readonly Func<double, double, bool> SmallerThan = (d, d1) => d <= d1;
         private static readonly Func<double, double, bool> LargerThan = (d, d1) => d > d1;
@@ -27,15 +26,14 @@ namespace IART_A3.Constraints
             LandusesTypes = landusesTypes;
             Threshold = threshold;
             CheckSmaller = checkSmaller;
-            _sizeCheck = checkSmaller ? SmallerThan : LargerThan;
         }
 
-        public bool Feasible(Landuse landuse, Lot lot)
+        public bool Feasible(Landuse landuse, Lot lot, Problem problem)
         {
+            var sizeCheck = CheckSmaller ? SmallerThan : LargerThan;
+
             if (LandusesTypes != null && LandusesTypes.Any(landuseType => landuseType == landuse.Type))
-            {
-                return _sizeCheck(lot.Size, Threshold);
-            }
+                return sizeCheck(lot.Size, Threshold);
 
             return true;
         }
@@ -47,30 +45,32 @@ namespace IART_A3.Constraints
         public LanduseType[] LandusesTypes;
         public double Threshold;
         public bool CheckCloser;
-        private readonly Func<double, double, bool> _distCheck;
 
         private static readonly Func<double, double, bool> CloserThan = (d, d1) => d <= d1;
         private static readonly Func<double, double, bool> FartherThan = (d, d1) => d > d1;
 
-        public DistanceHardConstraint(LanduseType[] landusesTypes, Place place, bool checkCloser, double threshold = Lot.NearKilometers)
+        public const double NearKilometers = 1;
+
+        public DistanceHardConstraint(LanduseType[] landusesTypes, Place place, bool checkCloser, double threshold = NearKilometers)
         {
             LandusesTypes = landusesTypes;
             Place = place;
             Threshold = threshold;
             CheckCloser = checkCloser;
-            _distCheck = checkCloser ? CloserThan : FartherThan;
         }
 
-        public bool Feasible(Landuse landuse, Lot lot)
+        public bool Feasible(Landuse landuse, Lot lot, Problem problem)
         {
             if (LandusesTypes != null && LandusesTypes.Any(landuseType => landuseType == landuse.Type))
             {
+                var distCheck = CheckCloser ? CloserThan : FartherThan;
+
                 switch (Place)
                 {
                     case Place.Lake:
-                        return _distCheck(lot.DistanceLake, Threshold);
+                        return distCheck(lot.DistanceLake(problem), Threshold);
                     case Place.Highway:
-                        return _distCheck(lot.DistanceHighway, Threshold);
+                        return distCheck(lot.DistanceHighway(problem), Threshold);
                 }
             }
 
@@ -89,7 +89,7 @@ namespace IART_A3.Constraints
             SteepTypes = steepTypes;
         }
 
-        public bool Feasible(Landuse landuse, Lot lot)
+        public bool Feasible(Landuse landuse, Lot lot, Problem problem)
         {
             if (LandusesTypes != null && LandusesTypes.Any(landuseType => landuseType == landuse.Type))
                 return SteepTypes.Any(steepType => steepType == lot.Steep);
@@ -109,7 +109,7 @@ namespace IART_A3.Constraints
             PoorSoil = poorSoil;
         }
 
-        public bool Feasible(Landuse landuse, Lot lot)
+        public bool Feasible(Landuse landuse, Lot lot, Problem problem)
         {
             if (LandusesTypes != null && LandusesTypes.Any(landuseType => landuseType == landuse.Type))
                 return lot.PoorSoil == PoorSoil;

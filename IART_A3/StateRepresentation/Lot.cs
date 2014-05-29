@@ -1,42 +1,26 @@
-﻿namespace IART_A3.StateRepresentation
-{
-    /// <summary>
-    /// Slope classification
-    /// </summary>
-    public enum SteepType
-    {
-        /// <summary>
-        /// No slope
-        /// </summary>
-        Flat,
-        /// <summary>
-        /// Almost flat
-        /// </summary>
-        ModeratelySteep,
-        /// <summary>
-        /// Steep slope
-        /// </summary>
-        Steep,
-        /// <summary>
-        /// Very steep slope
-        /// </summary>
-        VerySteep
-    }
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
+namespace IART_A3.StateRepresentation
+{
     /// <summary>
     /// Lots of land
     /// </summary>
     public class Lot
     {
         /// <summary>
-        /// Maximum distance to something to consider it "near"
+        /// Coordinates X, Y representing the shape of this lot
         /// </summary>
-        public const double NearKilometers = 0.5;
+        public List<Point> Terrain;
 
         /// <summary>
         /// Size of the lot in square Kilometers
         /// </summary>
-        public double Size { get; set; }
+        public double Size
+        {
+            get { return Terrain.Count; }
+        }
 
         /// <summary>
         /// Price of lot in millions of Euro
@@ -53,14 +37,41 @@
         /// </summary>
         public SteepType Steep { get; set; }
 
+        private double _distanceLake = double.NaN;
+        private double _distanceHighway = double.NaN;
+
         /// <summary>
         /// Distance in kilometers to the nearest lake
         /// </summary>
-        public double DistanceLake { get; set; }
+        public double DistanceLake(Problem problem)
+        {
+            if (!double.IsNaN(_distanceLake))
+                return _distanceLake;
+
+            if (problem.Lakes.Count == 0)
+                return double.PositiveInfinity;
+
+            _distanceLake = Terrain.Aggregate(double.PositiveInfinity,
+                (current, point) => problem.Lakes.Select(point.Distance)
+                    .Concat(new[] {current}).Min());
+            return _distanceLake;
+        }
 
         /// <summary>
         /// Distance in kilometers to the nearest highway
         /// </summary>
-        public double DistanceHighway { get; set; }
+        public double DistanceHighway(Problem problem)
+        {
+            if (!double.IsNaN(_distanceHighway))
+                return _distanceHighway;
+
+            if (problem.Highways.Count == 0)
+                return double.PositiveInfinity;
+
+            _distanceHighway = Terrain.Aggregate(double.PositiveInfinity,
+                (current, point) => problem.Highways.Select(point.Distance)
+                    .Concat(new[] {current}).Min());
+            return _distanceHighway;
+        }
     }
 }

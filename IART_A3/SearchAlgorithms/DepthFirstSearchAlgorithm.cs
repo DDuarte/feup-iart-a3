@@ -13,7 +13,7 @@ namespace IART_A3.SearchAlgorithms
 
         private LanduseAllocations SearchRecursive(LanduseAllocations curState, List<LanduseAllocations> visitedStates)
         {
-            ++ItCounter;
+            ++Iterations;
             if (curState.IsFinalState)
                 return curState;
 

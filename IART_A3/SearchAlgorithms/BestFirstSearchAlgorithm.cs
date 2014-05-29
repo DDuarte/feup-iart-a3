@@ -29,7 +29,7 @@ namespace IART_A3.SearchAlgorithms
             
             while (stateQueue.Count > 0) // while not empty
             {
-                ++ItCounter;
+                ++Iterations;
                 var currentState = stateQueue.Min;
                 stateQueue.Remove(currentState);
 
