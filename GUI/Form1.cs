@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Utilities.Media;
+using IART_A3.StateRepresentation;
 
 namespace GUI
 {
@@ -147,18 +148,35 @@ namespace GUI
         private void lotApplyButton_Click(object sender, System.EventArgs e)
         {
             Bitmap img = null;
+            var name = lotNameTextBox.Text;
             var poorSoil = poorSoilCheckBox.Checked;
+            var price = Convert.ToDouble(priceNumericUpDown.Value);
+            var distanceLake = 0.0;
+            var distanceHighway = 0.0;
+            var steepType = SteepType.Flat;
 
             if (flatRadioButton.Checked)
+            {
                 img = poorSoil ? Properties.Resources.SandFlatTexture : Properties.Resources.DirtFlatTexture;
+                steepType = SteepType.Flat;
+            }
             else if (moderatelySteepRadioButton.Checked)
+            {
                 img = poorSoil
                     ? Properties.Resources.SandModeratelySteepTexture
                     : Properties.Resources.DirtModeratelySteepTexture;
+                steepType = SteepType.ModeratelySteep;
+            }
             else if (steepRadioButton.Checked)
+            {
                 img = poorSoil ? Properties.Resources.SandSteepTexture : Properties.Resources.DirtSteepTexture;
+                steepType = SteepType.Steep;
+            }
             else if (verySteepRadioButton.Checked)
+            {
                 img = poorSoil ? Properties.Resources.SandVerySteepTexture : Properties.Resources.DirtVerySteepTexture;
+                steepType = SteepType.VerySteep;
+            }
 
             if (img == null)
                 return;
@@ -167,11 +185,48 @@ namespace GUI
             {
                 btn.BackColor = poorSoil ? Color.SandyBrown : Color.Brown;
                 btn.ForeColor = poorSoil ? Color.SandyBrown : Color.Brown;
-
                 btn.BackgroundImage = img;
             }
 
             _selectedButtons.Clear();
+
+            var lot = new Lot
+            {
+                Price = price,
+                DistanceLake = distanceLake,
+                DistanceHighway = distanceHighway,
+                PoorSoil = poorSoil,
+                Steep = steepType
+            };
+
+            lotsDataGridView.Rows.Add(name, lot.Price, lot.DistanceLake, lot.DistanceHighway, lot.PoorSoil,
+                lot.Steep.ToString());
+        }
+
+        private void landusesApplyButton_Click(object sender, EventArgs e)
+        {
+            var recreationalCount = recreationalNumericUpDown.Value;
+            var apartmentsCount = apartmentsNumericUpDown.Value;
+            var housingComplexCount = housingComplexNumericUpDown.Value;
+            var dumpCount = dumpNumericUpDown.Value;
+            var cemeteryCount = cemeteryNumericUpDown.Value;
+
+            var landuses = new Dictionary<string, Landuse>();
+
+            for (var i = 0; i < recreationalCount; ++i)
+                landuses.Add("recreational" + i, new Landuse { Type = LanduseType.Recreational });
+            for (var i = 0; i < apartmentsCount; ++i)
+                landuses.Add("apartment" + i, new Landuse { Type = LanduseType.Apartments });
+            for (var i = 0; i < housingComplexCount; ++i)
+                landuses.Add("house" + i, new Landuse { Type = LanduseType.HousingComplex });
+            for (var i = 0; i < dumpCount; ++i)
+                landuses.Add("dump" + i, new Landuse { Type = LanduseType.Dump });
+            for (var i = 0; i < cemeteryCount; ++i)
+                landuses.Add("cemetery" + i, new Landuse { Type = LanduseType.Cemetery });
+
+            landusesDataGridView.Rows.Clear();
+            foreach (var landuse in landuses)
+                landusesDataGridView.Rows.Add(landuse.Key, landuse.Value.Type.ToString());
         }
 
         /*
