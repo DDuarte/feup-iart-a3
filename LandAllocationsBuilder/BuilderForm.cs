@@ -368,6 +368,30 @@ namespace LandAllocationBuilder
                 constraintsTextBox.Text += constraint.Value + Environment.NewLine;
         }
 
+        private void helpConstraintButton_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(null, @"Hard Constraints:
+Size - H [<landuse>] size <op> <threshold>
+Distance - H [<landuse>] distance(<place>) <op> <threshold>
+Steepness - H [<landuse>] steep [<steep>]
+Soil Type - H [<landuse>] soil <soil_type>
+
+Soft Constraints:
+Size - S(<base_cost>) [<landuse>] size <op> <threshold>
+Distance - S(<base_cost>) [<landuse>] distance(<place>) <op> <threshold>
+Steepness - S(<base_cost>) [<landuse>] steep [<steep>]
+Soil Type - S(<base_cost>) [<landuse>] soil <soil_type>
+
+landuse: one or more of Recreational, Apartments, HousingComplex, Dump, Cemetery
+steep: one or more of Flat, ModeratelySteep, Steep, VerySteep
+op: > or <
+place: Lake or Highway
+threshold: distance or size in kilometers (1 square = 1km^2)
+base_cost: initial cost of violating a soft constraint",
+                "Constraints Syntax", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        }
+
         /*
         private void landuseApplyButton_Click(object sender, System.EventArgs e)
         {
