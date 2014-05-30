@@ -38,6 +38,11 @@ namespace LandAllocationBuilder
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.lotsTabPage = new System.Windows.Forms.TabPage();
             this.lotsDataGridView = new System.Windows.Forms.DataGridView();
+            this.nameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lotSizeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.priceColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.poorSoilColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.steepColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.landuses2TabPage = new System.Windows.Forms.TabPage();
             this.landusesDataGridView = new System.Windows.Forms.DataGridView();
             this.nameLandusesColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -59,6 +64,10 @@ namespace LandAllocationBuilder
             this.lotNameLabel = new System.Windows.Forms.Label();
             this.lotNameTextBox = new System.Windows.Forms.TextBox();
             this.steepGroupBox = new System.Windows.Forms.GroupBox();
+            this.verySteepRadioButton = new System.Windows.Forms.RadioButton();
+            this.steepRadioButton = new System.Windows.Forms.RadioButton();
+            this.moderatelySteepRadioButton = new System.Windows.Forms.RadioButton();
+            this.flatRadioButton = new System.Windows.Forms.RadioButton();
             this.poorSoilCheckBox = new System.Windows.Forms.CheckBox();
             this.euroLabel = new System.Windows.Forms.Label();
             this.priceLabel = new System.Windows.Forms.Label();
@@ -79,20 +88,11 @@ namespace LandAllocationBuilder
             this.apartmentsNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.recreationalLabel = new System.Windows.Forms.Label();
             this.recreationalNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.constraintsTextBox = new System.Windows.Forms.TextBox();
-            this.compileConstraintsButton = new System.Windows.Forms.Button();
             this.helpConstraintButton = new System.Windows.Forms.Button();
-            this.verySteepRadioButton = new System.Windows.Forms.RadioButton();
-            this.steepRadioButton = new System.Windows.Forms.RadioButton();
-            this.moderatelySteepRadioButton = new System.Windows.Forms.RadioButton();
-            this.flatRadioButton = new System.Windows.Forms.RadioButton();
-            this.nameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lotSizeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.priceColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.poorSoilColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.steepColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.compileConstraintsButton = new System.Windows.Forms.Button();
+            this.constraintsTextBox = new System.Windows.Forms.TextBox();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.panel1.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.lotsTabPage.SuspendLayout();
@@ -195,7 +195,6 @@ namespace LandAllocationBuilder
             // lotsDataGridView
             // 
             this.lotsDataGridView.AllowUserToAddRows = false;
-            this.lotsDataGridView.AllowUserToDeleteRows = false;
             this.lotsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.lotsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.nameColumn,
@@ -209,6 +208,43 @@ namespace LandAllocationBuilder
             this.lotsDataGridView.ReadOnly = true;
             this.lotsDataGridView.Size = new System.Drawing.Size(398, 193);
             this.lotsDataGridView.TabIndex = 0;
+            this.lotsDataGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.lotsDataGridView_UserDeletingRow);
+            // 
+            // nameColumn
+            // 
+            this.nameColumn.HeaderText = "Name";
+            this.nameColumn.Name = "nameColumn";
+            this.nameColumn.ReadOnly = true;
+            this.nameColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // lotSizeColumn
+            // 
+            this.lotSizeColumn.HeaderText = "Size";
+            this.lotSizeColumn.Name = "lotSizeColumn";
+            this.lotSizeColumn.ReadOnly = true;
+            // 
+            // priceColumn
+            // 
+            this.priceColumn.HeaderText = "Price";
+            this.priceColumn.Name = "priceColumn";
+            this.priceColumn.ReadOnly = true;
+            // 
+            // poorSoilColumn
+            // 
+            this.poorSoilColumn.HeaderText = "Poor Soil";
+            this.poorSoilColumn.Name = "poorSoilColumn";
+            this.poorSoilColumn.ReadOnly = true;
+            // 
+            // steepColumn
+            // 
+            this.steepColumn.HeaderText = "Steep";
+            this.steepColumn.Items.AddRange(new object[] {
+            "Flat",
+            "ModeratelySteep",
+            "Steep",
+            "VerySteep"});
+            this.steepColumn.Name = "steepColumn";
+            this.steepColumn.ReadOnly = true;
             // 
             // landuses2TabPage
             // 
@@ -428,6 +464,54 @@ namespace LandAllocationBuilder
             this.steepGroupBox.TabIndex = 7;
             this.steepGroupBox.TabStop = false;
             this.steepGroupBox.Text = "Steep";
+            // 
+            // verySteepRadioButton
+            // 
+            this.verySteepRadioButton.AutoSize = true;
+            this.verySteepRadioButton.Location = new System.Drawing.Point(7, 90);
+            this.verySteepRadioButton.Name = "verySteepRadioButton";
+            this.verySteepRadioButton.Size = new System.Drawing.Size(77, 17);
+            this.verySteepRadioButton.TabIndex = 3;
+            this.verySteepRadioButton.TabStop = true;
+            this.verySteepRadioButton.Tag = LandAllocationsLib.StateRepresentation.SteepType.VerySteep;
+            this.verySteepRadioButton.Text = "Very Steep";
+            this.verySteepRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // steepRadioButton
+            // 
+            this.steepRadioButton.AutoSize = true;
+            this.steepRadioButton.Location = new System.Drawing.Point(7, 67);
+            this.steepRadioButton.Name = "steepRadioButton";
+            this.steepRadioButton.Size = new System.Drawing.Size(53, 17);
+            this.steepRadioButton.TabIndex = 2;
+            this.steepRadioButton.TabStop = true;
+            this.steepRadioButton.Tag = LandAllocationsLib.StateRepresentation.SteepType.Steep;
+            this.steepRadioButton.Text = "Steep";
+            this.steepRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // moderatelySteepRadioButton
+            // 
+            this.moderatelySteepRadioButton.AutoSize = true;
+            this.moderatelySteepRadioButton.Location = new System.Drawing.Point(7, 44);
+            this.moderatelySteepRadioButton.Name = "moderatelySteepRadioButton";
+            this.moderatelySteepRadioButton.Size = new System.Drawing.Size(108, 17);
+            this.moderatelySteepRadioButton.TabIndex = 1;
+            this.moderatelySteepRadioButton.TabStop = true;
+            this.moderatelySteepRadioButton.Tag = LandAllocationsLib.StateRepresentation.SteepType.ModeratelySteep;
+            this.moderatelySteepRadioButton.Text = "Moderately Steep";
+            this.moderatelySteepRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // flatRadioButton
+            // 
+            this.flatRadioButton.AutoSize = true;
+            this.flatRadioButton.Location = new System.Drawing.Point(7, 20);
+            this.flatRadioButton.Name = "flatRadioButton";
+            this.flatRadioButton.Size = new System.Drawing.Size(42, 17);
+            this.flatRadioButton.TabIndex = 0;
+            this.flatRadioButton.TabStop = true;
+            this.flatRadioButton.Tag = LandAllocationsLib.StateRepresentation.SteepType.Flat;
+            this.flatRadioButton.Text = "Flat";
+            this.flatRadioButton.UseVisualStyleBackColor = true;
             // 
             // poorSoilCheckBox
             // 
@@ -665,12 +749,6 @@ namespace LandAllocationBuilder
             0,
             0});
             // 
-            // saveFileDialog
-            // 
-            this.saveFileDialog.DefaultExt = "json";
-            this.saveFileDialog.Filter = "JSON files|*.json|All files|*.*";
-            this.saveFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog_FileOk);
-            // 
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.helpConstraintButton);
@@ -684,13 +762,15 @@ namespace LandAllocationBuilder
             this.tabPage1.Text = "Constraints";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // constraintsTextBox
+            // helpConstraintButton
             // 
-            this.constraintsTextBox.Location = new System.Drawing.Point(6, 6);
-            this.constraintsTextBox.Multiline = true;
-            this.constraintsTextBox.Name = "constraintsTextBox";
-            this.constraintsTextBox.Size = new System.Drawing.Size(389, 215);
-            this.constraintsTextBox.TabIndex = 0;
+            this.helpConstraintButton.Location = new System.Drawing.Point(88, 227);
+            this.helpConstraintButton.Name = "helpConstraintButton";
+            this.helpConstraintButton.Size = new System.Drawing.Size(75, 23);
+            this.helpConstraintButton.TabIndex = 2;
+            this.helpConstraintButton.Text = "Help";
+            this.helpConstraintButton.UseVisualStyleBackColor = true;
+            this.helpConstraintButton.Click += new System.EventHandler(this.helpConstraintButton_Click);
             // 
             // compileConstraintsButton
             // 
@@ -702,99 +782,19 @@ namespace LandAllocationBuilder
             this.compileConstraintsButton.UseVisualStyleBackColor = true;
             this.compileConstraintsButton.Click += new System.EventHandler(this.compileConstraintsButton_Click);
             // 
-            // helpConstraintButton
+            // constraintsTextBox
             // 
-            this.helpConstraintButton.Location = new System.Drawing.Point(88, 227);
-            this.helpConstraintButton.Name = "helpConstraintButton";
-            this.helpConstraintButton.Size = new System.Drawing.Size(75, 23);
-            this.helpConstraintButton.TabIndex = 2;
-            this.helpConstraintButton.Text = "Help";
-            this.helpConstraintButton.UseVisualStyleBackColor = true;
-            this.helpConstraintButton.Click += new System.EventHandler(this.helpConstraintButton_Click);
+            this.constraintsTextBox.Location = new System.Drawing.Point(6, 6);
+            this.constraintsTextBox.Multiline = true;
+            this.constraintsTextBox.Name = "constraintsTextBox";
+            this.constraintsTextBox.Size = new System.Drawing.Size(389, 215);
+            this.constraintsTextBox.TabIndex = 0;
             // 
-            // verySteepRadioButton
+            // saveFileDialog
             // 
-            this.verySteepRadioButton.AutoSize = true;
-            this.verySteepRadioButton.Location = new System.Drawing.Point(7, 90);
-            this.verySteepRadioButton.Name = "verySteepRadioButton";
-            this.verySteepRadioButton.Size = new System.Drawing.Size(77, 17);
-            this.verySteepRadioButton.TabIndex = 3;
-            this.verySteepRadioButton.TabStop = true;
-            this.verySteepRadioButton.Tag = LandAllocationsLib.StateRepresentation.SteepType.VerySteep;
-            this.verySteepRadioButton.Text = "Very Steep";
-            this.verySteepRadioButton.UseVisualStyleBackColor = true;
-            // 
-            // steepRadioButton
-            // 
-            this.steepRadioButton.AutoSize = true;
-            this.steepRadioButton.Location = new System.Drawing.Point(7, 67);
-            this.steepRadioButton.Name = "steepRadioButton";
-            this.steepRadioButton.Size = new System.Drawing.Size(53, 17);
-            this.steepRadioButton.TabIndex = 2;
-            this.steepRadioButton.TabStop = true;
-            this.steepRadioButton.Tag = LandAllocationsLib.StateRepresentation.SteepType.Steep;
-            this.steepRadioButton.Text = "Steep";
-            this.steepRadioButton.UseVisualStyleBackColor = true;
-            // 
-            // moderatelySteepRadioButton
-            // 
-            this.moderatelySteepRadioButton.AutoSize = true;
-            this.moderatelySteepRadioButton.Location = new System.Drawing.Point(7, 44);
-            this.moderatelySteepRadioButton.Name = "moderatelySteepRadioButton";
-            this.moderatelySteepRadioButton.Size = new System.Drawing.Size(108, 17);
-            this.moderatelySteepRadioButton.TabIndex = 1;
-            this.moderatelySteepRadioButton.TabStop = true;
-            this.moderatelySteepRadioButton.Tag = LandAllocationsLib.StateRepresentation.SteepType.ModeratelySteep;
-            this.moderatelySteepRadioButton.Text = "Moderately Steep";
-            this.moderatelySteepRadioButton.UseVisualStyleBackColor = true;
-            // 
-            // flatRadioButton
-            // 
-            this.flatRadioButton.AutoSize = true;
-            this.flatRadioButton.Location = new System.Drawing.Point(7, 20);
-            this.flatRadioButton.Name = "flatRadioButton";
-            this.flatRadioButton.Size = new System.Drawing.Size(42, 17);
-            this.flatRadioButton.TabIndex = 0;
-            this.flatRadioButton.TabStop = true;
-            this.flatRadioButton.Tag = LandAllocationsLib.StateRepresentation.SteepType.Flat;
-            this.flatRadioButton.Text = "Flat";
-            this.flatRadioButton.UseVisualStyleBackColor = true;
-            // 
-            // nameColumn
-            // 
-            this.nameColumn.HeaderText = "Name";
-            this.nameColumn.Name = "nameColumn";
-            this.nameColumn.ReadOnly = true;
-            this.nameColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // lotSizeColumn
-            // 
-            this.lotSizeColumn.HeaderText = "Size";
-            this.lotSizeColumn.Name = "lotSizeColumn";
-            this.lotSizeColumn.ReadOnly = true;
-            // 
-            // priceColumn
-            // 
-            this.priceColumn.HeaderText = "Price";
-            this.priceColumn.Name = "priceColumn";
-            this.priceColumn.ReadOnly = true;
-            // 
-            // poorSoilColumn
-            // 
-            this.poorSoilColumn.HeaderText = "Poor Soil";
-            this.poorSoilColumn.Name = "poorSoilColumn";
-            this.poorSoilColumn.ReadOnly = true;
-            // 
-            // steepColumn
-            // 
-            this.steepColumn.HeaderText = "Steep";
-            this.steepColumn.Items.AddRange(new object[] {
-            "Flat",
-            "ModeratelySteep",
-            "Steep",
-            "VerySteep"});
-            this.steepColumn.Name = "steepColumn";
-            this.steepColumn.ReadOnly = true;
+            this.saveFileDialog.DefaultExt = "json";
+            this.saveFileDialog.Filter = "JSON files|*.json|All files|*.*";
+            this.saveFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog_FileOk);
             // 
             // BuilderForm
             // 

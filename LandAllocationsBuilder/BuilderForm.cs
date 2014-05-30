@@ -265,6 +265,21 @@ namespace LandAllocationBuilder
             lotsDataGridView.Rows.Add(name, lot.Size, lot.Price, lot.PoorSoil, lot.Steep.ToString());
         }
 
+        private void RemoveLot(string name)
+        {
+            var lot = _problem.Lots[name];
+
+            foreach (var point in lot.Terrain)
+            {
+                var btn = _buttons[point.X, point.Y];
+                btn.BackColor = Color.Gray;
+                btn.ForeColor = Color.Gray;
+                btn.BackgroundImage = null;
+            }
+
+            _problem.Lots.Remove(name);
+        }
+
         private void SetLanduses(Dictionary<string, Landuse> landuses)
         {
             _problem.Landuses = landuses;
@@ -464,5 +479,11 @@ base_cost: initial cost of violating a soft constraint",
             { LanduseType.Dump, Resources.Dump },
             { LanduseType.Cemetery, Resources.Cemetery }
         };
+
+        private void lotsDataGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            var name = (string) e.Row.Cells[0].Value;
+            RemoveLot(name);
+        }
     }
 }

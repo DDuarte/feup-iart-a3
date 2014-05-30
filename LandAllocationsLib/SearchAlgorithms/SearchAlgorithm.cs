@@ -50,7 +50,7 @@ namespace LandAllocationsLib.SearchAlgorithms
             }
 
             return new Problem.Result(Name, res != null ? res.Allocations : new HashSet<Tuple<string, string>>(),
-                res.CurrentCost, time, Iterations);
+                res != null ? res.CurrentCost : 0, time, Iterations);
         }
 
         protected abstract LanduseAllocations SearchImpl();
