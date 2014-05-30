@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using GUI.Properties;
 using IART_A3.StateRepresentation;
 using Point = IART_A3.StateRepresentation.Point;
 
@@ -15,11 +16,12 @@ namespace GUI
         private readonly Problem _problem;
         private readonly int _sizePx;
 
-        private bool RemoveTerrainPoint(Point point)
+        private void RemoveTerrainPoint(Point point)
         {
-            var removed = _problem.Lakes.Remove(point);
-            removed |= _problem.Highways.Remove(point);
-            return _problem.Lots.Aggregate(removed, (current, lot) => current | lot.Value.Terrain.Remove(point));
+            _problem.Lakes.Remove(point);
+            _problem.Highways.Remove(point);
+            foreach (var lot in _problem.Lots)
+                lot.Value.Terrain.Remove(point);
         }
 
         private bool IntersectsWith(Button btn1, Button btn2)
@@ -67,22 +69,6 @@ namespace GUI
 
         private bool ValidArea()
         {
-            if (_selectedButtons.Count <= 1)
-                return true;
-
-            /*
-            var minX = _selectedButtons.Min(button => button.Location.X);
-            var minY = _selectedButtons.Min(button => button.Location.Y);
-            var maxX = _selectedButtons.Max(button => button.Location.X) + size;
-            var maxY = _selectedButtons.Max(button => button.Location.Y) + size;
-
-            var rectangularArea = (maxX - minX) * (maxY - minY);
-
-            var realArea = _selectedButtons.Sum(btn => size * size);
-
-            return rectangularArea == realArea;
-            */
-
             return _selectedButtons.Count <= 1 ||
                 _selectedButtons.All(btn1 => _selectedButtons.Any(button => IntersectsWith(button, btn1)));
         }
@@ -93,10 +79,7 @@ namespace GUI
 
             _problem = new Problem();
 
-            _sizePx = (int)(10 / 20.0 * 55);
-
-            //gridPanel.Size = new Size(size * rows, size * cols);
-            //gridPanel.Location = new Point((ClientSize.Width - gridPanel.Size.Width) / 2, (ClientSize.Height - gridPanel.Size.Height) / 2);
+            _sizePx = (int)(550.0 / size);
 
             for (var i = 0; i < size; ++i)
             {
@@ -129,7 +112,7 @@ namespace GUI
             {
                 btn.BackColor = Color.SlateGray;
                 btn.ForeColor = Color.SlateGray;
-                btn.BackgroundImage = new Bitmap(Properties.Resources.AsphaltTexture);
+                btn.BackgroundImage = new Bitmap(Resources.AsphaltTexture);
 
                 var point = (Point) btn.Tag;
                 RemoveTerrainPoint(point);
@@ -145,7 +128,7 @@ namespace GUI
             {
                 btn.BackColor = Color.DodgerBlue;
                 btn.ForeColor = Color.DodgerBlue;
-                btn.BackgroundImage = new Bitmap(Properties.Resources.WaterTexture);
+                btn.BackgroundImage = new Bitmap(Resources.WaterTexture);
 
                 var point = (Point)btn.Tag;
                 RemoveTerrainPoint(point);
@@ -159,14 +142,16 @@ namespace GUI
         {
             if (_selectedButtons.Count == 0)
             {
-                MessageBox.Show("No terrain selected.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(Resources.BuilderForm_lotApplyButton_Click_No_terrain_selected_,
+                    Resources.BuilderForm_lotApplyButton_Click_Error, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             var name = lotNameTextBox.Text;
             if (_problem.Lots.ContainsKey(name))
             {
-                MessageBox.Show("Duplicate lot name.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(Resources.BuilderForm_lotApplyButton_Click_Duplicate_lot_name_,
+                    Resources.BuilderForm_lotApplyButton_Click_Error, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -177,30 +162,31 @@ namespace GUI
             var steepType = SteepType.Flat;
             if (flatRadioButton.Checked)
             {
-                img = poorSoil ? Properties.Resources.SandFlatTexture : Properties.Resources.DirtFlatTexture;
+                img = poorSoil ? Resources.SandFlatTexture : Resources.DirtFlatTexture;
                 steepType = SteepType.Flat;
             }
             else if (moderatelySteepRadioButton.Checked)
             {
                 img = poorSoil
-                    ? Properties.Resources.SandModeratelySteepTexture
-                    : Properties.Resources.DirtModeratelySteepTexture;
+                    ? Resources.SandModeratelySteepTexture
+                    : Resources.DirtModeratelySteepTexture;
                 steepType = SteepType.ModeratelySteep;
             }
             else if (steepRadioButton.Checked)
             {
-                img = poorSoil ? Properties.Resources.SandSteepTexture : Properties.Resources.DirtSteepTexture;
+                img = poorSoil ? Resources.SandSteepTexture : Resources.DirtSteepTexture;
                 steepType = SteepType.Steep;
             }
             else if (verySteepRadioButton.Checked)
             {
-                img = poorSoil ? Properties.Resources.SandVerySteepTexture : Properties.Resources.DirtVerySteepTexture;
+                img = poorSoil ? Resources.SandVerySteepTexture : Resources.DirtVerySteepTexture;
                 steepType = SteepType.VerySteep;
             }
 
             if (img == null)
             {
-                MessageBox.Show("Unknown steep type.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(Resources.BuilderForm_lotApplyButton_Click_Unknown_steep_type_,
+                    Resources.BuilderForm_lotApplyButton_Click_Error, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 

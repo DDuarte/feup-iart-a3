@@ -81,6 +81,42 @@ namespace GUI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Duplicate lot name..
+        /// </summary>
+        internal static string BuilderForm_lotApplyButton_Click_Duplicate_lot_name_ {
+            get {
+                return ResourceManager.GetString("BuilderForm_lotApplyButton_Click_Duplicate_lot_name_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        internal static string BuilderForm_lotApplyButton_Click_Error {
+            get {
+                return ResourceManager.GetString("BuilderForm_lotApplyButton_Click_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No terrain selected..
+        /// </summary>
+        internal static string BuilderForm_lotApplyButton_Click_No_terrain_selected_ {
+            get {
+                return ResourceManager.GetString("BuilderForm_lotApplyButton_Click_No_terrain_selected_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown steep type..
+        /// </summary>
+        internal static string BuilderForm_lotApplyButton_Click_Unknown_steep_type_ {
+            get {
+                return ResourceManager.GetString("BuilderForm_lotApplyButton_Click_Unknown_steep_type_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Cemetery {
