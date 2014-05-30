@@ -38,10 +38,6 @@ namespace LandAllocationBuilder
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.lotsTabPage = new System.Windows.Forms.TabPage();
             this.lotsDataGridView = new System.Windows.Forms.DataGridView();
-            this.nameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.priceColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.poorSoilColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.steepColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.landuses2TabPage = new System.Windows.Forms.TabPage();
             this.landusesDataGridView = new System.Windows.Forms.DataGridView();
             this.nameLandusesColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -87,11 +83,16 @@ namespace LandAllocationBuilder
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.constraintsTextBox = new System.Windows.Forms.TextBox();
             this.compileConstraintsButton = new System.Windows.Forms.Button();
+            this.helpConstraintButton = new System.Windows.Forms.Button();
             this.verySteepRadioButton = new System.Windows.Forms.RadioButton();
             this.steepRadioButton = new System.Windows.Forms.RadioButton();
             this.moderatelySteepRadioButton = new System.Windows.Forms.RadioButton();
             this.flatRadioButton = new System.Windows.Forms.RadioButton();
-            this.helpConstraintButton = new System.Windows.Forms.Button();
+            this.nameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lotSizeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.priceColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.poorSoilColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.steepColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.panel1.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.lotsTabPage.SuspendLayout();
@@ -198,6 +199,7 @@ namespace LandAllocationBuilder
             this.lotsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.lotsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.nameColumn,
+            this.lotSizeColumn,
             this.priceColumn,
             this.poorSoilColumn,
             this.steepColumn});
@@ -207,36 +209,6 @@ namespace LandAllocationBuilder
             this.lotsDataGridView.ReadOnly = true;
             this.lotsDataGridView.Size = new System.Drawing.Size(398, 193);
             this.lotsDataGridView.TabIndex = 0;
-            // 
-            // nameColumn
-            // 
-            this.nameColumn.HeaderText = "Name";
-            this.nameColumn.Name = "nameColumn";
-            this.nameColumn.ReadOnly = true;
-            this.nameColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // priceColumn
-            // 
-            this.priceColumn.HeaderText = "Price";
-            this.priceColumn.Name = "priceColumn";
-            this.priceColumn.ReadOnly = true;
-            // 
-            // poorSoilColumn
-            // 
-            this.poorSoilColumn.HeaderText = "Poor Soil";
-            this.poorSoilColumn.Name = "poorSoilColumn";
-            this.poorSoilColumn.ReadOnly = true;
-            // 
-            // steepColumn
-            // 
-            this.steepColumn.HeaderText = "Steep";
-            this.steepColumn.Items.AddRange(new object[] {
-            "Flat",
-            "ModeratelySteep",
-            "Steep",
-            "VerySteep"});
-            this.steepColumn.Name = "steepColumn";
-            this.steepColumn.ReadOnly = true;
             // 
             // landuses2TabPage
             // 
@@ -730,6 +702,16 @@ namespace LandAllocationBuilder
             this.compileConstraintsButton.UseVisualStyleBackColor = true;
             this.compileConstraintsButton.Click += new System.EventHandler(this.compileConstraintsButton_Click);
             // 
+            // helpConstraintButton
+            // 
+            this.helpConstraintButton.Location = new System.Drawing.Point(88, 227);
+            this.helpConstraintButton.Name = "helpConstraintButton";
+            this.helpConstraintButton.Size = new System.Drawing.Size(75, 23);
+            this.helpConstraintButton.TabIndex = 2;
+            this.helpConstraintButton.Text = "Help";
+            this.helpConstraintButton.UseVisualStyleBackColor = true;
+            this.helpConstraintButton.Click += new System.EventHandler(this.helpConstraintButton_Click);
+            // 
             // verySteepRadioButton
             // 
             this.verySteepRadioButton.AutoSize = true;
@@ -778,15 +760,41 @@ namespace LandAllocationBuilder
             this.flatRadioButton.Text = "Flat";
             this.flatRadioButton.UseVisualStyleBackColor = true;
             // 
-            // helpConstraintButton
+            // nameColumn
             // 
-            this.helpConstraintButton.Location = new System.Drawing.Point(88, 227);
-            this.helpConstraintButton.Name = "helpConstraintButton";
-            this.helpConstraintButton.Size = new System.Drawing.Size(75, 23);
-            this.helpConstraintButton.TabIndex = 2;
-            this.helpConstraintButton.Text = "Help";
-            this.helpConstraintButton.UseVisualStyleBackColor = true;
-            this.helpConstraintButton.Click += new System.EventHandler(this.helpConstraintButton_Click);
+            this.nameColumn.HeaderText = "Name";
+            this.nameColumn.Name = "nameColumn";
+            this.nameColumn.ReadOnly = true;
+            this.nameColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // lotSizeColumn
+            // 
+            this.lotSizeColumn.HeaderText = "Size";
+            this.lotSizeColumn.Name = "lotSizeColumn";
+            this.lotSizeColumn.ReadOnly = true;
+            // 
+            // priceColumn
+            // 
+            this.priceColumn.HeaderText = "Price";
+            this.priceColumn.Name = "priceColumn";
+            this.priceColumn.ReadOnly = true;
+            // 
+            // poorSoilColumn
+            // 
+            this.poorSoilColumn.HeaderText = "Poor Soil";
+            this.poorSoilColumn.Name = "poorSoilColumn";
+            this.poorSoilColumn.ReadOnly = true;
+            // 
+            // steepColumn
+            // 
+            this.steepColumn.HeaderText = "Steep";
+            this.steepColumn.Items.AddRange(new object[] {
+            "Flat",
+            "ModeratelySteep",
+            "Steep",
+            "VerySteep"});
+            this.steepColumn.Name = "steepColumn";
+            this.steepColumn.ReadOnly = true;
             // 
             // BuilderForm
             // 
@@ -868,10 +876,6 @@ namespace LandAllocationBuilder
         private System.Windows.Forms.DataGridView landusesDataGridView;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameLandusesColumn;
         private System.Windows.Forms.DataGridViewComboBoxColumn typeColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn nameColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn priceColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn poorSoilColumn;
-        private System.Windows.Forms.DataGridViewComboBoxColumn steepColumn;
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.Button runAlgorithmButton;
@@ -891,6 +895,11 @@ namespace LandAllocationBuilder
         private System.Windows.Forms.Button compileConstraintsButton;
         private System.Windows.Forms.TextBox constraintsTextBox;
         private System.Windows.Forms.Button helpConstraintButton;
+        private System.Windows.Forms.DataGridViewTextBoxColumn nameColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn lotSizeColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn priceColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn poorSoilColumn;
+        private System.Windows.Forms.DataGridViewComboBoxColumn steepColumn;
 
     }
 }

@@ -262,7 +262,7 @@ namespace LandAllocationBuilder
                 btn.BackgroundImage = lot.PoorSoil ? _steepImages[lot.Steep].Item1 : _steepImages[lot.Steep].Item2;
             }
 
-            lotsDataGridView.Rows.Add(name, lot.Price, lot.PoorSoil, lot.Steep.ToString());
+            lotsDataGridView.Rows.Add(name, lot.Size, lot.Price, lot.PoorSoil, lot.Steep.ToString());
         }
 
         private void SetLanduses(Dictionary<string, Landuse> landuses)
