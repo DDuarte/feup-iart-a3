@@ -81,42 +81,6 @@ namespace GUI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Duplicate lot name..
-        /// </summary>
-        internal static string BuilderForm_lotApplyButton_Click_Duplicate_lot_name_ {
-            get {
-                return ResourceManager.GetString("BuilderForm_lotApplyButton_Click_Duplicate_lot_name_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Error.
-        /// </summary>
-        internal static string BuilderForm_lotApplyButton_Click_Error {
-            get {
-                return ResourceManager.GetString("BuilderForm_lotApplyButton_Click_Error", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to No terrain selected..
-        /// </summary>
-        internal static string BuilderForm_lotApplyButton_Click_No_terrain_selected_ {
-            get {
-                return ResourceManager.GetString("BuilderForm_lotApplyButton_Click_No_terrain_selected_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unknown steep type..
-        /// </summary>
-        internal static string BuilderForm_lotApplyButton_Click_Unknown_steep_type_ {
-            get {
-                return ResourceManager.GetString("BuilderForm_lotApplyButton_Click_Unknown_steep_type_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Cemetery {
@@ -177,12 +141,39 @@ namespace GUI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Duplicate lot name..
+        /// </summary>
+        internal static string DuplicateLotNameStr {
+            get {
+                return ResourceManager.GetString("DuplicateLotNameStr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        internal static string ErrorStr {
+            get {
+                return ResourceManager.GetString("ErrorStr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap HousingComplex {
             get {
                 object obj = ResourceManager.GetObject("HousingComplex", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No terrain selected..
+        /// </summary>
+        internal static string NoTerrainSelectedStr {
+            get {
+                return ResourceManager.GetString("NoTerrainSelectedStr", resourceCulture);
             }
         }
         
@@ -233,6 +224,15 @@ namespace GUI.Properties {
             get {
                 object obj = ResourceManager.GetObject("SandVerySteepTexture", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown steep type..
+        /// </summary>
+        internal static string UnknownSteepTypeStr {
+            get {
+                return ResourceManager.GetString("UnknownSteepTypeStr", resourceCulture);
             }
         }
         

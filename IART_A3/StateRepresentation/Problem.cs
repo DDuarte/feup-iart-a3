@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using IART_A3.Constraints;
 using Newtonsoft.Json;
 
@@ -31,8 +28,11 @@ namespace IART_A3.StateRepresentation
 // ReSharper restore MemberCanBePrivate.Global
         }
 
-        public Problem()
+        public Problem() { }
+
+        public Problem(int size)
         {
+            Size = size;
             Lots = new Dictionary<string, Lot>();
             Landuses = new Dictionary<string, Landuse>();
             Lakes = new HashSet<Point>();
@@ -43,11 +43,12 @@ namespace IART_A3.StateRepresentation
             UpdateConstraintsTable();
         }
 
-        public Problem(Dictionary<string, Lot> lots, Dictionary<string, Landuse> landuses,
+        public Problem(int size, Dictionary<string, Lot> lots, Dictionary<string, Landuse> landuses,
             HashSet<Point> lakes, HashSet<Point> highways,
             Dictionary<string, IHardConstraint> hardConstraints,
             Dictionary<string, ISoftConstraint> softConstraints)
         {
+            Size = size;
             Lots = lots;
             Landuses = landuses;
             Lakes = lakes;
@@ -66,6 +67,7 @@ namespace IART_A3.StateRepresentation
         public Dictionary<string, IHardConstraint> HardConstraints;
         public Dictionary<string, ISoftConstraint> SoftConstraints;
         public Result ProblemResult;
+        public int Size;
 // ReSharper restore FieldCanBeMadeReadOnly.Global
 
         [JsonIgnore]

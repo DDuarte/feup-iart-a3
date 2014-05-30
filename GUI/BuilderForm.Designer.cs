@@ -35,6 +35,10 @@ namespace GUI
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.lotsTabPage = new System.Windows.Forms.TabPage();
             this.lotsDataGridView = new System.Windows.Forms.DataGridView();
+            this.nameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.priceColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.poorSoilColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.steepColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.landuses2TabPage = new System.Windows.Forms.TabPage();
             this.landusesDataGridView = new System.Windows.Forms.DataGridView();
             this.nameLandusesColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -69,10 +73,6 @@ namespace GUI
             this.apartmentsNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.recreationalLabel = new System.Windows.Forms.Label();
             this.recreationalNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.nameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.priceColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.poorSoilColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.steepColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.panel1.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.lotsTabPage.SuspendLayout();
@@ -146,6 +146,36 @@ namespace GUI
             this.lotsDataGridView.ReadOnly = true;
             this.lotsDataGridView.Size = new System.Drawing.Size(398, 193);
             this.lotsDataGridView.TabIndex = 0;
+            // 
+            // nameColumn
+            // 
+            this.nameColumn.HeaderText = "Name";
+            this.nameColumn.Name = "nameColumn";
+            this.nameColumn.ReadOnly = true;
+            this.nameColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // priceColumn
+            // 
+            this.priceColumn.HeaderText = "Price";
+            this.priceColumn.Name = "priceColumn";
+            this.priceColumn.ReadOnly = true;
+            // 
+            // poorSoilColumn
+            // 
+            this.poorSoilColumn.HeaderText = "Poor Soil";
+            this.poorSoilColumn.Name = "poorSoilColumn";
+            this.poorSoilColumn.ReadOnly = true;
+            // 
+            // steepColumn
+            // 
+            this.steepColumn.HeaderText = "Steep";
+            this.steepColumn.Items.AddRange(new object[] {
+            "Flat",
+            "ModeratelySteep",
+            "Steep",
+            "VerySteep"});
+            this.steepColumn.Name = "steepColumn";
+            this.steepColumn.ReadOnly = true;
             // 
             // landuses2TabPage
             // 
@@ -544,37 +574,7 @@ namespace GUI
             0,
             0});
             // 
-            // nameColumn
-            // 
-            this.nameColumn.HeaderText = "Name";
-            this.nameColumn.Name = "nameColumn";
-            this.nameColumn.ReadOnly = true;
-            this.nameColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // priceColumn
-            // 
-            this.priceColumn.HeaderText = "Price";
-            this.priceColumn.Name = "priceColumn";
-            this.priceColumn.ReadOnly = true;
-            // 
-            // poorSoilColumn
-            // 
-            this.poorSoilColumn.HeaderText = "Poor Soil";
-            this.poorSoilColumn.Name = "poorSoilColumn";
-            this.poorSoilColumn.ReadOnly = true;
-            // 
-            // steepColumn
-            // 
-            this.steepColumn.HeaderText = "Steep";
-            this.steepColumn.Items.AddRange(new object[] {
-            "Flat",
-            "ModeratelySteep",
-            "Steep",
-            "VerySteep"});
-            this.steepColumn.Name = "steepColumn";
-            this.steepColumn.ReadOnly = true;
-            // 
-            // Form1
+            // BuilderForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -583,6 +583,7 @@ namespace GUI
             this.Controls.Add(this.gridPanel);
             this.Name = "BuilderForm";
             this.Text = "Form1";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.BuilderForm_FormClosed);
             this.panel1.ResumeLayout(false);
             this.tabControl2.ResumeLayout(false);
             this.lotsTabPage.ResumeLayout(false);

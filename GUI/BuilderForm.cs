@@ -15,6 +15,7 @@ namespace GUI
 
         private readonly Problem _problem;
         private readonly int _sizePx;
+        private readonly StartForm _startForm;
 
         private void RemoveTerrainPoint(Point point)
         {
@@ -73,17 +74,18 @@ namespace GUI
                 _selectedButtons.All(btn1 => _selectedButtons.Any(button => IntersectsWith(button, btn1)));
         }
 
-        public BuilderForm(int size)
+        public BuilderForm(StartForm startForm, Problem problem)
         {
             InitializeComponent();
 
-            _problem = new Problem();
+            _startForm = startForm;
+            _problem = problem;
 
-            _sizePx = (int)(550.0 / size);
+            _sizePx = (int)(550.0 / _problem.Size);
 
-            for (var i = 0; i < size; ++i)
+            for (var i = 0; i < _problem.Size; ++i)
             {
-                for (var j = 0; j < size; ++j)
+                for (var j = 0; j < _problem.Size; ++j)
                 {
                     var btn = new Button
                     {
@@ -142,16 +144,16 @@ namespace GUI
         {
             if (_selectedButtons.Count == 0)
             {
-                MessageBox.Show(Resources.BuilderForm_lotApplyButton_Click_No_terrain_selected_,
-                    Resources.BuilderForm_lotApplyButton_Click_Error, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(Resources.NoTerrainSelectedStr,
+                    Resources.ErrorStr, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             var name = lotNameTextBox.Text;
             if (_problem.Lots.ContainsKey(name))
             {
-                MessageBox.Show(Resources.BuilderForm_lotApplyButton_Click_Duplicate_lot_name_,
-                    Resources.BuilderForm_lotApplyButton_Click_Error, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(Resources.DuplicateLotNameStr,
+                    Resources.ErrorStr, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -185,8 +187,8 @@ namespace GUI
 
             if (img == null)
             {
-                MessageBox.Show(Resources.BuilderForm_lotApplyButton_Click_Unknown_steep_type_,
-                    Resources.BuilderForm_lotApplyButton_Click_Error, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(Resources.UnknownSteepTypeStr,
+                    Resources.ErrorStr, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -243,6 +245,11 @@ namespace GUI
             landusesDataGridView.Rows.Clear();
             foreach (var landuse in landuses)
                 landusesDataGridView.Rows.Add(landuse.Key, landuse.Value.Type.ToString());
+        }
+
+        private void BuilderForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _startForm.Show();
         }
 
         /*
