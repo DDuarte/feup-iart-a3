@@ -371,6 +371,11 @@ namespace LandAllocationBuilder
                         costTextBox.Text =
                             _problem.ProblemResult.Cost.ToString(CultureInfo.InvariantCulture);
 
+                        foreach (var landuseAllocation in _problem.ProblemResult.LanduseAllocations)
+                        {
+                            AddLandAllocation(landuseAllocation.Item1, landuseAllocation.Item2);
+                        }
+
                         tabControl2.SelectTab(resultTabPage);
                     }));
                 }
@@ -437,7 +442,7 @@ base_cost: initial cost of violating a soft constraint",
 
         }
 
-        private void AddLandAllocation(string lot, string landuse)
+        private void AddLandAllocation(string landuse, string lot)
         {
             var img = _landuseImages[_problem.Landuses[landuse].Type];
             foreach (var point in _problem.Lots[lot].Terrain)
