@@ -300,23 +300,7 @@ namespace LandAllocationBuilder
 
         private void BuilderForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            _startForm.Show();
-
-            _selectedButtons.Clear();
-            _selectedButtons = null;
-            _buttons = null;
-
-            _problem.HardConstraints.Clear();
-            _problem.SoftConstraints.Clear();
-            _problem.HardConstraintsTable.Clear();
-            _problem.SoftConstraintsTable.Clear();
-            _problem.Lots.Clear();
-            _problem.Landuses.Clear();
-            _problem.Lakes.Clear();
-            _problem.Highways.Clear();
-            _problem = null;
-
-            GC.Collect();
+            _startForm.Close();
         }
 
         private void saveButton_Click(object sender, EventArgs e)
