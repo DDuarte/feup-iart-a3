@@ -329,11 +329,13 @@ namespace LandAllocationBuilder
                         tabControl2.SelectTab(resultTabPage);
                     }));
                 }
-                catch (ThreadAbortException)
+                catch (ThreadAbortException) { }
+
+                Invoke(new Action(() =>
                 {
                     _algoRunning = false;
                     runAlgorithmButton.Text = "Run Algorithm";
-                }
+                }));
             });
             _algoThread.Start();
         }
