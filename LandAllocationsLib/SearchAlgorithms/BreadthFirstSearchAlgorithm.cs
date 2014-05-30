@@ -17,7 +17,7 @@ namespace LandAllocationsLib.SearchAlgorithms
             var stateQueue = new List<LanduseAllocations> { firstState };
             var visitedStates = new List<LanduseAllocations>();
 
-            while (stateQueue.Count > 0)
+            while (stateQueue.Count > 0 && !ShouldStop)
             {
                 ++Iterations;
                 var curState = stateQueue.First();

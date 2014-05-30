@@ -8,6 +8,7 @@ namespace LandAllocationsLib.SearchAlgorithms
 {
     public abstract class SearchAlgorithm
     {
+        public volatile bool ShouldStop = false;
         protected readonly Problem Problem;
         protected long Iterations;
 

@@ -27,7 +27,7 @@ namespace LandAllocationsLib.SearchAlgorithms
             };
 
             
-            while (stateQueue.Count > 0) // while not empty
+            while (stateQueue.Count > 0 && !ShouldStop) // while not empty
             {
                 ++Iterations;
                 var currentState = stateQueue.Min;

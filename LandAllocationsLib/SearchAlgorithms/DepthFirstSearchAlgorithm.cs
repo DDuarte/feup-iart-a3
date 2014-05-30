@@ -12,6 +12,9 @@ namespace LandAllocationsLib.SearchAlgorithms
 
         private LanduseAllocations SearchRecursive(LanduseAllocations curState, List<LanduseAllocations> visitedStates)
         {
+            if (ShouldStop)
+                return null;
+
             ++Iterations;
             if (curState.IsFinalState)
                 return curState;

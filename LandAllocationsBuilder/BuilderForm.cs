@@ -17,7 +17,7 @@ namespace LandAllocationBuilder
     {
         private HashSet<Button> _selectedButtons = new HashSet<Button>();
         private Button[,] _buttons;
-
+        private volatile SearchAlgorithm _algorithm;
         private Problem _problem;
         private readonly int _sizePx;
         private readonly StartForm _startForm;
@@ -345,9 +345,10 @@ namespace LandAllocationBuilder
         {
             if (_algoRunning)
             {
-                _algoThread.Abort();
+                _algorithm.ShouldStop = true;
                 _algoRunning = false;
                 runAlgorithmButton.Text = "Run Algorithm";
+                return;
             }
 
             var algorithms = new Dictionary<string, Type>
@@ -363,10 +364,11 @@ namespace LandAllocationBuilder
             var algorithmName = (string) algorithmComboBox.SelectedItem;
 
             var algorithmType = algorithms[algorithmName];
-            var algorithm = (SearchAlgorithm)Activator.CreateInstance(algorithmType, _problem);
+            _algorithm = (SearchAlgorithm)Activator.CreateInstance(algorithmType, _problem);
 
             _problem.UpdateConstraintsTable();
 
+            _algorithm.ShouldStop = false;
             _algoRunning = true;
             runAlgorithmButton.Text = "Stop";
             _algoThread = new Thread(() =>
@@ -374,7 +376,7 @@ namespace LandAllocationBuilder
                 try
                 {
                     _algoRunning = true;
-                    _problem.ProblemResult = algorithm.Search();
+                    _problem.ProblemResult = _algorithm.Search();
                     _algoRunning = false;
 
                     Invoke(new Action(() =>

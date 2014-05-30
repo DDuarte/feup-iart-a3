@@ -19,7 +19,7 @@ namespace LandAllocationsLib.SearchAlgorithms
 
             var states = new List<LanduseAllocations>();
 
-            while (stateQueue.Count > 0)
+            while (stateQueue.Count > 0 && !ShouldStop)
             {
                 ++Iterations;
                 var curState = stateQueue.First();
