@@ -113,6 +113,9 @@ namespace LandAllocationsLib.StateRepresentation
 
             var tokens = str.Split(' ');
 
+            for (var i = 0; i < tokens.Length; i++)
+                tokens[i] = tokens[i].Trim();
+
             string name;
             bool hardConstraint;
 
@@ -203,7 +206,7 @@ namespace LandAllocationsLib.StateRepresentation
             }
             else if (tokens[2].StartsWith("steep", StringComparison.InvariantCultureIgnoreCase))
             {
-                var steepTypesStr = tokens[3].Trim().Trim('[', ']');
+                var steepTypesStr = tokens[3].Trim('[', ']');
                 var steepTypesStrArray = steepTypesStr.Split(',');
                 var steepTypes = steepTypesStrArray.Select(s =>
                 {

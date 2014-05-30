@@ -85,12 +85,13 @@ namespace LandAllocationBuilder
             this.recreationalNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.constraintsTextBox = new System.Windows.Forms.TextBox();
+            this.compileConstraintsButton = new System.Windows.Forms.Button();
             this.verySteepRadioButton = new System.Windows.Forms.RadioButton();
             this.steepRadioButton = new System.Windows.Forms.RadioButton();
             this.moderatelySteepRadioButton = new System.Windows.Forms.RadioButton();
             this.flatRadioButton = new System.Windows.Forms.RadioButton();
-            this.constraintsTextBox = new System.Windows.Forms.TextBox();
-            this.compileConstraintsButton = new System.Windows.Forms.Button();
+            this.helpConstraintButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.lotsTabPage.SuspendLayout();
@@ -700,6 +701,7 @@ namespace LandAllocationBuilder
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.helpConstraintButton);
             this.tabPage1.Controls.Add(this.compileConstraintsButton);
             this.tabPage1.Controls.Add(this.constraintsTextBox);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
@@ -709,6 +711,24 @@ namespace LandAllocationBuilder
             this.tabPage1.TabIndex = 5;
             this.tabPage1.Text = "Constraints";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // constraintsTextBox
+            // 
+            this.constraintsTextBox.Location = new System.Drawing.Point(6, 6);
+            this.constraintsTextBox.Multiline = true;
+            this.constraintsTextBox.Name = "constraintsTextBox";
+            this.constraintsTextBox.Size = new System.Drawing.Size(389, 215);
+            this.constraintsTextBox.TabIndex = 0;
+            // 
+            // compileConstraintsButton
+            // 
+            this.compileConstraintsButton.Location = new System.Drawing.Point(7, 227);
+            this.compileConstraintsButton.Name = "compileConstraintsButton";
+            this.compileConstraintsButton.Size = new System.Drawing.Size(75, 23);
+            this.compileConstraintsButton.TabIndex = 1;
+            this.compileConstraintsButton.Text = "Compile";
+            this.compileConstraintsButton.UseVisualStyleBackColor = true;
+            this.compileConstraintsButton.Click += new System.EventHandler(this.compileConstraintsButton_Click);
             // 
             // verySteepRadioButton
             // 
@@ -758,23 +778,15 @@ namespace LandAllocationBuilder
             this.flatRadioButton.Text = "Flat";
             this.flatRadioButton.UseVisualStyleBackColor = true;
             // 
-            // constraintsTextBox
+            // helpConstraintButton
             // 
-            this.constraintsTextBox.Location = new System.Drawing.Point(6, 6);
-            this.constraintsTextBox.Multiline = true;
-            this.constraintsTextBox.Name = "constraintsTextBox";
-            this.constraintsTextBox.Size = new System.Drawing.Size(389, 215);
-            this.constraintsTextBox.TabIndex = 0;
-            // 
-            // compileConstraintsButton
-            // 
-            this.compileConstraintsButton.Location = new System.Drawing.Point(7, 227);
-            this.compileConstraintsButton.Name = "compileConstraintsButton";
-            this.compileConstraintsButton.Size = new System.Drawing.Size(75, 23);
-            this.compileConstraintsButton.TabIndex = 1;
-            this.compileConstraintsButton.Text = "Compile";
-            this.compileConstraintsButton.UseVisualStyleBackColor = true;
-            this.compileConstraintsButton.Click += new System.EventHandler(this.compileConstraintsButton_Click);
+            this.helpConstraintButton.Location = new System.Drawing.Point(88, 227);
+            this.helpConstraintButton.Name = "helpConstraintButton";
+            this.helpConstraintButton.Size = new System.Drawing.Size(75, 23);
+            this.helpConstraintButton.TabIndex = 2;
+            this.helpConstraintButton.Text = "Help";
+            this.helpConstraintButton.UseVisualStyleBackColor = true;
+            this.helpConstraintButton.Click += new System.EventHandler(this.helpConstraintButton_Click);
             // 
             // BuilderForm
             // 
@@ -878,6 +890,7 @@ namespace LandAllocationBuilder
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.Button compileConstraintsButton;
         private System.Windows.Forms.TextBox constraintsTextBox;
+        private System.Windows.Forms.Button helpConstraintButton;
 
     }
 }

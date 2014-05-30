@@ -16,6 +16,7 @@ namespace LandAllocationBuilder
     public partial class BuilderForm : Form
     {
         private readonly HashSet<Button> _selectedButtons = new HashSet<Button>();
+        private readonly Button[,] _buttons;
 
         private readonly Problem _problem;
         private readonly int _sizePx;
@@ -84,6 +85,7 @@ namespace LandAllocationBuilder
 
             _startForm = startForm;
             _problem = problem;
+            _buttons = new Button[_problem.Size, _problem.Size];
 
             algorithmComboBox.SelectedIndex = 0;
 
@@ -110,19 +112,58 @@ namespace LandAllocationBuilder
                     btn.Click += (sender, args) => ToggleButton((Button) sender);
 
                     gridPanel.Controls.Add(btn);
+                    _buttons[i, j] = btn;
                 }
             }
+
+            foreach (var point in _problem.Highways)
+                AddHighway(point);
+
+            foreach (var point in _problem.Lakes)
+                AddLake(point);
+
+            foreach (var lot in _problem.Lots)
+                AddLot(lot.Key, lot.Value);
+
+            SetLanduses(_problem.Landuses);
+
+            constraintsTextBox.Text = string.Empty;
+            foreach (var constraint in _problem.HardConstraints)
+                constraintsTextBox.Text += constraint.Value + Environment.NewLine;
+            foreach (var constraint in _problem.SoftConstraints)
+                constraintsTextBox.Text += constraint.Value + Environment.NewLine;
+
+            if (_problem.ProblemResult != null)
+            {
+                foreach (var landuseAllocation in _problem.ProblemResult.LanduseAllocations)
+                {
+                    AddLandAllocation(landuseAllocation.Item1, landuseAllocation.Item2);
+                }
+            }
+        }
+
+        private void AddHighway(Point point)
+        {
+            var btn = _buttons[point.X, point.Y];
+            btn.BackColor = Color.SlateGray;
+            btn.ForeColor = Color.SlateGray;
+            btn.BackgroundImage = Resources.AsphaltTexture;
+        }
+
+        private void AddLake(Point point)
+        {
+            var btn = _buttons[point.X, point.Y];
+            btn.BackColor = Color.DodgerBlue;
+            btn.ForeColor = Color.DodgerBlue;
+            btn.BackgroundImage = Resources.WaterTexture;
         }
 
         private void highwayApplyButton_Click(object sender, EventArgs e)
         {
             foreach (var btn in _selectedButtons)
             {
-                btn.BackColor = Color.SlateGray;
-                btn.ForeColor = Color.SlateGray;
-                btn.BackgroundImage = new Bitmap(Resources.AsphaltTexture);
-
                 var point = (Point) btn.Tag;
+                AddHighway(point);
                 RemoveTerrainPoint(point);
                 _problem.Highways.Add(point);
             }
@@ -134,11 +175,8 @@ namespace LandAllocationBuilder
         {
             foreach (var btn in _selectedButtons)
             {
-                btn.BackColor = Color.DodgerBlue;
-                btn.ForeColor = Color.DodgerBlue;
-                btn.BackgroundImage = new Bitmap(Resources.WaterTexture);
-
-                var point = (Point)btn.Tag;
+                var point = (Point) btn.Tag;
+                AddLake(point);
                 RemoveTerrainPoint(point);
                 _problem.Lakes.Add(point);
             }
@@ -166,32 +204,16 @@ namespace LandAllocationBuilder
             var poorSoil = poorSoilCheckBox.Checked;
             var price = Convert.ToDouble(priceNumericUpDown.Value);
 
-            Bitmap img = null;
-            var steepType = SteepType.Flat;
+            SteepType steepType;
             if (flatRadioButton.Checked)
-            {
-                img = poorSoil ? Resources.SandFlatTexture : Resources.DirtFlatTexture;
                 steepType = SteepType.Flat;
-            }
             else if (moderatelySteepRadioButton.Checked)
-            {
-                img = poorSoil
-                    ? Resources.SandModeratelySteepTexture
-                    : Resources.DirtModeratelySteepTexture;
                 steepType = SteepType.ModeratelySteep;
-            }
             else if (steepRadioButton.Checked)
-            {
-                img = poorSoil ? Resources.SandSteepTexture : Resources.DirtSteepTexture;
                 steepType = SteepType.Steep;
-            }
             else if (verySteepRadioButton.Checked)
-            {
-                img = poorSoil ? Resources.SandVerySteepTexture : Resources.DirtVerySteepTexture;
                 steepType = SteepType.VerySteep;
-            }
-
-            if (img == null)
+            else
             {
                 MessageBox.Show(Resources.UnknownSteepTypeStr,
                     Resources.ErrorStr, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -202,13 +224,9 @@ namespace LandAllocationBuilder
 
             foreach (var btn in _selectedButtons)
             {
-                btn.BackColor = poorSoil ? Color.SandyBrown : Color.Brown;
-                btn.ForeColor = poorSoil ? Color.SandyBrown : Color.Brown;
-                btn.BackgroundImage = img;
-
-                var point = (Point)btn.Tag;
-                RemoveTerrainPoint(point);
+                var point = (Point) btn.Tag;
                 terrain.Add(point);
+                RemoveTerrainPoint(point);
             }
 
             _selectedButtons.Clear();
@@ -221,8 +239,39 @@ namespace LandAllocationBuilder
                 Terrain = terrain
             };
 
+            AddLot(name, lot);
             _problem.Lots.Add(name, lot);
+        }
+
+        private readonly Dictionary<SteepType, Tuple<Bitmap, Bitmap>> _steepImages = new Dictionary
+            <SteepType, Tuple<Bitmap, Bitmap>>
+        {
+            {SteepType.Flat, Tuple.Create(Resources.SandFlatTexture, Resources.DirtFlatTexture)},
+            {SteepType.ModeratelySteep, Tuple.Create(Resources.SandModeratelySteepTexture, Resources.DirtModeratelySteepTexture)},
+            {SteepType.Steep, Tuple.Create(Resources.SandSteepTexture, Resources.DirtSteepTexture)},
+            {SteepType.VerySteep, Tuple.Create(Resources.SandVerySteepTexture, Resources.DirtVerySteepTexture)},
+        };
+
+        private void AddLot(string name, Lot lot)
+        {
+            foreach (var point in lot.Terrain)
+            {
+                var btn = _buttons[point.X, point.Y];
+                btn.BackColor = lot.PoorSoil ? Color.SandyBrown : Color.Brown;
+                btn.ForeColor = lot.PoorSoil ? Color.SandyBrown : Color.Brown;
+                btn.BackgroundImage = lot.PoorSoil ? _steepImages[lot.Steep].Item1 : _steepImages[lot.Steep].Item2;
+            }
+
             lotsDataGridView.Rows.Add(name, lot.Price, lot.PoorSoil, lot.Steep.ToString());
+        }
+
+        private void SetLanduses(Dictionary<string, Landuse> landuses)
+        {
+            _problem.Landuses = landuses;
+
+            landusesDataGridView.Rows.Clear();
+            foreach (var landuse in landuses)
+                landusesDataGridView.Rows.Add(landuse.Key, landuse.Value.Type.ToString());
         }
 
         private void landusesApplyButton_Click(object sender, EventArgs e)
@@ -246,11 +295,7 @@ namespace LandAllocationBuilder
             for (var i = 0; i < cemeteryCount; ++i)
                 landuses.Add("cemetery" + i, new Landuse { Type = LanduseType.Cemetery });
 
-            _problem.Landuses = landuses;
-
-            landusesDataGridView.Rows.Clear();
-            foreach (var landuse in landuses)
-                landusesDataGridView.Rows.Add(landuse.Key, landuse.Value.Type.ToString());
+            SetLanduses(landuses);
         }
 
         private void BuilderForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -368,34 +413,51 @@ namespace LandAllocationBuilder
                 constraintsTextBox.Text += constraint.Value + Environment.NewLine;
         }
 
-        /*
-        private void landuseApplyButton_Click(object sender, System.EventArgs e)
+        private void helpConstraintButton_Click(object sender, EventArgs e)
         {
-            Bitmap img = null;
+            MessageBox.Show(null, @"Hard Constraints:
+Size - H [<landuse>] size <op> <threshold>
+Distance - H [<landuse>] distance(<place>) <op> <threshold>
+Steepness - H [<landuse>] steep [<steep>]
+Soil Type - H [<landuse>] soil <soil_type>
 
-            if (recreationalRadioButton.Checked)
-                img = Properties.Resources.Recreational;
-            else if (apartmentsRadioButton.Checked)
-                img = Properties.Resources.Apartments;
-            else if (housingComplexRadioButton.Checked)
-                img = Properties.Resources.HousingComplex;
-            else if (dumpRadioButton.Checked)
-                img = Properties.Resources.Dump;
-            else if (cemetryRadioButton.Checked)
-                img = Properties.Resources.Cemetery;
+Soft Constraints:
+Size - S(<base_cost>) [<landuse>] size <op> <threshold>
+Distance - S(<base_cost>) [<landuse>] distance(<place>) <op> <threshold>
+Steepness - S(<base_cost>) [<landuse>] steep [<steep>]
+Soil Type - S(<base_cost>) [<landuse>] soil <soil_type>
 
-            if (img == null)
-                return;
+landuse: one or more of Recreational, Apartments, HousingComplex, Dump, Cemetery
+steep: one or more of Flat, ModeratelySteep, Steep, VerySteep
+op: > or <
+place: Lake or Highway
+threshold: distance or size in kilometers (1 square = 1km^2)
+base_cost: initial cost of violating a soft constraint",
+                "Constraints Syntax", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            foreach (var btn in _selectedButtons)
+        }
+
+        private void AddLandAllocation(string lot, string landuse)
+        {
+            var img = _landuseImages[_problem.Landuses[landuse].Type];
+            foreach (var point in _problem.Lots[lot].Terrain)
             {
+                var btn = _buttons[point.X, point.Y];
                 btn.BackColor = Color.Yellow;
                 btn.ForeColor = Color.Yellow;
 
                 btn.BackgroundImage = img;
             }
+            
+        }
 
-            _selectedButtons.Clear();
-        }*/
+        private readonly Dictionary<LanduseType, Bitmap> _landuseImages = new Dictionary<LanduseType, Bitmap>
+        {
+            { LanduseType.Recreational, Resources.Recreational },
+            { LanduseType.Apartments, Resources.Apartments },
+            { LanduseType.HousingComplex, Resources.HousingComplex },
+            { LanduseType.Dump, Resources.Dump },
+            { LanduseType.Cemetery, Resources.Cemetery }
+        };
     }
 }
