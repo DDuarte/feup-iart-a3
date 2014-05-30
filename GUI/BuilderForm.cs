@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GUI.Properties;
+using IART_A3.SearchAlgorithms;
 using IART_A3.StateRepresentation;
 using Point = IART_A3.StateRepresentation.Point;
 
@@ -80,6 +83,8 @@ namespace GUI
 
             _startForm = startForm;
             _problem = problem;
+
+            algorithmComboBox.SelectedIndex = 0;
 
             _sizePx = (int)(550.0 / _problem.Size);
 
@@ -250,6 +255,51 @@ namespace GUI
         private void BuilderForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             _startForm.Show();
+        }
+
+        private void saveButton_Click(object sender, EventArgs e)
+        {
+            saveFileDialog.ShowDialog();
+        }
+
+        private void saveFileDialog_FileOk(object sender, CancelEventArgs e)
+        {
+            var name = saveFileDialog.FileName;
+
+            try
+            {
+                _problem.WriteJson(name);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.ErrorStr,
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void runAlgorithmButton_Click(object sender, EventArgs e)
+        {
+            var algorithms = new Dictionary<string, Type>
+            {
+                {"A*", typeof (AStarSearchAlgorithm)},
+                {"Greedy", typeof (GreedySearchAlgorithm)},
+                {"UniformCost", typeof (UniformCostAlgorithm)},
+                {"BreadthFirst", typeof (BreadthFirstSearchAlgorithm)},
+                {"Bruteforce", typeof (BruteforceSearchAlgorithm)},
+                {"DepthFirst", typeof (DepthFirstSearchAlgorithm)}
+            };
+
+            var algorithmName = (string) algorithmComboBox.SelectedItem;
+
+            var algorithmType = algorithms[algorithmName];
+            var algorithm = (SearchAlgorithm)Activator.CreateInstance(algorithmType, _problem);
+
+            var stringWriter = new StringWriter();
+
+            _problem.UpdateConstraintsTable();
+            _problem.ProblemResult = algorithm.Search(stringWriter);
+
+            MessageBox.Show(stringWriter.ToString());
         }
 
         /*

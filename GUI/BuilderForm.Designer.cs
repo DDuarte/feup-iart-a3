@@ -49,10 +49,6 @@ namespace GUI
             this.lotNameLabel = new System.Windows.Forms.Label();
             this.lotNameTextBox = new System.Windows.Forms.TextBox();
             this.steepGroupBox = new System.Windows.Forms.GroupBox();
-            this.verySteepRadioButton = new System.Windows.Forms.RadioButton();
-            this.steepRadioButton = new System.Windows.Forms.RadioButton();
-            this.moderatelySteepRadioButton = new System.Windows.Forms.RadioButton();
-            this.flatRadioButton = new System.Windows.Forms.RadioButton();
             this.poorSoilCheckBox = new System.Windows.Forms.CheckBox();
             this.euroLabel = new System.Windows.Forms.Label();
             this.priceLabel = new System.Windows.Forms.Label();
@@ -73,6 +69,14 @@ namespace GUI
             this.apartmentsNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.recreationalLabel = new System.Windows.Forms.Label();
             this.recreationalNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.saveButton = new System.Windows.Forms.Button();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.runAlgorithmButton = new System.Windows.Forms.Button();
+            this.algorithmComboBox = new System.Windows.Forms.ComboBox();
+            this.verySteepRadioButton = new System.Windows.Forms.RadioButton();
+            this.steepRadioButton = new System.Windows.Forms.RadioButton();
+            this.moderatelySteepRadioButton = new System.Windows.Forms.RadioButton();
+            this.flatRadioButton = new System.Windows.Forms.RadioButton();
             this.panel1.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.lotsTabPage.SuspendLayout();
@@ -102,6 +106,9 @@ namespace GUI
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.algorithmComboBox);
+            this.panel1.Controls.Add(this.runAlgorithmButton);
+            this.panel1.Controls.Add(this.saveButton);
             this.panel1.Controls.Add(this.tabControl2);
             this.panel1.Controls.Add(this.tabControl1);
             this.panel1.Location = new System.Drawing.Point(561, 4);
@@ -289,54 +296,6 @@ namespace GUI
             this.steepGroupBox.TabIndex = 7;
             this.steepGroupBox.TabStop = false;
             this.steepGroupBox.Text = "Steep";
-            // 
-            // verySteepRadioButton
-            // 
-            this.verySteepRadioButton.AutoSize = true;
-            this.verySteepRadioButton.Location = new System.Drawing.Point(7, 90);
-            this.verySteepRadioButton.Name = "verySteepRadioButton";
-            this.verySteepRadioButton.Size = new System.Drawing.Size(77, 17);
-            this.verySteepRadioButton.TabIndex = 3;
-            this.verySteepRadioButton.TabStop = true;
-            this.verySteepRadioButton.Tag = IART_A3.StateRepresentation.SteepType.VerySteep;
-            this.verySteepRadioButton.Text = "Very Steep";
-            this.verySteepRadioButton.UseVisualStyleBackColor = true;
-            // 
-            // steepRadioButton
-            // 
-            this.steepRadioButton.AutoSize = true;
-            this.steepRadioButton.Location = new System.Drawing.Point(7, 67);
-            this.steepRadioButton.Name = "steepRadioButton";
-            this.steepRadioButton.Size = new System.Drawing.Size(53, 17);
-            this.steepRadioButton.TabIndex = 2;
-            this.steepRadioButton.TabStop = true;
-            this.steepRadioButton.Tag = IART_A3.StateRepresentation.SteepType.Steep;
-            this.steepRadioButton.Text = "Steep";
-            this.steepRadioButton.UseVisualStyleBackColor = true;
-            // 
-            // moderatelySteepRadioButton
-            // 
-            this.moderatelySteepRadioButton.AutoSize = true;
-            this.moderatelySteepRadioButton.Location = new System.Drawing.Point(7, 44);
-            this.moderatelySteepRadioButton.Name = "moderatelySteepRadioButton";
-            this.moderatelySteepRadioButton.Size = new System.Drawing.Size(108, 17);
-            this.moderatelySteepRadioButton.TabIndex = 1;
-            this.moderatelySteepRadioButton.TabStop = true;
-            this.moderatelySteepRadioButton.Tag = IART_A3.StateRepresentation.SteepType.ModeratelySteep;
-            this.moderatelySteepRadioButton.Text = "Moderately Steep";
-            this.moderatelySteepRadioButton.UseVisualStyleBackColor = true;
-            // 
-            // flatRadioButton
-            // 
-            this.flatRadioButton.AutoSize = true;
-            this.flatRadioButton.Location = new System.Drawing.Point(7, 20);
-            this.flatRadioButton.Name = "flatRadioButton";
-            this.flatRadioButton.Size = new System.Drawing.Size(42, 17);
-            this.flatRadioButton.TabIndex = 0;
-            this.flatRadioButton.TabStop = true;
-            this.flatRadioButton.Tag = IART_A3.StateRepresentation.SteepType.Flat;
-            this.flatRadioButton.Text = "Flat";
-            this.flatRadioButton.UseVisualStyleBackColor = true;
             // 
             // poorSoilCheckBox
             // 
@@ -574,6 +533,96 @@ namespace GUI
             0,
             0});
             // 
+            // saveButton
+            // 
+            this.saveButton.Location = new System.Drawing.Point(349, 523);
+            this.saveButton.Name = "saveButton";
+            this.saveButton.Size = new System.Drawing.Size(75, 23);
+            this.saveButton.TabIndex = 11;
+            this.saveButton.Text = "Save";
+            this.saveButton.UseVisualStyleBackColor = true;
+            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
+            // 
+            // saveFileDialog
+            // 
+            this.saveFileDialog.DefaultExt = "json";
+            this.saveFileDialog.Filter = "JSON files|*.json|All files|*.*";
+            this.saveFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog_FileOk);
+            // 
+            // runAlgorithmButton
+            // 
+            this.runAlgorithmButton.Location = new System.Drawing.Point(124, 524);
+            this.runAlgorithmButton.Name = "runAlgorithmButton";
+            this.runAlgorithmButton.Size = new System.Drawing.Size(108, 23);
+            this.runAlgorithmButton.TabIndex = 12;
+            this.runAlgorithmButton.Text = "Run Algorithm";
+            this.runAlgorithmButton.UseVisualStyleBackColor = true;
+            this.runAlgorithmButton.Click += new System.EventHandler(this.runAlgorithmButton_Click);
+            // 
+            // algorithmComboBox
+            // 
+            this.algorithmComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.algorithmComboBox.FormattingEnabled = true;
+            this.algorithmComboBox.Items.AddRange(new object[] {
+            "A*",
+            "Greedy",
+            "UniformCost",
+            "BreadthFirst",
+            "Bruteforce",
+            "DepthFirst"});
+            this.algorithmComboBox.Location = new System.Drawing.Point(12, 525);
+            this.algorithmComboBox.Name = "algorithmComboBox";
+            this.algorithmComboBox.Size = new System.Drawing.Size(106, 21);
+            this.algorithmComboBox.TabIndex = 14;
+            // 
+            // verySteepRadioButton
+            // 
+            this.verySteepRadioButton.AutoSize = true;
+            this.verySteepRadioButton.Location = new System.Drawing.Point(7, 90);
+            this.verySteepRadioButton.Name = "verySteepRadioButton";
+            this.verySteepRadioButton.Size = new System.Drawing.Size(77, 17);
+            this.verySteepRadioButton.TabIndex = 3;
+            this.verySteepRadioButton.TabStop = true;
+            this.verySteepRadioButton.Tag = IART_A3.StateRepresentation.SteepType.VerySteep;
+            this.verySteepRadioButton.Text = "Very Steep";
+            this.verySteepRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // steepRadioButton
+            // 
+            this.steepRadioButton.AutoSize = true;
+            this.steepRadioButton.Location = new System.Drawing.Point(7, 67);
+            this.steepRadioButton.Name = "steepRadioButton";
+            this.steepRadioButton.Size = new System.Drawing.Size(53, 17);
+            this.steepRadioButton.TabIndex = 2;
+            this.steepRadioButton.TabStop = true;
+            this.steepRadioButton.Tag = IART_A3.StateRepresentation.SteepType.Steep;
+            this.steepRadioButton.Text = "Steep";
+            this.steepRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // moderatelySteepRadioButton
+            // 
+            this.moderatelySteepRadioButton.AutoSize = true;
+            this.moderatelySteepRadioButton.Location = new System.Drawing.Point(7, 44);
+            this.moderatelySteepRadioButton.Name = "moderatelySteepRadioButton";
+            this.moderatelySteepRadioButton.Size = new System.Drawing.Size(108, 17);
+            this.moderatelySteepRadioButton.TabIndex = 1;
+            this.moderatelySteepRadioButton.TabStop = true;
+            this.moderatelySteepRadioButton.Tag = IART_A3.StateRepresentation.SteepType.ModeratelySteep;
+            this.moderatelySteepRadioButton.Text = "Moderately Steep";
+            this.moderatelySteepRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // flatRadioButton
+            // 
+            this.flatRadioButton.AutoSize = true;
+            this.flatRadioButton.Location = new System.Drawing.Point(7, 20);
+            this.flatRadioButton.Name = "flatRadioButton";
+            this.flatRadioButton.Size = new System.Drawing.Size(42, 17);
+            this.flatRadioButton.TabIndex = 0;
+            this.flatRadioButton.TabStop = true;
+            this.flatRadioButton.Tag = IART_A3.StateRepresentation.SteepType.Flat;
+            this.flatRadioButton.Text = "Flat";
+            this.flatRadioButton.UseVisualStyleBackColor = true;
+            // 
             // BuilderForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -582,7 +631,7 @@ namespace GUI
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.gridPanel);
             this.Name = "BuilderForm";
-            this.Text = "Form1";
+            this.Text = "Land Allocations Builder";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.BuilderForm_FormClosed);
             this.panel1.ResumeLayout(false);
             this.tabControl2.ResumeLayout(false);
@@ -654,6 +703,10 @@ namespace GUI
         private System.Windows.Forms.DataGridViewTextBoxColumn priceColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn poorSoilColumn;
         private System.Windows.Forms.DataGridViewComboBoxColumn steepColumn;
+        private System.Windows.Forms.Button saveButton;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private System.Windows.Forms.Button runAlgorithmButton;
+        private System.Windows.Forms.ComboBox algorithmComboBox;
 
     }
 }

@@ -4,7 +4,7 @@ using IART_A3.StateRepresentation;
 
 namespace IART_A3.SearchAlgorithms
 {
-    class BruteforceSearchAlgorithm : SearchAlgorithm
+    public class BruteforceSearchAlgorithm : SearchAlgorithm
     {
         public BruteforceSearchAlgorithm(Problem problem) : base(problem) { }
 

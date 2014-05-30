@@ -4,7 +4,7 @@ using IART_A3.StateRepresentation;
 
 namespace IART_A3.SearchAlgorithms
 {
-    class BreadthFirstSearchAlgorithm : SearchAlgorithm
+    public class BreadthFirstSearchAlgorithm : SearchAlgorithm
     {
         public BreadthFirstSearchAlgorithm(Problem problem) : base(problem) { }
 

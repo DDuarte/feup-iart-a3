@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using IART_A3.StateRepresentation;
 
 namespace IART_A3.SearchAlgorithms
 {
-    class DepthFirstSearchAlgorithm : SearchAlgorithm
+    public class DepthFirstSearchAlgorithm : SearchAlgorithm
     {
         public DepthFirstSearchAlgorithm(Problem problem) : base(problem) { }
 
