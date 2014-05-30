@@ -307,6 +307,34 @@ namespace LandAllocationBuilder
             tabControl2.SelectTab(resultTabPage);
         }
 
+        private void compileConstraintsButton_Click(object sender, EventArgs e)
+        {
+            _problem.HardConstraints.Clear();
+            _problem.SoftConstraints.Clear();
+
+            var lines = constraintsTextBox.Text.Split('\n');
+            foreach (var line in lines.Where(line => !string.IsNullOrWhiteSpace(line)))
+            {
+                try
+                {
+                    if (!_problem.AddConstraint(line))
+                        throw new Exception("Failed at parsing.");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, Resources.ErrorStr, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+
+            constraintsTextBox.Text = string.Empty;
+
+            foreach (var constraint in _problem.HardConstraints)
+                constraintsTextBox.Text += constraint.Value + Environment.NewLine;
+            foreach (var constraint in _problem.SoftConstraints)
+                constraintsTextBox.Text += constraint.Value + Environment.NewLine;
+        }
+
         /*
         private void landuseApplyButton_Click(object sender, System.EventArgs e)
         {

@@ -44,6 +44,12 @@ namespace LandAllocationsLib.Constraints
 
             return 0;
         }
+
+        public override string ToString()
+        {
+            var landuseTypes = LandusesTypes.Select(type => type.ToString()).Aggregate((s1, s2) => s1 + "," + s2);
+            return string.Format("S({3}) [{0}] size {1} {2}", landuseTypes, CheckSmaller ? '<' : '>', Threshold, BaseCost);
+        }
     }
 
     public class DistanceSoftConstraint : ISoftConstraint
@@ -89,6 +95,13 @@ namespace LandAllocationsLib.Constraints
 
             return 0;
         }
+
+        public override string ToString()
+        {
+            var landuseTypes = LandusesTypes.Select(type => type.ToString()).Aggregate((s1, s2) => s1 + "," + s2);
+            return string.Format("S({4}) [{0}] distance({1}) {2} {3}",
+                landuseTypes, Place, CheckCloser ? '<' : '>', Threshold, BaseCost);
+        }
     }
 
     public class SteepSoftConstraint : ISoftConstraint
@@ -111,6 +124,13 @@ namespace LandAllocationsLib.Constraints
 
             return 0;
         }
+
+        public override string ToString()
+        {
+            var landuseTypes = LandusesTypes.Select(type => type.ToString()).Aggregate((s1, s2) => s1 + "," + s2);
+            var steepTypes = SteepTypes.Select(type => type.ToString()).Aggregate((s1, s2) => s1 + "," + s2);
+            return string.Format("S({2}) [{0}] steep [{1}]", landuseTypes, steepTypes, BaseCost);
+        }
     }
 
     public class SoilSoftConstraint : ISoftConstraint
@@ -132,6 +152,12 @@ namespace LandAllocationsLib.Constraints
                 return lot.PoorSoil == PoorSoil ? 0 : BaseCost;
 
             return 0;
+        }
+
+        public override string ToString()
+        {
+            var landuseTypes = LandusesTypes.Select(type => type.ToString()).Aggregate((s1, s2) => s1 + "," + s2);
+            return string.Format("S({2}) [{0}] soil {1}", landuseTypes, PoorSoil ? "poor" : "good", BaseCost);
         }
     }
 }

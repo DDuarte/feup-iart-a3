@@ -37,6 +37,12 @@ namespace LandAllocationsLib.Constraints
 
             return true;
         }
+
+        public override string ToString()
+        {
+            var landuseTypes = LandusesTypes.Select(type => type.ToString()).Aggregate((s1, s2) => s1 + "," + s2);
+            return string.Format("H [{0}] size {1} {2}", landuseTypes, CheckSmaller ? '<' : '>', Threshold);
+        }
     }
 
     public class DistanceHardConstraint : IHardConstraint
@@ -76,6 +82,12 @@ namespace LandAllocationsLib.Constraints
 
             return true;
         }
+
+        public override string ToString()
+        {
+            var landuseTypes = LandusesTypes.Select(type => type.ToString()).Aggregate((s1, s2) => s1 + "," + s2);
+            return string.Format("H [{0}] distance({1}) {2} {3}", landuseTypes, Place, CheckCloser ? '<' : '>', Threshold);
+        }
     }
 
     public class SteepHardConstraint : IHardConstraint
@@ -96,6 +108,13 @@ namespace LandAllocationsLib.Constraints
 
             return true;
         }
+
+        public override string ToString()
+        {
+            var landuseTypes = LandusesTypes.Select(type => type.ToString()).Aggregate((s1, s2) => s1 + "," + s2);
+            var steepTypes = SteepTypes.Select(type => type.ToString()).Aggregate((s1, s2) => s1 + "," + s2);
+            return string.Format("H [{0}] steep [{1}]", landuseTypes, steepTypes);
+        }
     }
 
     public class SoilHardConstraint : IHardConstraint
@@ -115,6 +134,12 @@ namespace LandAllocationsLib.Constraints
                 return lot.PoorSoil == PoorSoil;
 
             return true;
+        }
+
+        public override string ToString()
+        {
+            var landuseTypes = LandusesTypes.Select(type => type.ToString()).Aggregate((s1, s2) => s1 + "," + s2);
+            return string.Format("H [{0}] soil {1}", landuseTypes, PoorSoil ? "poor" : "good");
         }
     }
 }
