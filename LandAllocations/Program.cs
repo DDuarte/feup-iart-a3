@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
+using System.Linq;
 using LandAllocationsLib.SearchAlgorithms;
 using LandAllocationsLib.StateRepresentation;
 
-namespace IART_A3
+namespace LandAllocation
 {
     public static class Program
     {

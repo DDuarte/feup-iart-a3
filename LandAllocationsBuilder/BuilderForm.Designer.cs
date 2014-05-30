@@ -32,6 +32,9 @@ namespace LandAllocationBuilder
         {
             this.gridPanel = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.algorithmComboBox = new System.Windows.Forms.ComboBox();
+            this.runAlgorithmButton = new System.Windows.Forms.Button();
+            this.saveButton = new System.Windows.Forms.Button();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.lotsTabPage = new System.Windows.Forms.TabPage();
             this.lotsDataGridView = new System.Windows.Forms.DataGridView();
@@ -69,14 +72,22 @@ namespace LandAllocationBuilder
             this.apartmentsNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.recreationalLabel = new System.Windows.Forms.Label();
             this.recreationalNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.saveButton = new System.Windows.Forms.Button();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.runAlgorithmButton = new System.Windows.Forms.Button();
-            this.algorithmComboBox = new System.Windows.Forms.ComboBox();
+            this.resultTabPage = new System.Windows.Forms.TabPage();
+            this.label1 = new System.Windows.Forms.Label();
+            this.algorithmNameTextBox = new System.Windows.Forms.TextBox();
+            this.timeTextBox = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.iterTextBox = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.solutionTextBox = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.verySteepRadioButton = new System.Windows.Forms.RadioButton();
             this.steepRadioButton = new System.Windows.Forms.RadioButton();
             this.moderatelySteepRadioButton = new System.Windows.Forms.RadioButton();
             this.flatRadioButton = new System.Windows.Forms.RadioButton();
+            this.costTextBox = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.lotsTabPage.SuspendLayout();
@@ -95,6 +106,7 @@ namespace LandAllocationBuilder
             ((System.ComponentModel.ISupportInitialize)(this.housingComplexNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.apartmentsNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.recreationalNumericUpDown)).BeginInit();
+            this.resultTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // gridPanel
@@ -116,10 +128,47 @@ namespace LandAllocationBuilder
             this.panel1.Size = new System.Drawing.Size(427, 550);
             this.panel1.TabIndex = 1;
             // 
+            // algorithmComboBox
+            // 
+            this.algorithmComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.algorithmComboBox.FormattingEnabled = true;
+            this.algorithmComboBox.Items.AddRange(new object[] {
+            "A*",
+            "Greedy",
+            "UniformCost",
+            "BreadthFirst",
+            "Bruteforce",
+            "DepthFirst"});
+            this.algorithmComboBox.Location = new System.Drawing.Point(12, 525);
+            this.algorithmComboBox.Name = "algorithmComboBox";
+            this.algorithmComboBox.Size = new System.Drawing.Size(106, 21);
+            this.algorithmComboBox.TabIndex = 14;
+            // 
+            // runAlgorithmButton
+            // 
+            this.runAlgorithmButton.Location = new System.Drawing.Point(124, 524);
+            this.runAlgorithmButton.Name = "runAlgorithmButton";
+            this.runAlgorithmButton.Size = new System.Drawing.Size(108, 23);
+            this.runAlgorithmButton.TabIndex = 12;
+            this.runAlgorithmButton.Text = "Run Algorithm";
+            this.runAlgorithmButton.UseVisualStyleBackColor = true;
+            this.runAlgorithmButton.Click += new System.EventHandler(this.runAlgorithmButton_Click);
+            // 
+            // saveButton
+            // 
+            this.saveButton.Location = new System.Drawing.Point(349, 523);
+            this.saveButton.Name = "saveButton";
+            this.saveButton.Size = new System.Drawing.Size(75, 23);
+            this.saveButton.TabIndex = 11;
+            this.saveButton.Text = "Save";
+            this.saveButton.UseVisualStyleBackColor = true;
+            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
+            // 
             // tabControl2
             // 
             this.tabControl2.Controls.Add(this.lotsTabPage);
             this.tabControl2.Controls.Add(this.landuses2TabPage);
+            this.tabControl2.Controls.Add(this.resultTabPage);
             this.tabControl2.Location = new System.Drawing.Point(12, 296);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
@@ -533,47 +582,99 @@ namespace LandAllocationBuilder
             0,
             0});
             // 
-            // saveButton
-            // 
-            this.saveButton.Location = new System.Drawing.Point(349, 523);
-            this.saveButton.Name = "saveButton";
-            this.saveButton.Size = new System.Drawing.Size(75, 23);
-            this.saveButton.TabIndex = 11;
-            this.saveButton.Text = "Save";
-            this.saveButton.UseVisualStyleBackColor = true;
-            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
-            // 
             // saveFileDialog
             // 
             this.saveFileDialog.DefaultExt = "json";
             this.saveFileDialog.Filter = "JSON files|*.json|All files|*.*";
             this.saveFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog_FileOk);
             // 
-            // runAlgorithmButton
+            // resultTabPage
             // 
-            this.runAlgorithmButton.Location = new System.Drawing.Point(124, 524);
-            this.runAlgorithmButton.Name = "runAlgorithmButton";
-            this.runAlgorithmButton.Size = new System.Drawing.Size(108, 23);
-            this.runAlgorithmButton.TabIndex = 12;
-            this.runAlgorithmButton.Text = "Run Algorithm";
-            this.runAlgorithmButton.UseVisualStyleBackColor = true;
-            this.runAlgorithmButton.Click += new System.EventHandler(this.runAlgorithmButton_Click);
+            this.resultTabPage.Controls.Add(this.costTextBox);
+            this.resultTabPage.Controls.Add(this.label5);
+            this.resultTabPage.Controls.Add(this.solutionTextBox);
+            this.resultTabPage.Controls.Add(this.label4);
+            this.resultTabPage.Controls.Add(this.iterTextBox);
+            this.resultTabPage.Controls.Add(this.label3);
+            this.resultTabPage.Controls.Add(this.timeTextBox);
+            this.resultTabPage.Controls.Add(this.label2);
+            this.resultTabPage.Controls.Add(this.algorithmNameTextBox);
+            this.resultTabPage.Controls.Add(this.label1);
+            this.resultTabPage.Location = new System.Drawing.Point(4, 22);
+            this.resultTabPage.Name = "resultTabPage";
+            this.resultTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.resultTabPage.Size = new System.Drawing.Size(404, 199);
+            this.resultTabPage.TabIndex = 2;
+            this.resultTabPage.Text = "Results";
+            this.resultTabPage.UseVisualStyleBackColor = true;
             // 
-            // algorithmComboBox
+            // label1
             // 
-            this.algorithmComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.algorithmComboBox.FormattingEnabled = true;
-            this.algorithmComboBox.Items.AddRange(new object[] {
-            "A*",
-            "Greedy",
-            "UniformCost",
-            "BreadthFirst",
-            "Bruteforce",
-            "DepthFirst"});
-            this.algorithmComboBox.Location = new System.Drawing.Point(12, 525);
-            this.algorithmComboBox.Name = "algorithmComboBox";
-            this.algorithmComboBox.Size = new System.Drawing.Size(106, 21);
-            this.algorithmComboBox.TabIndex = 14;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(7, 7);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(53, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Algorithm:";
+            // 
+            // algorithmNameTextBox
+            // 
+            this.algorithmNameTextBox.Location = new System.Drawing.Point(67, 4);
+            this.algorithmNameTextBox.Name = "algorithmNameTextBox";
+            this.algorithmNameTextBox.ReadOnly = true;
+            this.algorithmNameTextBox.Size = new System.Drawing.Size(100, 20);
+            this.algorithmNameTextBox.TabIndex = 1;
+            // 
+            // timeTextBox
+            // 
+            this.timeTextBox.Location = new System.Drawing.Point(67, 32);
+            this.timeTextBox.Name = "timeTextBox";
+            this.timeTextBox.ReadOnly = true;
+            this.timeTextBox.Size = new System.Drawing.Size(100, 20);
+            this.timeTextBox.TabIndex = 3;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(7, 35);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(55, 13);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "Time (ms):";
+            // 
+            // iterTextBox
+            // 
+            this.iterTextBox.Location = new System.Drawing.Point(67, 62);
+            this.iterTextBox.Name = "iterTextBox";
+            this.iterTextBox.ReadOnly = true;
+            this.iterTextBox.Size = new System.Drawing.Size(100, 20);
+            this.iterTextBox.TabIndex = 5;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(7, 65);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(53, 13);
+            this.label3.TabIndex = 4;
+            this.label3.Text = "Iterations:";
+            // 
+            // solutionTextBox
+            // 
+            this.solutionTextBox.Location = new System.Drawing.Point(67, 92);
+            this.solutionTextBox.Name = "solutionTextBox";
+            this.solutionTextBox.ReadOnly = true;
+            this.solutionTextBox.Size = new System.Drawing.Size(330, 20);
+            this.solutionTextBox.TabIndex = 7;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(7, 95);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(48, 13);
+            this.label4.TabIndex = 6;
+            this.label4.Text = "Solution:";
             // 
             // verySteepRadioButton
             // 
@@ -623,6 +724,23 @@ namespace LandAllocationBuilder
             this.flatRadioButton.Text = "Flat";
             this.flatRadioButton.UseVisualStyleBackColor = true;
             // 
+            // costTextBox
+            // 
+            this.costTextBox.Location = new System.Drawing.Point(67, 121);
+            this.costTextBox.Name = "costTextBox";
+            this.costTextBox.ReadOnly = true;
+            this.costTextBox.Size = new System.Drawing.Size(100, 20);
+            this.costTextBox.TabIndex = 9;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(7, 124);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(31, 13);
+            this.label5.TabIndex = 8;
+            this.label5.Text = "Cost:";
+            // 
             // BuilderForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -654,6 +772,8 @@ namespace LandAllocationBuilder
             ((System.ComponentModel.ISupportInitialize)(this.housingComplexNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.apartmentsNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.recreationalNumericUpDown)).EndInit();
+            this.resultTabPage.ResumeLayout(false);
+            this.resultTabPage.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -707,6 +827,17 @@ namespace LandAllocationBuilder
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.Button runAlgorithmButton;
         private System.Windows.Forms.ComboBox algorithmComboBox;
+        private System.Windows.Forms.TabPage resultTabPage;
+        private System.Windows.Forms.TextBox algorithmNameTextBox;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox iterTextBox;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox timeTextBox;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox solutionTextBox;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox costTextBox;
+        private System.Windows.Forms.Label label5;
 
     }
 }

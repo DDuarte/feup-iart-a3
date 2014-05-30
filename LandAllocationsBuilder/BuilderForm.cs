@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -294,12 +295,16 @@ namespace LandAllocationBuilder
             var algorithmType = algorithms[algorithmName];
             var algorithm = (SearchAlgorithm)Activator.CreateInstance(algorithmType, _problem);
 
-            var stringWriter = new StringWriter();
-
             _problem.UpdateConstraintsTable();
-            _problem.ProblemResult = algorithm.Search(stringWriter);
+            _problem.ProblemResult = algorithm.Search();
 
-            MessageBox.Show(stringWriter.ToString());
+            algorithmNameTextBox.Text = _problem.ProblemResult.AlgorithmName;
+            timeTextBox.Text = _problem.ProblemResult.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture);
+            iterTextBox.Text = _problem.ProblemResult.Iterations.ToString(CultureInfo.InvariantCulture);
+            solutionTextBox.Text = _problem.ProblemResult.LanduseAllocations.ToString();
+            costTextBox.Text = _problem.ProblemResult.LanduseAllocations.CurrentCost.ToString(CultureInfo.InvariantCulture);
+
+            tabControl2.SelectTab(resultTabPage);
         }
 
         /*
