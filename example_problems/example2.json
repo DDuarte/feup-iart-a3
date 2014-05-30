@@ -881,14 +881,98 @@
       "Y": 3
     }
   ],
-  "HardConstraints": {},
-  "SoftConstraints": {},
+  "HardConstraints": {
+    "CH0": {
+      "$type": "LandAllocationsLib.Constraints.SizeHardConstraint, LandAllocationsLib",
+      "LandusesTypes": [
+        0,
+        2
+      ],
+      "Threshold": 8.0,
+      "CheckSmaller": false
+    },
+    "CH1": {
+      "$type": "LandAllocationsLib.Constraints.DistanceHardConstraint, LandAllocationsLib",
+      "Place": 1,
+      "LandusesTypes": [
+        1,
+        2
+      ],
+      "Threshold": 5.0,
+      "CheckCloser": true
+    },
+    "CH2": {
+      "$type": "LandAllocationsLib.Constraints.DistanceHardConstraint, LandAllocationsLib",
+      "Place": 0,
+      "LandusesTypes": [
+        0
+      ],
+      "Threshold": 5.0,
+      "CheckCloser": true
+    },
+    "CH3": {
+      "$type": "LandAllocationsLib.Constraints.SteepHardConstraint, LandAllocationsLib",
+      "LandusesTypes": [
+        1,
+        2
+      ],
+      "SteepTypes": [
+        0,
+        1
+      ]
+    },
+    "CH4": {
+      "$type": "LandAllocationsLib.Constraints.SoilHardConstraint, LandAllocationsLib",
+      "LandusesTypes": [
+        3,
+        4
+      ],
+      "PoorSoil": true
+    }
+  },
+  "SoftConstraints": {
+    "CS5": {
+      "$type": "LandAllocationsLib.Constraints.DistanceSoftConstraint, LandAllocationsLib",
+      "Place": 0,
+      "LandusesTypes": [
+        0
+      ],
+      "Threshold": 2.0,
+      "BaseCost": 4.0,
+      "CheckCloser": true
+    }
+  },
   "ProblemResult": {
     "AlgorithmName": "A*",
-    "LanduseAllocations": [],
-    "Cost": 0.0,
-    "ElapsedMilliseconds": 8,
-    "Iterations": 1
+    "LanduseAllocations": [
+      {
+        "Item1": "apartment0",
+        "Item2": "L5"
+      },
+      {
+        "Item1": "apartment1",
+        "Item2": "L6"
+      },
+      {
+        "Item1": "dump0",
+        "Item2": "L0"
+      },
+      {
+        "Item1": "cemetery0",
+        "Item2": "L4"
+      },
+      {
+        "Item1": "recreational0",
+        "Item2": "L1"
+      },
+      {
+        "Item1": "house0",
+        "Item2": "L3"
+      }
+    ],
+    "Cost": 32.6,
+    "ElapsedMilliseconds": 655,
+    "Iterations": 722
   },
   "Size": 14
 }
