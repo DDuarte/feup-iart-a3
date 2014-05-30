@@ -35,7 +35,7 @@ namespace IART_A3
             if (args.Length != 3 && args.Length != 4)
             {
                 Console.Error.WriteLine("Usage: {0} {1} <in.json> <out.json> [--verbose|-v]",
-                    System.AppDomain.CurrentDomain.FriendlyName, allAlgorithms);
+                    AppDomain.CurrentDomain.FriendlyName, allAlgorithms);
                 return (int) ExitCodes.WrongUsage;
             }
 

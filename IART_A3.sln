@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IART_A3", "IART_A3\IART_A3.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI", "GUI\GUI.csproj", "{AE53515C-EE95-4EDF-8683-A2D27DDF8F1F}"
 EndProject
+Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "UML", "ModelingProject2\UML.modelproj", "{64B44F71-74E3-4572-8F76-1680788A31BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{AE53515C-EE95-4EDF-8683-A2D27DDF8F1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE53515C-EE95-4EDF-8683-A2D27DDF8F1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE53515C-EE95-4EDF-8683-A2D27DDF8F1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64B44F71-74E3-4572-8F76-1680788A31BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64B44F71-74E3-4572-8F76-1680788A31BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64B44F71-74E3-4572-8F76-1680788A31BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64B44F71-74E3-4572-8F76-1680788A31BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
