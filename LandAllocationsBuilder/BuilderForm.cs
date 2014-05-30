@@ -15,10 +15,10 @@ namespace LandAllocationBuilder
 {
     public partial class BuilderForm : Form
     {
-        private readonly HashSet<Button> _selectedButtons = new HashSet<Button>();
-        private readonly Button[,] _buttons;
+        private HashSet<Button> _selectedButtons = new HashSet<Button>();
+        private Button[,] _buttons;
 
-        private readonly Problem _problem;
+        private Problem _problem;
         private readonly int _sizePx;
         private readonly StartForm _startForm;
 
@@ -301,6 +301,22 @@ namespace LandAllocationBuilder
         private void BuilderForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             _startForm.Show();
+
+            _selectedButtons.Clear();
+            _selectedButtons = null;
+            _buttons = null;
+
+            _problem.HardConstraints.Clear();
+            _problem.SoftConstraints.Clear();
+            _problem.HardConstraintsTable.Clear();
+            _problem.SoftConstraintsTable.Clear();
+            _problem.Lots.Clear();
+            _problem.Landuses.Clear();
+            _problem.Lakes.Clear();
+            _problem.Highways.Clear();
+            _problem = null;
+
+            GC.Collect();
         }
 
         private void saveButton_Click(object sender, EventArgs e)
