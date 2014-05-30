@@ -64,18 +64,23 @@ namespace LandAllocationsLib.StateRepresentation
                 _unattributedLots.SetEquals(la._unattributedLots);
         }
 
-        public override string ToString()
+        public static string ToString(HashSet<Tuple<string, string>> allocations)
         {
-            if (_string != null) return _string;
-            var alls = Allocations.ToList();
+            var alls = allocations.ToList();
             var b = new StringBuilder("{");
             for (var i = 0; i < alls.Count; i++)
             {
                 b.AppendFormat("{0}-{1}", alls[i].Item1, alls[i].Item2);
-                if (i != Allocations.Count - 1)
+                if (i != allocations.Count - 1)
                     b.Append(", ");
             }
-            _string = b.Append('}').ToString();
+            return b.Append('}').ToString();
+        }
+
+        public override string ToString()
+        {
+            if (_string != null) return _string;
+            _string = ToString(Allocations);
             return _string;
         }
 

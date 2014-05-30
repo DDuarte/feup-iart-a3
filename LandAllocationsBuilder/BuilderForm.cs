@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using LandAllocationBuilder.Properties;
 using LandAllocationsLib.SearchAlgorithms;
@@ -278,8 +278,18 @@ namespace LandAllocationBuilder
             }
         }
 
+        private bool _algoRunning;
+        private Thread _algoThread;
+
         private void runAlgorithmButton_Click(object sender, EventArgs e)
         {
+            if (_algoRunning)
+            {
+                _algoThread.Abort();
+                _algoRunning = false;
+                runAlgorithmButton.Text = "Run Algorithm";
+            }
+
             var algorithms = new Dictionary<string, Type>
             {
                 {"A*", typeof (AStarSearchAlgorithm)},
@@ -296,15 +306,36 @@ namespace LandAllocationBuilder
             var algorithm = (SearchAlgorithm)Activator.CreateInstance(algorithmType, _problem);
 
             _problem.UpdateConstraintsTable();
-            _problem.ProblemResult = algorithm.Search();
 
-            algorithmNameTextBox.Text = _problem.ProblemResult.AlgorithmName;
-            timeTextBox.Text = _problem.ProblemResult.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture);
-            iterTextBox.Text = _problem.ProblemResult.Iterations.ToString(CultureInfo.InvariantCulture);
-            solutionTextBox.Text = _problem.ProblemResult.LanduseAllocations.ToString();
-            costTextBox.Text = _problem.ProblemResult.LanduseAllocations.CurrentCost.ToString(CultureInfo.InvariantCulture);
+            _algoRunning = true;
+            runAlgorithmButton.Text = "Stop";
+            _algoThread = new Thread(() =>
+            {
+                try
+                {
+                    _algoRunning = true;
+                    _problem.ProblemResult = algorithm.Search();
+                    _algoRunning = false;
 
-            tabControl2.SelectTab(resultTabPage);
+                    Invoke(new Action(() =>
+                    {
+                        algorithmNameTextBox.Text = _problem.ProblemResult.AlgorithmName;
+                        timeTextBox.Text = _problem.ProblemResult.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture);
+                        iterTextBox.Text = _problem.ProblemResult.Iterations.ToString(CultureInfo.InvariantCulture);
+                        solutionTextBox.Text = LanduseAllocations.ToString(_problem.ProblemResult.LanduseAllocations);
+                        costTextBox.Text =
+                            _problem.ProblemResult.Cost.ToString(CultureInfo.InvariantCulture);
+
+                        tabControl2.SelectTab(resultTabPage);
+                    }));
+                }
+                catch (ThreadAbortException)
+                {
+                    _algoRunning = false;
+                    runAlgorithmButton.Text = "Run Algorithm";
+                }
+            });
+            _algoThread.Start();
         }
 
         private void compileConstraintsButton_Click(object sender, EventArgs e)
