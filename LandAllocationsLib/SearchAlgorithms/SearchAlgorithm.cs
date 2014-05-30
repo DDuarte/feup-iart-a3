@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using LandAllocationsLib.StateRepresentation;
@@ -47,7 +49,7 @@ namespace LandAllocationsLib.SearchAlgorithms
                 }
             }
 
-            return new Problem.Result(Name, res, time, Iterations);
+            return new Problem.Result(Name, res != null ? res.Allocations : new HashSet<Tuple<string, string>>(), time, Iterations);
         }
 
         protected abstract LanduseAllocations SearchImpl();

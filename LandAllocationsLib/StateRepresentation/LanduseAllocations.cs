@@ -7,7 +7,6 @@ namespace LandAllocationsLib.StateRepresentation
 {
     public class LanduseAllocations : IEquatable<LanduseAllocations>
     {
-        private readonly HashSet<Tuple<string, string>> _allocations; // [landuse, lot]
         private readonly HashSet<string> _unattributedLanduses;
         private readonly HashSet<string> _unattributedLots;
         private readonly Problem _problem;
@@ -24,12 +23,14 @@ namespace LandAllocationsLib.StateRepresentation
 
         public int LandUsesLeft { get { return _unattributedLanduses.Count; } }
 
+        public HashSet<Tuple<string, string>> Allocations { get; private set; } // [landuse, lot]
+
         public LanduseAllocations(Problem problem)
         {
             _id = _lastId++;
             _string = null;
             _problem = problem;
-            _allocations = new HashSet<Tuple<string, string>>();
+            Allocations = new HashSet<Tuple<string, string>>();
             _unattributedLanduses = new HashSet<string>(problem.Landuses.Keys);
             _unattributedLots = new HashSet<string>(problem.Lots.Keys);
 
@@ -42,11 +43,11 @@ namespace LandAllocationsLib.StateRepresentation
             _id = _lastId++;
             _problem = landuseAllocations._problem;
 
-            _allocations = new HashSet<Tuple<string, string>>(landuseAllocations._allocations);
+            Allocations = new HashSet<Tuple<string, string>>(landuseAllocations.Allocations);
             _unattributedLanduses = new HashSet<string>(landuseAllocations._unattributedLanduses);
             _unattributedLots = new HashSet<string>(landuseAllocations._unattributedLots);
 
-            _allocations.Add(Tuple.Create(landuse, lot));
+            Allocations.Add(Tuple.Create(landuse, lot));
             _unattributedLanduses.Remove(landuse);
             _unattributedLots.Remove(lot);
 
@@ -58,7 +59,7 @@ namespace LandAllocationsLib.StateRepresentation
 
         public bool Equals(LanduseAllocations la)
         {
-            return _allocations.SetEquals(la._allocations) &&
+            return Allocations.SetEquals(la.Allocations) &&
                 _unattributedLanduses.SetEquals(la._unattributedLanduses) &&
                 _unattributedLots.SetEquals(la._unattributedLots);
         }
@@ -66,12 +67,12 @@ namespace LandAllocationsLib.StateRepresentation
         public override string ToString()
         {
             if (_string != null) return _string;
-            var alls = _allocations.ToList();
+            var alls = Allocations.ToList();
             var b = new StringBuilder("{");
             for (var i = 0; i < alls.Count; i++)
             {
                 b.AppendFormat("{0}-{1}", alls[i].Item1, alls[i].Item2);
-                if (i != _allocations.Count - 1)
+                if (i != Allocations.Count - 1)
                     b.Append(", ");
             }
             _string = b.Append('}').ToString();

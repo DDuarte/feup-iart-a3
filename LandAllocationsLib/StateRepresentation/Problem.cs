@@ -11,7 +11,7 @@ namespace LandAllocationsLib.StateRepresentation
     {
         public class Result
         {
-            public Result(string algorithmName, LanduseAllocations landuseAllocations,
+            public Result(string algorithmName, HashSet<Tuple<string, string>> landuseAllocations,
                 long elapsedMilliseconds, long iterations)
             {
                 AlgorithmName = algorithmName;
@@ -22,7 +22,7 @@ namespace LandAllocationsLib.StateRepresentation
 
 // ReSharper disable MemberCanBePrivate.Global
             public string AlgorithmName;
-            public LanduseAllocations LanduseAllocations;
+            public HashSet<Tuple<string, string>> LanduseAllocations;
             public long ElapsedMilliseconds;
             public long Iterations;
 // ReSharper restore MemberCanBePrivate.Global
