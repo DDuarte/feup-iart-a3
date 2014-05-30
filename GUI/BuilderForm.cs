@@ -4,42 +4,39 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using IART_A3.StateRepresentation;
+using Point = IART_A3.StateRepresentation.Point;
 
 namespace GUI
 {
-    public partial class Form1 : Form
+    public partial class BuilderForm : Form
     {
         private readonly HashSet<Button> _selectedButtons = new HashSet<Button>();
-        private double _centroidX;
-        private double _centroidY;
 
-        private const int size = 55;
-        private const int rows = 10;
-        private const int cols = 10;
+        private readonly Problem _problem;
+        private readonly int _sizePx;
 
-        private static bool IntersectsWith(Button btn1, Button btn2)
+        private bool RemoveTerrainPoint(Point point)
+        {
+            var removed = _problem.Lakes.Remove(point);
+            removed |= _problem.Highways.Remove(point);
+            return _problem.Lots.Aggregate(removed, (current, lot) => current | lot.Value.Terrain.Remove(point));
+        }
+
+        private bool IntersectsWith(Button btn1, Button btn2)
         {
             if (btn1 == btn2)
                 return false;
 
             var bounds1 = btn1.Bounds;
             var bounds2 = btn1.Bounds;
-            bounds1.Inflate(size / 2, -size / 2);
-            bounds2.Inflate(-size / 2, size / 2);
+            bounds1.Inflate(_sizePx / 2, -_sizePx / 2);
+            bounds2.Inflate(-_sizePx / 2, _sizePx / 2);
 
             return btn2.Bounds.IntersectsWith(bounds1) || btn2.Bounds.IntersectsWith(bounds2);
         }
 
         private void ToggleButton(Button button)
         {
-            if (_selectedButtons.Count == 0)
-                _centroidX = _centroidY = -1;
-            else
-            {
-                _centroidX = _selectedButtons.Average(btn => btn.Location.X + size/2);
-                _centroidY = _selectedButtons.Average(btn => btn.Location.Y - size/2);
-            }
-
             if (_selectedButtons.Add(button))
             {
                 if (!ValidArea())
@@ -90,27 +87,32 @@ namespace GUI
                 _selectedButtons.All(btn1 => _selectedButtons.Any(button => IntersectsWith(button, btn1)));
         }
 
-        public Form1()
+        public BuilderForm(int size)
         {
             InitializeComponent();
+
+            _problem = new Problem();
+
+            _sizePx = (int)(10 / 20.0 * 55);
 
             //gridPanel.Size = new Size(size * rows, size * cols);
             //gridPanel.Location = new Point((ClientSize.Width - gridPanel.Size.Width) / 2, (ClientSize.Height - gridPanel.Size.Height) / 2);
 
-            for (var i = 0; i < rows; ++i)
+            for (var i = 0; i < size; ++i)
             {
-                for (var j = 0; j < cols; ++j)
+                for (var j = 0; j < size; ++j)
                 {
                     var btn = new Button
                     {
                         Name = "btn" + i + j,
-                        Bounds = new Rectangle(size*i, size*j, size, size),
+                        Bounds = new Rectangle(_sizePx * i, _sizePx * j, _sizePx, _sizePx),
                         BackColor = Color.Gray,
                         ForeColor = Color.Gray,
                         Margin = new Padding(0),
                         FlatStyle = FlatStyle.Flat,
                         BackgroundImageLayout = ImageLayout.Stretch,
-                        TabStop = false
+                        TabStop = false,
+                        Tag = new Point(i, j)
                     };
 
                     btn.FlatAppearance.BorderSize = 0;
@@ -121,40 +123,58 @@ namespace GUI
             }
         }
 
-        private void highwayApplyButton_Click(object sender, System.EventArgs e)
+        private void highwayApplyButton_Click(object sender, EventArgs e)
         {
             foreach (var btn in _selectedButtons)
             {
                 btn.BackColor = Color.SlateGray;
                 btn.ForeColor = Color.SlateGray;
                 btn.BackgroundImage = new Bitmap(Properties.Resources.AsphaltTexture);
+
+                var point = (Point) btn.Tag;
+                RemoveTerrainPoint(point);
+                _problem.Highways.Add(point);
             }
 
             _selectedButtons.Clear();
         }
 
-        private void waterApplyButton_Click(object sender, System.EventArgs e)
+        private void waterApplyButton_Click(object sender, EventArgs e)
         {
             foreach (var btn in _selectedButtons)
             {
                 btn.BackColor = Color.DodgerBlue;
                 btn.ForeColor = Color.DodgerBlue;
                 btn.BackgroundImage = new Bitmap(Properties.Resources.WaterTexture);
+
+                var point = (Point)btn.Tag;
+                RemoveTerrainPoint(point);
+                _problem.Lakes.Add(point);
             }
 
             _selectedButtons.Clear();
         }
 
-        private void lotApplyButton_Click(object sender, System.EventArgs e)
+        private void lotApplyButton_Click(object sender, EventArgs e)
         {
-            Bitmap img = null;
+            if (_selectedButtons.Count == 0)
+            {
+                MessageBox.Show("No terrain selected.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             var name = lotNameTextBox.Text;
+            if (_problem.Lots.ContainsKey(name))
+            {
+                MessageBox.Show("Duplicate lot name.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             var poorSoil = poorSoilCheckBox.Checked;
             var price = Convert.ToDouble(priceNumericUpDown.Value);
-            var distanceLake = 0.0;
-            var distanceHighway = 0.0;
-            var steepType = SteepType.Flat;
 
+            Bitmap img = null;
+            var steepType = SteepType.Flat;
             if (flatRadioButton.Checked)
             {
                 img = poorSoil ? Properties.Resources.SandFlatTexture : Properties.Resources.DirtFlatTexture;
@@ -179,13 +199,22 @@ namespace GUI
             }
 
             if (img == null)
+            {
+                MessageBox.Show("Unknown steep type.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
+            }
+
+            var terrain = new HashSet<Point>();
 
             foreach (var btn in _selectedButtons)
             {
                 btn.BackColor = poorSoil ? Color.SandyBrown : Color.Brown;
                 btn.ForeColor = poorSoil ? Color.SandyBrown : Color.Brown;
                 btn.BackgroundImage = img;
+
+                var point = (Point)btn.Tag;
+                RemoveTerrainPoint(point);
+                terrain.Add(point);
             }
 
             _selectedButtons.Clear();
@@ -193,14 +222,13 @@ namespace GUI
             var lot = new Lot
             {
                 Price = price,
-                DistanceLake = distanceLake,
-                DistanceHighway = distanceHighway,
                 PoorSoil = poorSoil,
-                Steep = steepType
+                Steep = steepType,
+                Terrain = terrain
             };
 
-            lotsDataGridView.Rows.Add(name, lot.Price, lot.DistanceLake, lot.DistanceHighway, lot.PoorSoil,
-                lot.Steep.ToString());
+            _problem.Lots.Add(name, lot);
+            lotsDataGridView.Rows.Add(name, lot.Price, lot.PoorSoil, lot.Steep.ToString());
         }
 
         private void landusesApplyButton_Click(object sender, EventArgs e)
@@ -223,6 +251,8 @@ namespace GUI
                 landuses.Add("dump" + i, new Landuse { Type = LanduseType.Dump });
             for (var i = 0; i < cemeteryCount; ++i)
                 landuses.Add("cemetery" + i, new Landuse { Type = LanduseType.Cemetery });
+
+            _problem.Landuses = landuses;
 
             landusesDataGridView.Rows.Clear();
             foreach (var landuse in landuses)

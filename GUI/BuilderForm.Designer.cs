@@ -2,7 +2,7 @@
 
 namespace GUI
 {
-    partial class Form1
+    partial class BuilderForm
     {
         /// <summary>
         /// Required designer variable.
@@ -32,6 +32,13 @@ namespace GUI
         {
             this.gridPanel = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.lotsTabPage = new System.Windows.Forms.TabPage();
+            this.lotsDataGridView = new System.Windows.Forms.DataGridView();
+            this.landuses2TabPage = new System.Windows.Forms.TabPage();
+            this.landusesDataGridView = new System.Windows.Forms.DataGridView();
+            this.nameLandusesColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.typeColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.lotTabPage = new System.Windows.Forms.TabPage();
             this.lotApplyButton = new System.Windows.Forms.Button();
@@ -62,20 +69,16 @@ namespace GUI
             this.apartmentsNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.recreationalLabel = new System.Windows.Forms.Label();
             this.recreationalNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.tabControl2 = new System.Windows.Forms.TabControl();
-            this.lotsTabPage = new System.Windows.Forms.TabPage();
-            this.landuses2TabPage = new System.Windows.Forms.TabPage();
-            this.lotsDataGridView = new System.Windows.Forms.DataGridView();
-            this.landusesDataGridView = new System.Windows.Forms.DataGridView();
-            this.nameLandusesColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.typeColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.nameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.priceColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.distanceLakeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.distanceHighwayColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.poorSoilColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.steepColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.panel1.SuspendLayout();
+            this.tabControl2.SuspendLayout();
+            this.lotsTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lotsDataGridView)).BeginInit();
+            this.landuses2TabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.landusesDataGridView)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.lotTabPage.SuspendLayout();
             this.steepGroupBox.SuspendLayout();
@@ -88,11 +91,6 @@ namespace GUI
             ((System.ComponentModel.ISupportInitialize)(this.housingComplexNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.apartmentsNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.recreationalNumericUpDown)).BeginInit();
-            this.tabControl2.SuspendLayout();
-            this.lotsTabPage.SuspendLayout();
-            this.landuses2TabPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.lotsDataGridView)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.landusesDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // gridPanel
@@ -110,6 +108,88 @@ namespace GUI
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(427, 550);
             this.panel1.TabIndex = 1;
+            // 
+            // tabControl2
+            // 
+            this.tabControl2.Controls.Add(this.lotsTabPage);
+            this.tabControl2.Controls.Add(this.landuses2TabPage);
+            this.tabControl2.Location = new System.Drawing.Point(12, 296);
+            this.tabControl2.Name = "tabControl2";
+            this.tabControl2.SelectedIndex = 0;
+            this.tabControl2.Size = new System.Drawing.Size(412, 225);
+            this.tabControl2.TabIndex = 10;
+            // 
+            // lotsTabPage
+            // 
+            this.lotsTabPage.Controls.Add(this.lotsDataGridView);
+            this.lotsTabPage.Location = new System.Drawing.Point(4, 22);
+            this.lotsTabPage.Name = "lotsTabPage";
+            this.lotsTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.lotsTabPage.Size = new System.Drawing.Size(404, 199);
+            this.lotsTabPage.TabIndex = 0;
+            this.lotsTabPage.Text = "Lots";
+            this.lotsTabPage.UseVisualStyleBackColor = true;
+            // 
+            // lotsDataGridView
+            // 
+            this.lotsDataGridView.AllowUserToAddRows = false;
+            this.lotsDataGridView.AllowUserToDeleteRows = false;
+            this.lotsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.lotsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.nameColumn,
+            this.priceColumn,
+            this.poorSoilColumn,
+            this.steepColumn});
+            this.lotsDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lotsDataGridView.Location = new System.Drawing.Point(3, 3);
+            this.lotsDataGridView.Name = "lotsDataGridView";
+            this.lotsDataGridView.ReadOnly = true;
+            this.lotsDataGridView.Size = new System.Drawing.Size(398, 193);
+            this.lotsDataGridView.TabIndex = 0;
+            // 
+            // landuses2TabPage
+            // 
+            this.landuses2TabPage.Controls.Add(this.landusesDataGridView);
+            this.landuses2TabPage.Location = new System.Drawing.Point(4, 22);
+            this.landuses2TabPage.Name = "landuses2TabPage";
+            this.landuses2TabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.landuses2TabPage.Size = new System.Drawing.Size(404, 199);
+            this.landuses2TabPage.TabIndex = 1;
+            this.landuses2TabPage.Text = "Landuses";
+            this.landuses2TabPage.UseVisualStyleBackColor = true;
+            // 
+            // landusesDataGridView
+            // 
+            this.landusesDataGridView.AllowUserToAddRows = false;
+            this.landusesDataGridView.AllowUserToDeleteRows = false;
+            this.landusesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.landusesDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.nameLandusesColumn,
+            this.typeColumn});
+            this.landusesDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.landusesDataGridView.Location = new System.Drawing.Point(3, 3);
+            this.landusesDataGridView.Name = "landusesDataGridView";
+            this.landusesDataGridView.ReadOnly = true;
+            this.landusesDataGridView.Size = new System.Drawing.Size(398, 193);
+            this.landusesDataGridView.TabIndex = 0;
+            // 
+            // nameLandusesColumn
+            // 
+            this.nameLandusesColumn.HeaderText = "Name";
+            this.nameLandusesColumn.Name = "nameLandusesColumn";
+            this.nameLandusesColumn.ReadOnly = true;
+            // 
+            // typeColumn
+            // 
+            this.typeColumn.HeaderText = "Type";
+            this.typeColumn.Items.AddRange(new object[] {
+            "Recreational",
+            "Apartments",
+            "HousingComplex",
+            "Cemetery",
+            "Dump"});
+            this.typeColumn.Name = "typeColumn";
+            this.typeColumn.ReadOnly = true;
             // 
             // tabControl1
             // 
@@ -464,90 +544,6 @@ namespace GUI
             0,
             0});
             // 
-            // tabControl2
-            // 
-            this.tabControl2.Controls.Add(this.lotsTabPage);
-            this.tabControl2.Controls.Add(this.landuses2TabPage);
-            this.tabControl2.Location = new System.Drawing.Point(12, 296);
-            this.tabControl2.Name = "tabControl2";
-            this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(412, 225);
-            this.tabControl2.TabIndex = 10;
-            // 
-            // lotsTabPage
-            // 
-            this.lotsTabPage.Controls.Add(this.lotsDataGridView);
-            this.lotsTabPage.Location = new System.Drawing.Point(4, 22);
-            this.lotsTabPage.Name = "lotsTabPage";
-            this.lotsTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.lotsTabPage.Size = new System.Drawing.Size(404, 199);
-            this.lotsTabPage.TabIndex = 0;
-            this.lotsTabPage.Text = "Lots";
-            this.lotsTabPage.UseVisualStyleBackColor = true;
-            // 
-            // landuses2TabPage
-            // 
-            this.landuses2TabPage.Controls.Add(this.landusesDataGridView);
-            this.landuses2TabPage.Location = new System.Drawing.Point(4, 22);
-            this.landuses2TabPage.Name = "landuses2TabPage";
-            this.landuses2TabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.landuses2TabPage.Size = new System.Drawing.Size(404, 199);
-            this.landuses2TabPage.TabIndex = 1;
-            this.landuses2TabPage.Text = "Landuses";
-            this.landuses2TabPage.UseVisualStyleBackColor = true;
-            // 
-            // lotsDataGridView
-            // 
-            this.lotsDataGridView.AllowUserToAddRows = false;
-            this.lotsDataGridView.AllowUserToDeleteRows = false;
-            this.lotsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.lotsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.nameColumn,
-            this.priceColumn,
-            this.distanceLakeColumn,
-            this.distanceHighwayColumn,
-            this.poorSoilColumn,
-            this.steepColumn});
-            this.lotsDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lotsDataGridView.Location = new System.Drawing.Point(3, 3);
-            this.lotsDataGridView.Name = "lotsDataGridView";
-            this.lotsDataGridView.ReadOnly = true;
-            this.lotsDataGridView.Size = new System.Drawing.Size(398, 193);
-            this.lotsDataGridView.TabIndex = 0;
-            // 
-            // landusesDataGridView
-            // 
-            this.landusesDataGridView.AllowUserToAddRows = false;
-            this.landusesDataGridView.AllowUserToDeleteRows = false;
-            this.landusesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.landusesDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.nameLandusesColumn,
-            this.typeColumn});
-            this.landusesDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.landusesDataGridView.Location = new System.Drawing.Point(3, 3);
-            this.landusesDataGridView.Name = "landusesDataGridView";
-            this.landusesDataGridView.ReadOnly = true;
-            this.landusesDataGridView.Size = new System.Drawing.Size(398, 193);
-            this.landusesDataGridView.TabIndex = 0;
-            // 
-            // nameLandusesColumn
-            // 
-            this.nameLandusesColumn.HeaderText = "Name";
-            this.nameLandusesColumn.Name = "nameLandusesColumn";
-            this.nameLandusesColumn.ReadOnly = true;
-            // 
-            // typeColumn
-            // 
-            this.typeColumn.HeaderText = "Type";
-            this.typeColumn.Items.AddRange(new object[] {
-            "Recreational",
-            "Apartments",
-            "HousingComplex",
-            "Cemetery",
-            "Dump"});
-            this.typeColumn.Name = "typeColumn";
-            this.typeColumn.ReadOnly = true;
-            // 
             // nameColumn
             // 
             this.nameColumn.HeaderText = "Name";
@@ -560,18 +556,6 @@ namespace GUI
             this.priceColumn.HeaderText = "Price";
             this.priceColumn.Name = "priceColumn";
             this.priceColumn.ReadOnly = true;
-            // 
-            // distanceLakeColumn
-            // 
-            this.distanceLakeColumn.HeaderText = "Distance Lake";
-            this.distanceLakeColumn.Name = "distanceLakeColumn";
-            this.distanceLakeColumn.ReadOnly = true;
-            // 
-            // distanceHighwayColumn
-            // 
-            this.distanceHighwayColumn.HeaderText = "Distance Highway";
-            this.distanceHighwayColumn.Name = "distanceHighwayColumn";
-            this.distanceHighwayColumn.ReadOnly = true;
             // 
             // poorSoilColumn
             // 
@@ -597,9 +581,14 @@ namespace GUI
             this.ClientSize = new System.Drawing.Size(1000, 561);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.gridPanel);
-            this.Name = "Form1";
+            this.Name = "BuilderForm";
             this.Text = "Form1";
             this.panel1.ResumeLayout(false);
+            this.tabControl2.ResumeLayout(false);
+            this.lotsTabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.lotsDataGridView)).EndInit();
+            this.landuses2TabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.landusesDataGridView)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.lotTabPage.ResumeLayout(false);
             this.lotTabPage.PerformLayout();
@@ -615,11 +604,6 @@ namespace GUI
             ((System.ComponentModel.ISupportInitialize)(this.housingComplexNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.apartmentsNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.recreationalNumericUpDown)).EndInit();
-            this.tabControl2.ResumeLayout(false);
-            this.lotsTabPage.ResumeLayout(false);
-            this.landuses2TabPage.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.lotsDataGridView)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.landusesDataGridView)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -667,8 +651,6 @@ namespace GUI
         private System.Windows.Forms.DataGridViewComboBoxColumn typeColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn priceColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn distanceLakeColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn distanceHighwayColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn poorSoilColumn;
         private System.Windows.Forms.DataGridViewComboBoxColumn steepColumn;
 

@@ -12,7 +12,7 @@ namespace IART_A3.StateRepresentation
         /// <summary>
         /// Coordinates X, Y representing the shape of this lot
         /// </summary>
-        public List<Point> Terrain;
+        public HashSet<Point> Terrain;
 
         /// <summary>
         /// Size of the lot in square Kilometers

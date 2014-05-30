@@ -31,26 +31,38 @@ namespace IART_A3.StateRepresentation
 // ReSharper restore MemberCanBePrivate.Global
         }
 
+        public Problem()
+        {
+            Lots = new Dictionary<string, Lot>();
+            Landuses = new Dictionary<string, Landuse>();
+            Lakes = new HashSet<Point>();
+            Highways = new HashSet<Point>();
+            HardConstraints = new Dictionary<string, IHardConstraint>();
+            SoftConstraints = new Dictionary<string, ISoftConstraint>();
+
+            UpdateConstraintsTable();
+        }
+
         public Problem(Dictionary<string, Lot> lots, Dictionary<string, Landuse> landuses,
-            List<Point> lakes, List<Point> highways,
+            HashSet<Point> lakes, HashSet<Point> highways,
             Dictionary<string, IHardConstraint> hardConstraints,
             Dictionary<string, ISoftConstraint> softConstraints)
         {
-            Lots = lots ?? new Dictionary<string, Lot>();
-            Landuses = landuses ?? new Dictionary<string, Landuse>();
-            Lakes = lakes ?? new List<Point>();
-            Highways = highways ?? new List<Point>();
-            HardConstraints = hardConstraints ?? new Dictionary<string, IHardConstraint>();
-            SoftConstraints = softConstraints ?? new Dictionary<string, ISoftConstraint>();
+            Lots = lots;
+            Landuses = landuses;
+            Lakes = lakes;
+            Highways = highways;
+            HardConstraints = hardConstraints;
+            SoftConstraints = softConstraints;
 
-            CreateConstraintsTables();
+            UpdateConstraintsTable();
         }
 
 // ReSharper disable FieldCanBeMadeReadOnly.Global
         public Dictionary<string, Lot> Lots;
         public Dictionary<string, Landuse> Landuses;
-        public List<Point> Lakes;
-        public List<Point> Highways;
+        public HashSet<Point> Lakes;
+        public HashSet<Point> Highways;
         public Dictionary<string, IHardConstraint> HardConstraints;
         public Dictionary<string, ISoftConstraint> SoftConstraints;
         public Result ProblemResult;
@@ -61,13 +73,7 @@ namespace IART_A3.StateRepresentation
         [JsonIgnore]
         public Dictionary<string, Dictionary<string, double>> SoftConstraintsTable;
 
-        [OnDeserialized]
-        internal void OnDeserializedMethod(StreamingContext context)
-        {
-            CreateConstraintsTables();
-        }
-
-        private void CreateConstraintsTables()
+        public void UpdateConstraintsTable()
         {
             var hardConstraintsTable = new Dictionary<string, Dictionary<string, bool>>(); // landuse -> lot -> yes/no
             var softConstraintsTable = new Dictionary<string, Dictionary<string, double>>(); // landuse -> lot -> cost
@@ -121,7 +127,9 @@ namespace IART_A3.StateRepresentation
             {
                 using (JsonReader reader = new JsonTextReader(sr))
                 {
-                    return js.Deserialize<Problem>(reader);
+                    var problem = js.Deserialize<Problem>(reader);
+                    problem.UpdateConstraintsTable();
+                    return problem;
                 }
             }
         }

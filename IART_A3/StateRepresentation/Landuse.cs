@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace IART_A3.StateRepresentation
+﻿namespace IART_A3.StateRepresentation
 {
     public enum LanduseType
     {
@@ -16,11 +14,6 @@ namespace IART_A3.StateRepresentation
     /// </summary>
     public class Landuse
     {
-        /// <summary>
-        /// Coordinates X, Y representing the shape of this landuse
-        /// </summary>
-        public List<Point> Terrain;
-
         public LanduseType Type { get; set; }
     }
 }
